@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Zyz777 Blog 后台管理系统</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><h1>Zyz777 Blog</h1></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-rmb"></i>请博主大宝剑</a></li>
+            <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-home"></i>访问前台</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它操作</a>
+                <dl class="layui-nav-child">
+                    <dd><a href=""><i class="layui-icon layui-icon-notice"></i>邮件管理</a></dd>
+                    <dd><a href=""><i class="layui-icon layui-icon-notice"></i>消息管理</a></dd>
+                    <dd><a href=""><i class="layui-icon layui-icon-auz"></i>授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    宗哥
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退了</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+           <!-- <div  class="layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <img width="100" height="100" src="../third-plugin/image/headPic.png" alt="头像">
+                </div>
+                <div class="layui-col-md4">
+                    <span id="hello_msg">下午好</span>
+                    <h2>尊敬的管理员</h2>
+                </div>
+            </div>
+            <br/>-->
+
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree "  lay-filter="leftNav" lay-shrink="all">
+
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;" layui-url="./articleManage/articleList.html"><i class="layui-icon layui-icon-home"></i>&nbsp;&nbsp;首页</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;"><i class="layui-icon layui-icon-read"></i>&nbsp;&nbsp;文章管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" layui-url="./articleManage/articleList.html">&nbsp;&nbsp;文章列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;标签列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;分类列表</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-website"></i>&nbsp;&nbsp;网站管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;评论管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;友情管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;模板管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;更新日志</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;公告管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;文件管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-set-sm"></i>&nbsp;&nbsp;权限管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;资源管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;角色管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-user"></i>&nbsp;&nbsp;用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;用户列表</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon"></i>&nbsp;&nbsp;实验室</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;文章搬运工</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;推送消息</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon"></i>&nbsp;&nbsp;测试页面</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;编辑器</a></dd>
+                    </dl>
+                </li>
+                <!--
+                <li class="layui-nav-item"><a href="">云市场</a></li>
+                <li class="layui-nav-item"><a href="">发布商品</a></li>
+                -->
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="layui-body" id="nav1" style="margin-left: 10px; height: 87.3%;">
+        <!--layui-tab-card   brief-->
+        <div class="layui-tab  layui-tab-card" lay-filter="demo" lay-allowclose="true" style="margin-right: 10px;height: 100%;"  >
+            <ul id="demo" class="layui-tab-title" >
+            </ul>
+            <div class="layui-tab-content">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="layui-footer" lay-id="footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script src="../layui/layui.js"></script>
+<script>
+
+    //JavaScript代码区域
+    layui.config({
+        base: '../third-plugin/tabrightmenu/module/',
+    }).use(['element','layer', 'tabrightmenu'], function(){
+        var element = layui.element;
+        var $ = layui.$;
+
+        //todo 步骤五   选项卡右键菜单注册事件
+        var rightMenuEvent = {
+            testMethod: function (id, title, currentNavGroup, dom) {
+                rightMenuEvent.changeCurrentTabContent(currentNavGroup, "[测试]触发,触发的ID：" + id + "，标题：" + title);
+            },
+            test2Method: function (id, title, currentNavGroup, dom) {
+                rightMenuEvent.changeCurrentTabContent(currentNavGroup, "[测试2]触发,触发的ID：" + id + "，标题：" + title);
+            },
+            changeCurrentTabContent: function (currentNavGroup, content) {
+                $(currentNavGroup + " div[class='layui-tab-item layui-show']").html(content);
+            }
+        };
+
+        var activity = {
+            tabAdd : function (layId, tabTitle, tabContent, url) {
+                if (url == null || url == '') {
+                    url = "./common/404.html";
+                } 
+                
+                //todo 步骤三   根据 layid , 判断是否已经出现选项卡。 出现,就激活; 否则就新增选项卡
+                var li = $('li[lay-id="'+layId+'"]');
+                console.log('layId=['+layId+'] 是否出现? ' + (li.length > 0));
+                if (li.length == 0) {
+                    element.tabAdd('demo', {
+                        title: tabTitle,
+                        content: '<iframe src='+url+' layui-iframeid="'+layId+'" width="100%" style="min-height: 500px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>', //支持传入html
+                        id: layId
+                    });
+
+                    //todo 步骤四  为Tab选项卡右键弹出菜单组件
+                    let rightmenu_ = layui.tabrightmenu;
+                    // 默认方式渲染全部：关闭当前（closethis）、关闭所有（closeall）、关闭其它（closeothers）、关闭左侧所有（closeleft）、关闭右侧所有（closeright）、刷新当前页（refresh）
+                    rightmenu_.render({
+                        container: '#nav1',
+                        filter: 'demo',
+                        navArr: [
+                            // {eventName: 'closethis', title: '关闭当前', icon: 'layui-icon-close'},
+                            {eventName: 'closeall', title: '关闭所有'},
+                            {eventName: 'closeothers', title: '关闭其它'},
+                            //自定义菜单项，此时dataType属性表示自定义事件
+                            {title: "测试", eventName: 'test'},
+                            {title: "测试2", eventName: 'test2'},
+                        ],
+                        //注册自定义事件
+                        registMethod: {'test': rightMenuEvent.testMethod, 'test2': rightMenuEvent.test2Method}
+                    });
+                }
+                element.tabChange('demo', layId);
+            }
+        };
+
+        //todo 步骤一  给左侧菜单绑定监听事件, 触发, 则新增选项卡
+        element.on('nav(leftNav)', function (elem) {
+            var innerText = elem[0].innerText.trim();
+            var url = elem[0].attributes['layui-url'];
+            if (url == null || url == '') {
+                console.log('不是二级菜单');
+                // return;  //不是二级菜单, 不新增选项卡
+            } else {
+                url = url.value;
+            }
+            activity.tabAdd(innerText, innerText, innerText+'选项卡的内容', url);
+        });
+
+        //todo 步骤二  页面初始化时, 加载'首页'
+        activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./articleManage/articleList.html");
+
+    });
+
+
+    /**
+     * ifrme自适应页面高度，需要设定min-height
+     * @param iframe
+     */
+    function setIframeHeight(iframe) {
+        if (iframe) {
+            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+            if (iframeWin.document.body) {
+                iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+            }
+        }
+    };
+
+</script>
+</body>
+</html>
