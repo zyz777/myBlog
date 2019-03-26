@@ -17,17 +17,45 @@
 
 
 <script src="../../layui/layui.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
+    <!-- 这里同样支持 laytpl 语法，如： -->
+  <!--  {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
+    {{#  } }}-->
+</script>
+<script type="text/html" id="barDemo2">
+    <a class="layui-btn layui-btn-xs" lay-event="new">新增</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delMore">批量删除</a>
+</script>
 <script>
-    layui.use('table', function(){
+    layui.use(['table','laypage'], function(){
         var table = layui.table;
+        var laypage = layui.laypage;
 
         //第一个实例
         table.render({
             elem: '#articleListTable'
-            ,height: 312
+            ,height: 'full-20'
             ,url: 'articleList.json' //数据接口
+            // ,method:'POST'   //laui 修改请求方式
+            // ,request: {
+            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
+            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            // }
+            // , response: {
+            //     statusName: 'code' //数据状态的字段名称，默认：code
+            //     ,countName: 'count' //数据总数的字段名称，默认：count
+            //     ,dataName: 'data' //默数据列表的字段名称，默认：data
+            //
+            // }
+            ,title: '用户表'
             ,page: true //开启分页
             ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'},
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
                 ,{field: 'username', title: '用户名', width:80}
                 ,{field: 'sex', title: '性别', width:80, sort: true}
@@ -37,7 +65,10 @@
                 ,{field: 'score', title: '评分', width: 80, sort: true}
                 ,{field: 'classify', title: '职业', width: 80}
                 ,{field: 'wealth', title: '财富', width: 135, sort: true}
-            ]]
+                ,{title: '操作', width: 155, sort: false, toolbar: '#barDemo', fixed: 'right'}
+            ]],
+            toolbar: '#barDemo2',
+            totalRow: false,
         });
 
     });
