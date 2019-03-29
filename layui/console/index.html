@@ -40,16 +40,19 @@
 
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-           <!-- <div  class="layui-row layui-col-space10">
-                <div class="layui-col-md4">
+            <div  class="layui-row layui-col-space10">
+               <!-- <div class="layui-col-md4">
                     <img width="100" height="100" src="../third-plugin/image/headPic.png" alt="头像">
+                </div>-->
+                <div class="layui-inline">
+                    <img style="width: 100px; margin-left: 30%; margin-top: 10%;"  src="../third-plugin/image/headPic.png" class="layui-circle">
                 </div>
-                <div class="layui-col-md4">
+                <!--<div class="layui-col-md4">
                     <span id="hello_msg">下午好</span>
                     <h2>尊敬的管理员</h2>
-                </div>
+                </div>-->
             </div>
-            <br/>-->
+            <hr class="layui-bg-orange">
 
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree "  lay-filter="leftNav" lay-shrink="all">
@@ -68,12 +71,12 @@
                 <li class="layui-nav-item">
                     <a href="javascript:;"><i class="layui-icon layui-icon-website"></i>&nbsp;&nbsp;网站管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;评论管理</a></dd>
-                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;友情管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="./websiteManage/commentList.html">&nbsp;&nbsp;评论管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;友情链接</a></dd>
                         <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;模板管理</a></dd>
-                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;更新日志</a></dd>
+                        <dd><a href="javascript:;" layui-url="./websiteManage/releaseLogList.html">&nbsp;&nbsp;更新日志</a></dd>
                         <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;公告管理</a></dd>
-                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;文件管理</a></dd>
+                        <dd><a href="javascript:;" layui-url="./websiteManage/fileList.html">&nbsp;&nbsp;文件管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -133,9 +136,11 @@
     //JavaScript代码区域
     layui.config({
         base: '../third-plugin/tabrightmenu/module/',
-    }).use(['element','layer', 'tabrightmenu'], function(){
+    }).use(['element','layer', 'tabrightmenu',  'form'], function(){
         var element = layui.element;
         var $ = layui.$;
+        var layer = layui.layer;//给 iframe 弹窗 或其它使用
+        var form = layui.form;//给 iframe 弹窗 或其它使用
 
         //todo 步骤五   选项卡右键菜单注册事件
         var rightMenuEvent = {
@@ -166,7 +171,7 @@
                         id: layId
                     });
 
-                    //todo 步骤四  为Tab选项卡右键弹出菜单组件
+                    //todo 步骤四  为Tab选项卡绑定右键弹出菜单组件
                     let rightmenu_ = layui.tabrightmenu;
                     // 默认方式渲染全部：关闭当前（closethis）、关闭所有（closeall）、关闭其它（closeothers）、关闭左侧所有（closeleft）、关闭右侧所有（closeright）、刷新当前页（refresh）
                     rightmenu_.render({
@@ -194,7 +199,7 @@
             var url = elem[0].attributes['layui-url'];
             if (url == null || url == '') {
                 console.log('不是二级菜单');
-                // return;  //不是二级菜单, 不新增选项卡
+                return;  //不是二级菜单, 不新增选项卡
             } else {
                 url = url.value;
             }
@@ -202,7 +207,7 @@
         });
 
         //todo 步骤二  页面初始化时, 加载'首页'
-        activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./articleManage/articleList.html");
+        activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./websiteManage/fileList.html");
 
     });
 
