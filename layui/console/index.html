@@ -113,7 +113,6 @@
         </div>
     </div>
 
-
     <div class="layui-body" id="nav1" style="margin-left: 10px; height: 87.3%;">
         <!--layui-tab-card   brief-->
         <div class="layui-tab  layui-tab-card" lay-filter="demo" lay-allowclose="true" style="margin-right: 10px;height: 100%;"  >
@@ -167,7 +166,7 @@
                 if (li.length == 0) {
                     element.tabAdd('demo', {
                         title: tabTitle,
-                        content: '<iframe src='+url+' layui-iframeid="'+layId+'" width="100%" style="min-height: 500px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>', //支持传入html
+                        content: '<iframe src='+url+' layui-iframeid="'+layId+'" width="100%" style="min-height: 600px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>', //支持传入html
                         id: layId
                     });
 
@@ -223,6 +222,7 @@
                 iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
             }
         }
+        console.log('高度是: ' +  iframe.height) ;
     };
 
 </script>
