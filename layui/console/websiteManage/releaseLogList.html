@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+
+<div>
+
+    <table id="releaseLogListTable" lay-filter="releaseLogListTable">
+    </table>
+</div>
+
+
+<script src="../../layui/layui.js"></script>
+
+<script type="text/html" id="barDemo">
+    <!--
+    <a class="layui-btn layui-btn-xs layui-icon layui-icon-form" title="查看" lay-event="detail"></a>
+    -->
+
+    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
+        <i class="layui-icon">&#xe642;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
+</script>
+
+<script type="text/html" id="barDemo2">
+    <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="new">
+        <i class="layui-icon">&#xe608;</i> 新增
+    </a>
+    <a class="layui-btn  layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delMore">
+        <i class="layui-icon">&#xe640;</i> 批量删除
+    </a>
+</script>
+<script>
+    var layer = null;
+    var $ = null;
+    var form = null;
+
+    layui.use(['table','laypage', 'layer', 'form'], function(){
+        var table = layui.table;
+        layer = layui.layer;
+        $ = layui.jquery;
+        form = layui.form;
+
+        //todo 步骤一, 请求数据,进行表格渲染
+        table.render({
+            elem: '#releaseLogListTable'
+            ,height: 'full-20'
+            ,url: 'releaseLogList.json' //数据接口
+            // ,method:'POST'   //laui 修改请求方式
+            // ,request: {
+            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
+            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            // }
+            // , response: {
+            //     statusName: 'code' //数据状态的字段名称，默认：code
+            //     ,countName: 'count' //数据总数的字段名称，默认：count
+            //     ,dataName: 'data' //默数据列表的字段名称，默认：data
+            //
+            // }
+            ,title: '用户表'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+                ,{field: 'version', title: '版本'}
+                ,{field: 'content', title: '更新内容'}
+                ,{field: 'createTime', title: '更新时间', sort: true}
+                ,{title: '操作', width: 100, sort: false, toolbar: '#barDemo', event:'aa', fixed: 'right'}
+            ]],
+            toolbar: '#barDemo2',
+            totalRow: false,
+        });
+
+        //todo 步骤二  监听事件, '操作'单元格的事件
+        table.on('tool(releaseLogListTable)', function(obj){
+            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            var data = obj.data;
+            switch(eventType){
+                case 'del':
+                    layer.msg('删除');
+                    break;
+                case 'edit':
+                    layer.msg('编辑');
+                    break;
+            };
+        });
+    });
+
+</script>
+</body>
+</html>

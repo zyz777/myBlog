@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+
+<div>
+    <table id="fileListTable" lay-filter="fileListTable">
+    </table>
+</div>
+<div style="display: none" id="uploadDiv">
+    <div class="layui-upload">
+        <button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
+        <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+        <div class="layui-upload-list">
+            <table class="layui-table">
+                <thead>
+                <tr><th>文件名</th>
+                    <th>大小</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr></thead>
+                <tbody id="demoList"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="../../layui/layui.js"></script>
+
+<script type="text/html" id="barDemo">
+    <!--
+    <a class="layui-btn layui-btn-xs layui-icon layui-icon-form" title="查看" lay-event="detail"></a>
+    -->
+
+    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
+        <i class="layui-icon">&#xe642;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
+</script>
+
+<script type="text/html" id="barDemo2">
+    <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="new">
+        <i class="layui-icon">&#xe608;</i> 新增
+    </a>
+    <a class="layui-btn  layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delMore">
+        <i class="layui-icon">&#xe640;</i> 批量删除
+    </a>
+</script>
+<script>
+    var layer = null;
+    var $ = null;
+    var form = null;
+    var upload = null;
+
+    layui.use(['table','laypage', 'layer', 'form', 'upload'], function(){
+        var table = layui.table;
+        layer = layui.layer;
+        $ = layui.jquery;
+        form = layui.form;
+        upload = layui.upload;
+
+        //todo 步骤一, 请求数据,进行表格渲染
+        table.render({
+            elem: '#fileListTable'
+            ,height: 'full-20'
+            ,url: 'releaseLogList.json' //数据接口
+            // ,method:'POST'   //laui 修改请求方式
+            // ,request: {
+            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
+            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            // }
+            // , response: {
+            //     statusName: 'code' //数据状态的字段名称，默认：code
+            //     ,countName: 'count' //数据总数的字段名称，默认：count
+            //     ,dataName: 'data' //默数据列表的字段名称，默认：data
+            //
+            // }
+            ,title: '用户表'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+                ,{field: 'version', title: '版本'}
+                ,{field: 'content', title: '更新内容'}
+                ,{field: 'createTime', title: '更新时间', sort: true}
+                ,{title: '操作', width: 100, sort: false, toolbar: '#barDemo', event:'aa', fixed: 'right'}
+            ]],
+            toolbar: '#barDemo2',
+            totalRow: false,
+        });
+
+        //todo 步骤二  监听事件, '操作'单元格的事件
+        table.on('tool(fileListTable)', function(obj){
+            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            var data = obj.data;
+            switch(eventType){
+                case 'del':
+                    layer.msg('删除');
+                    break;
+                case 'edit':
+                    layer.msg('编辑');
+                    break;
+            };
+        });
+
+        //todo 步骤三 监听工具栏事件
+        table.on('toolbar(fileListTable)', function(obj){
+            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            var data = obj.data;
+            switch(eventType){
+                case 'new':
+                    layer.msg('新增');
+                    chooseFile();
+                    break;
+            };
+        });
+
+    });
+
+
+    function chooseFile() {
+        var div = $('#uploadDiv').html();
+        // parent.layer.confirm(div, {
+        parent.layer.open({
+            content: div,
+            btn: ['提交','取消'], //按钮
+            title: '文件上传',
+            skin: 'layui-layer-lan',
+            area: ['500px','600px'],
+            anim: 1,
+            yes: function(index, layero){
+                //按钮【按钮一】的回调
+                var body = layer.getChildFrame('body', index);
+                var f = body.find("#commentForm").length;//f会等于1 说明可以获取到id=form表单的长度
+                parent.layer.msg(f);
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                layer.msg('222');
+                //return false 开启该代码可禁止点击该按钮关闭
+            }
+            ,cancel: function(){
+                //右上角关闭回调
+                layer.msg('333');
+                //return false 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+
+                //多文件列表示例
+                var divElem = layero[0];
+
+                var demoListView = $(divElem).find('#demoList')
+                    ,uploadListIns = upload.render({
+                    elem: $(divElem).find('#testList')
+                    ,url: 'upload/'
+                    ,accept: 'file'
+                    ,multiple: true
+                    ,auto: false
+                    ,bindAction: $(divElem).find('#testListAction')
+                    ,choose: function(obj){
+                        var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                        //读取本地文件
+                        obj.preview(function(index, file, result){
+                            var tr = $(['<tr id="upload-'+ index +'">'
+                                ,'<td>'+ file.name +'</td>'
+                                ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+                                ,'<td>等待上传</td>'
+                                ,'<td>'
+                                ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                                ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                ,'</td>'
+                                ,'</tr>'].join(''));
+
+                            //单个重传
+                            tr.find('.demo-reload').on('click', function(){
+                                obj.upload(index, file);
+                            });
+
+                            //删除
+                            tr.find('.demo-delete').on('click', function(){
+                                delete files[index]; //删除对应的文件
+                                tr.remove();
+                                uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                            });
+
+                            demoListView.append(tr);
+                        });
+                    }
+                    ,done: function(res, index, upload){
+                        if(res.code == 0){ //上传成功
+                            var tr = demoListView.find('tr#upload-'+ index)
+                                ,tds = tr.children();
+                            tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                            tds.eq(3).html(''); //清空操作
+                            return delete this.files[index]; //删除文件队列已经上传成功的文件
+                        }
+                        this.error(index, upload);
+                    }
+                    ,error: function(index, upload){
+                        var tr = demoListView.find('tr#upload-'+ index)
+                            ,tds = tr.children();
+                        tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                        tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                    }
+                });
+            }
+        });
+
+    }
+
+</script>
+
+</body>
+</html>

@@ -32,9 +32,10 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delMore">批量删除</a>
 </script>
 <script>
-    layui.use(['table','laypage'], function(){
+    var layer;
+    layui.use(['table', 'layer'], function(){
         var table = layui.table;
-        var laypage = layui.laypage;
+        layer = layui.layer;
 
         //第一个实例
         table.render({
@@ -71,7 +72,51 @@
             totalRow: false,
         });
 
+
+        //todo 步骤三 监听工具栏事件
+        table.on('toolbar(articleListTable)', function(obj){
+            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            switch(eventType){
+                case 'new':
+                    layer.msg('新增');
+                    // window.location.href = './articleForm.html';
+                    loadMarkdown();
+                    break;
+            };
+        });
     });
+
+
+    function loadMarkdown() {
+        var confirm = parent.layer.confirm('articleManage/articleForm.html', {
+            type: 2,
+            btn: ['提交','取消'], //按钮
+            title: '新增文章',
+            skin: 'layui-layer-lan',
+            // area: '500px',
+            // area: 'auto',
+            area: ['50%', '50%'],
+            maxmin: true,
+            yes: function(index, layero){
+                //按钮【按钮一】的回调
+                parent.layer.msg('提交按钮');
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('取消按钮');
+                // return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                parent.layer.full(confirm);//默认最大化
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
