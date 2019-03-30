@@ -22,14 +22,41 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 
-    <!-- 这里同样支持 laytpl 语法，如： -->
-  <!--  {{#  if(d.auth > 2){ }}
-    <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
-    {{#  } }}-->
 </script>
 <script type="text/html" id="barDemo2">
-    <a class="layui-btn layui-btn-xs" lay-event="new">新增</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delMore">批量删除</a>
+    <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="new">
+        <i class="layui-icon">&#xe608;</i> 新增
+    </a>
+    <a class="layui-btn  layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delMore">
+        <i class="layui-icon">&#xe640;</i> 批量删除
+    </a>
+</script>
+<script type="text/html" id="isCommentTpl">
+    {{#
+        var checkedFn = function(){
+        return d.isComment ? 'checked':'';
+        };
+    }}
+    <!--lay-text="开启|关闭"-->
+    <input type="checkbox" name="isComment" lay-skin="switch"    {{ checkedFn() }} >
+</script>
+<script type="text/html" id="isRecommendationTpl">
+    {{#
+    var checkedFn = function(){
+    return d.isRecommendation ? 'checked':'';
+    };
+    }}
+    <!--lay-text="开启|关闭"-->
+    <input type="checkbox" name="isRecommendation" lay-skin="switch"    {{ checkedFn() }} >
+</script>
+<script type="text/html" id="isTopTpl">
+    {{#
+    var checkedFn = function(){
+    return d.isTop ? 'checked':'';
+    };
+    }}
+    <!--lay-text="开启|关闭"-->
+    <input type="checkbox" name="isTop" lay-skin="switch"    {{ checkedFn() }} >
 </script>
 <script>
     var layer;
@@ -57,15 +84,15 @@
             ,page: true //开启分页
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'},
-                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-                ,{field: 'username', title: '用户名', width:80}
-                ,{field: 'sex', title: '性别', width:80, sort: true}
-                ,{field: 'city', title: '城市', width:80}
-                ,{field: 'sign', title: '签名', width: 177}
-                ,{field: 'experience', title: '积分', width: 80, sort: true}
-                ,{field: 'score', title: '评分', width: 80, sort: true}
-                ,{field: 'classify', title: '职业', width: 80}
-                ,{field: 'wealth', title: '财富', width: 135, sort: true}
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
+                ,{field: 'title', title: '标题', width:80}
+                ,{field: 'isComment', title: '评论', sort: true, templet: '#isCommentTpl'}
+                ,{field: 'isRecommendation', title: '推荐', templet: '#isRecommendationTpl'}
+                ,{field: 'isTop', title: '置顶', templet: '#isTopTpl'}
+                ,{field: 'browseNum', title: '浏览量', sort: true}
+                ,{field: 'commentNum', title: '评论量', sort: true}
+                ,{field: 'likeNum', title: '喜欢', sort: true}
+                ,{field: 'createDate', title: '发布时间', width: 135, sort: true}
                 ,{title: '操作', width: 155, sort: false, toolbar: '#barDemo', fixed: 'right'}
             ]],
             toolbar: '#barDemo2',
