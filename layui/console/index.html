@@ -55,14 +55,14 @@
             <ul class="layui-nav layui-nav-tree "  lay-filter="leftNav" lay-shrink="all">
 
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a href="javascript:;" layui-url="./articleManage/articleList.html"><i class="layui-icon layui-icon-home"></i>&nbsp;&nbsp;首页</a>
+                    <a href="javascript:;" layui-url="./articleManage/categoryList.html"><i class="layui-icon layui-icon-home"></i>&nbsp;&nbsp;首页</a>
                 </li>
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;"><i class="layui-icon layui-icon-read"></i>&nbsp;&nbsp;文章管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;" layui-url="./articleManage/articleList.html">&nbsp;&nbsp;文章列表</a></dd>
-                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;标签列表</a></dd>
-                        <dd><a href="javascript:;" layui-url="">&nbsp;&nbsp;分类列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="./articleManage/categoryList.html">&nbsp;&nbsp;分类列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="./articleManage/tagList.html">&nbsp;&nbsp;标签列表</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -194,7 +194,7 @@
             var url = elem[0].attributes['layui-url'];
             if (url == null || url == '') {
                 console.log('不是二级菜单');
-                // return;  //不是二级菜单, 不新增选项卡
+                return;  //不是二级菜单, 不新增选项卡
             } else {
                 url = url.value;
             }
@@ -202,7 +202,7 @@
         });
 
         //todo 步骤二  页面初始化时, 加载'首页'
-        activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./articleManage/articleList.html");
+        activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./articleManage/categoryList.html");
 
     });
 
