@@ -1,3 +1,8 @@
 # myBlog
-博客系统, 后台页面使用extjs, 前台页面待定, 后台框架使用springboot+spring+mybatis
-愿望功能: 后台使用自定义注解+反射, 仿jpa, 调用mybatis
+
+master: 此主干只存放【手机端展示页面，pc端前台展示页面，pc端后台页面】
+
+其它分支：都从主干拉取，主要是后台框架，分支名根据后台框架技术取名，例如：
+    【springboot+spring+mybatis，springboot+spring+jpa】等
+   
+
