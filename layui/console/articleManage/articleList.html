@@ -17,12 +17,19 @@
 
 
 <script src="../../layui/layui.js"></script>
-<script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 
+<!-- 行的按钮 -->
+<script type="text/html" id="barDemo">
+    <!--<a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
+    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
+        <i class="layui-icon">&#xe642;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
 </script>
+
+<!-- 上方工具条 -->
 <script type="text/html" id="barDemo2">
     <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="new">
         <i class="layui-icon">&#xe608;</i> 新增
@@ -93,12 +100,26 @@
                 ,{field: 'commentNum', title: '评论量', sort: true}
                 ,{field: 'likeNum', title: '喜欢', sort: true}
                 ,{field: 'createDate', title: '发布时间', width: 135, sort: true}
-                ,{title: '操作', width: 155, sort: false, toolbar: '#barDemo', fixed: 'right'}
+                ,{title: '操作', width: 100, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
             totalRow: false,
         });
 
+        //todo 步骤二  监听事件, '操作'单元格的事件
+        table.on('tool(articleListTable)', function(obj){
+            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            var data = obj.data;
+            switch(eventType){
+                case 'del':
+                    layer.msg('删除');
+                    break;
+                case 'edit':
+                    layer.msg('编辑');
+                    editForm(data);
+                    break;
+            };
+        });
 
         //todo 步骤三 监听工具栏事件
         table.on('toolbar(articleListTable)', function(obj){
@@ -117,7 +138,7 @@
     function loadMarkdown() {
         var confirm = parent.layer.confirm('articleManage/articleForm.html', {
             type: 2,
-            btn: ['提交','取消'], //按钮
+            btn: ['提交','保存草稿','取消'], //按钮
             title: '新增文章',
             skin: 'layui-layer-lan',
             // area: '500px',
@@ -129,6 +150,11 @@
                 parent.layer.msg('提交按钮');
             }
             ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('保存草稿按钮');
+                return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,btn3: function(index, layero){
                 //按钮【按钮二】的回调
                 parent.layer.msg('取消按钮');
                 // return false;  //开启该代码可禁止点击该按钮关闭

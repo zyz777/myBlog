@@ -3,50 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
-    <title>标签列表</title>
+    <title>Title</title>
     <link rel="stylesheet" href="../../layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
 
 <div>
 
-    <table id="tagList" lay-filter="tagList">
+    <table id="articleDraftListTable" lay-filter="articleDraftListTable">
     </table>
 
 </div>
 
 
 <script src="../../layui/layui.js"></script>
-<!-- 行的按钮 -->
 <script type="text/html" id="barDemo">
-   <!-- <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
-   <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
-       <i class="layui-icon">&#xe642;</i>
-   </a>
-   <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
-       <i class="layui-icon">&#xe640;</i>
-   </a>
+    <a class="layui-btn layui-btn-xs layui-icon layui-icon-ok-circle" lay-event="submit" title="提交"></a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
+        <i class="layui-icon">&#xe642;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
 </script>
-
-<!-- 上方工具条 -->
 <script type="text/html" id="barDemo2">
     <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="new">
-        <i class="layui-icon">&#xe608;</i> 新增
+        <i class="layui-icon">&#x1005;</i> 批量提交
     </a>
     <a class="layui-btn  layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delMore">
         <i class="layui-icon">&#xe640;</i> 批量删除
     </a>
 </script>
 <script>
-    layui.use(['table','laypage'], function(){
+    var layer;
+    layui.use(['table', 'layer'], function(){
         var table = layui.table;
-        var laypage = layui.laypage;
+        layer = layui.layer;
 
         //第一个实例
         table.render({
-            elem: '#tagList'
+            elem: '#articleDraftListTable'
             ,height: 'full-20'
-            ,url: 'tagList.json' //数据接口
+            ,url: 'articleList.json' //数据接口
             // ,method:'POST'   //laui 修改请求方式
             // ,request: {
             //     pageName: 'currentPageNo' //页码的参数名称，默认：page
@@ -62,9 +60,10 @@
             ,page: true //开启分页
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'},
-                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-                ,{field: 'name', title: '名称', width:80}
-                ,{field: 'descn', title: '描述', width:80, sort: true}
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
+                ,{field: 'title', width: 155, title: '标题', width:80}
+                ,{field: 'createDate', width: 155, title: '创建时间', width: 135, sort: true}
+                ,{field: 'createDate', width: 155, title: '修改时间', width: 135, sort: true}
                 ,{title: '操作', width: 155, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
@@ -72,7 +71,7 @@
         });
 
         //todo 步骤二  监听事件, '操作'单元格的事件
-        table.on('tool(tagList)', function(obj){
+        table.on('tool(articleDraftListTable)', function(obj){
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             var data = obj.data;
             switch(eventType){
@@ -85,8 +84,9 @@
                     break;
             };
         });
+
         //todo 步骤三 监听工具栏事件
-        table.on('toolbar(tagList)', function(obj){
+        table.on('toolbar(articleDraftListTable)', function(obj){
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             switch(eventType){
                 case 'new':
@@ -97,6 +97,43 @@
             };
         });
     });
+
+
+    function loadMarkdown() {
+        var confirm = parent.layer.confirm('articleManage/articleForm.html', {
+            type: 2,
+            btn: ['提交','保存草稿','取消'], //按钮
+            title: '新增文章',
+            skin: 'layui-layer-lan',
+            // area: '500px',
+            // area: 'auto',
+            area: ['50%', '50%'],
+            maxmin: true,
+            yes: function(index, layero){
+                //按钮【按钮一】的回调
+                parent.layer.msg('提交按钮');
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('保存草稿按钮');
+                return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,btn3: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('取消按钮');
+                // return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                parent.layer.full(confirm);//默认最大化
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
