@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Zyz777 Blog 后台管理系统</title>
     <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        .container{
+            border: 1px solid #000;
+            display: -webkit-flex; /* Safari */
+            display: flex;
+            justify-content: space-evenly;
+            /*width: 400px;*/
+            /*height: 100px;*/
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
@@ -12,7 +22,16 @@
         <div class="layui-logo"><h1>Zyz777 Blog</h1></div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-rmb"></i>请博主大宝剑</a></li>
+            <li class="layui-nav-item" onmouseover="showDBJ()" onmouseout="hideDBJ()"><a href=""><i class="layui-icon layui-icon-rmb"></i>请博主大宝剑</a>
+                <div style="display: none; position: absolute; float: left; background-color: wheat;"   class="container" id="dbjDiv">
+                    <div class="item" style="margin-right: 10px;">
+                        <img src="../third-plugin/image/wechat_pay.png" height="350">
+                    </div>
+                    <div class="item">
+                        <img src="../third-plugin/image/ali_pay.jpg" height="350">
+                    </div>
+                </div>
+            </li>
             <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-home"></i>访问前台</a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">其它操作</a>
@@ -133,12 +152,14 @@
 <script src="../layui/layui.js"></script>
 <script>
 
+    var $;
+
     //JavaScript代码区域
     layui.config({
         base: '../third-plugin/tabrightmenu/module/',
     }).use(['element','layer', 'tabrightmenu',  'form'], function(){
         var element = layui.element;
-        var $ = layui.$;
+        $ = layui.$;
         var layer = layui.layer;//给 iframe 弹窗 或其它使用
         var form = layui.form;//给 iframe 弹窗 或其它使用
 
@@ -225,6 +246,21 @@
         }
         console.log('高度是: ' +  iframe.height) ;
     };
+
+    /*
+    * 显示"大宝剑"div
+    * */
+    function showDBJ() {
+        console.log('show');
+        $('#dbjDiv').show();
+    }
+    /*
+   * 隐藏"大宝剑"div
+   * */
+    function hideDBJ() {
+        console.log('hide');
+        $('#dbjDiv').hide();
+    }
 
 </script>
 </body>
