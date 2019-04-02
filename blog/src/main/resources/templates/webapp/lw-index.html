@@ -24,7 +24,7 @@
         .blog-slider-con {
             padding: 0rem 0rem;
         }
-        .blog-continue {
+        /*.blog-continue {
             margin: 0 7px 10px 0;
             display: inline-block;
             height: 38px;
@@ -49,7 +49,13 @@
 
             font-family: inherit;
             font-style: inherit;
-            /*font-weight: inherit;*/
+        }*/
+        .am-thumbnail {
+            margin-bottom: 0rem;
+        }
+        .am-thumbnail-caption {
+            text-align: center;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -68,7 +74,7 @@
     <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
 
     <div class="am-collapse am-topbar-collapse" id="blog-collapse">
-        <ul class="am-nav am-nav-pills am-topbar-nav">
+        <ul class="am-nav am-nav-pills am-topbar-nav "><!-- am-nav-tabs -->
             <li class="am-active"><a href="lw-index.html">首页</a></li>
             <li class="am-dropdown" data-am-dropdown>
                 <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
@@ -90,8 +96,11 @@
             <li><a href="lw-article.html">归档(时间轴)</a></li>
         </ul>
         <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
-            <div class="am-form-group">
+            <div class="am-input-group am-input-group-primary">
                 <input type="text" class="am-form-field am-input-sm" placeholder="搜索">
+                <span class="am-input-group-btn">
+                    <button class="am-btn am-btn-primary" type="button"><span class="am-icon-search"></span></button>
+                  </span>
             </div>
         </form>
     </div>
@@ -104,8 +113,8 @@
 <div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-article-margin">
     <div data-am-widget="slider" class="am-slider am-slider-b1" data-am-slider='{&quot;controlNav&quot;:false}' >
     <ul class="am-slides" ><!--  style="font-size: 1rem" -->
-      <li>
-            <img src="assets/i/b1.jpg">
+      <li >
+          <!--  <img src="assets/i/b1.jpg">
             <div class="blog-slider-desc am-slider-desc ">
                 <div class="blog-text-center blog-slider-con">
                     <span><a href="" class="blog-color">Article &nbsp;</a></span>
@@ -114,43 +123,29 @@
                     </p>
                     <span class="blog-bor">2015/10/9</span>
                 </div>
-            </div>
+            </div>-->
+          <div class="am-thumbnail">
+              <img src="assets/i/b1.jpg">
+              <h3 class="am-thumbnail-caption">总在思考一句积极的话</h3>
+          </div>
       </li>
       <li>
-            <img src="assets/i/b2.jpg">
-            <div class="am-slider-desc blog-slider-desc">
-                <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
-                    </p>
-                    <span>2015/10/9</span>
-                </div>
-            </div>
+          <div class="am-thumbnail">
+              <img src="assets/i/b2.jpg">
+              <h3 class="am-thumbnail-caption">总在思考一句积极的话</h3>
+          </div>
       </li>
       <li>
-            <img src="assets/i/b3.jpg">
-            <div class="am-slider-desc blog-slider-desc">
-                <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
-                    </p>
-                    <span>2015/10/9</span>
-                </div>
-            </div>
+          <div class="am-thumbnail">
+              <img src="assets/i/b3.jpg">
+              <h3 class="am-thumbnail-caption">总在思考一句积极的话</h3>
+          </div>
       </li>
       <li>
-            <img src="assets/i/b2.jpg">
-            <div class="am-slider-desc blog-slider-desc">
-                <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
-                    </p>
-                    <span>2015/10/9</span>
-                </div>
-            </div>
+          <div class="am-thumbnail">
+              <img src="assets/i/b2.jpg">
+              <h3 class="am-thumbnail-caption">总在思考一句积极的话</h3>
+          </div>
       </li>
     </ul>
     </div>
@@ -166,8 +161,7 @@
                 <img src="assets/i/f10.jpg" alt="" class="am-u-sm-12">
             </div>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <!--<span><a href="" class="blog-color">article &nbsp;</a></span>-->
-                <!--<span> @amazeUI &nbsp;</span>-->
+                <span class="am-badge am-badge-danger am-radius">new</span>
                 <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;2015/10/9</span>
                 &nbsp;
                 <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;">1234567890</span>
@@ -176,7 +170,7 @@
                     我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。
                     我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。
                 </p>
-                <p>
+                <p >
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;spring</a>
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;java</a>
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;html</a>
@@ -185,7 +179,7 @@
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;mybatis</a>
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;springboot</a>
                 </p>
-                <p><a href="" class="blog-continue"><img src="../third-plugin/image/read1.svg" style="width: 2.5rem;">&nbsp;&nbsp;continue reading</a></p>
+                <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2.5rem;">&nbsp;&nbsp;continue reading</a></p>
             </div>
         </article>
 
@@ -194,9 +188,6 @@
                 <img src="assets/i/f6.jpg" alt="" class="am-u-sm-12">
             </div>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <!--<span><a href="" class="blog-color">article&nbsp;</a></span>-->
-                <!--<span>@amazeUI &nbsp;</span>-->
-                <!--<span>2015/10/9</span>-->
                 <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;2015/10/9</span>
                 &nbsp;
                 <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;">1234567890</span>
@@ -212,7 +203,7 @@
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;mybatis</a>
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;springboot</a>
                 </p>
-                <p><a href="" class="blog-continue"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
+                <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
             </div>
         </article>
 
@@ -221,9 +212,7 @@
                 <img src="assets/i/f12.jpg" alt="" class="am-u-sm-12">
             </div>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <!--<span><a href="" class="blog-color">article&nbsp;</a></span>-->
-                <!--<span>@amazeUI</span>-->
-                <!--<span>2015/10/9</span>-->
+                <span class="am-badge am-badge-danger am-radius">new</span>
                 <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;2015/10/9</span>
                 &nbsp;
                 <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;">1234567890</span>
@@ -239,129 +228,42 @@
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;mybatis</a>
                     <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;springboot</a>
                 </p>
-                <p><a href="" class="blog-continue"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
+                <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
             </div>
         </article>
 
-        <article class="am-g blog-entry-article">
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
-                <img src="assets/i/f22.jpg" alt="" class="am-u-sm-12">
-            </div>
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <!--<span><a href="" class="blog-color">article&nbsp;</a></span>-->
-                <!--<span>@amazeUI</span>-->
-                <!--<span>2015/10/9</span>-->
-                <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;2015/10/9</span>
-                &nbsp;
-                <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;">1234567890</span>
-                <h1><a href="">爱自己是终生浪漫的开始</a></h1>
-                <p>the whole of life becomes an act of letting go, but what always hurts the most is not taking a moment to say goodbye
-                </p>
-                <p>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;spring</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;java</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;html</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;javascript</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;js</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;mybatis</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;springboot</a>
-                </p>
-                <p><a href="" class="blog-continue"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
-            </div>
-        </article>
 
-        <article class="am-g blog-entry-article">
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
-                <img src="assets/i/f18.jpg" alt="" class="am-u-sm-12">
-            </div>
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <!--<span><a href="" class="blog-color">article&nbsp;</a></span>-->
-                <!--<span> @amazeUI &nbsp;</span>-->
-                <!--<span>2015/10/9</span>-->
-                <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;2015/10/9</span>
-                &nbsp;
-                <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;">1234567890</span>
-                <h1><a href="">My dear amazeUI, Hello </a></h1>
-                <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。我们就在骑楼下躲雨，看绿色的邮筒孤独地站在街的对面。
-                </p>
-                <p>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;spring</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;java</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;html</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;javascript</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;js</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;mybatis</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;springboot</a>
-                </p>
-                <p><a href="" class="blog-continue"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
-            </div>
-        </article>
 
-        <article class="am-g blog-entry-article">
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
-                <img src="assets/i/f20.jpg" alt="" class="am-u-sm-12">
-            </div>
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <!--<span><a href="" class="blog-color">article&nbsp;</a></span>-->
-                <!--<span> @amazeUI &nbsp;</span>-->
-                <!--<span>2015/10/9</span>-->
-                <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;2015/10/9</span>
-                &nbsp;
-                <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;">1234567890</span>
-                <h1><a href="">My way or the highway</a></h1>
-                <p>A big wind rises， clouds are driven away. Home am Inow the world is under my sway. Where are brave men to guard the four frontiers today！ 
-                </p>
-                <p>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;spring</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;java</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;html</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;javascript</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;js</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;mybatis</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;springboot</a>
-                </p>
-                <p><a href="" class="blog-continue"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
-            </div>
-        </article>
 
-         <article class="am-g blog-entry-article">
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
-                <img src="assets/i/f19.jpg" alt="" class="am-u-sm-12">
-            </div>
-            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <!--<span><a href="" class="blog-color">article&nbsp;</a></span>-->
-                <!--<span> @amazeUI &nbsp;</span>-->
-                <!--<span>2015/10/9</span>-->
-                <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;2015/10/9</span>
-                &nbsp;
-                <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;">1234567890</span>
-                <h1><a href="">一想到你，我这张丑脸上就泛起微笑</a></h1>
-                <p>那一天我二十一岁，在我一生的黄金时代。我有好多奢望。我想爱，想吃，还想在一瞬间变成天上半明半暗的云。
-                </p>
-                <p>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;spring</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;java</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;html</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;javascript</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;js</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;mybatis</a>
-                    <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;springboot</a>
-                </p>
-                <p><a href="" class="blog-continue"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
-            </div>
-        </article>
-        
-        <ul class="am-pagination">
-  <li class="am-pagination-prev"><a href="">&laquo; Prev</a></li>
-  <li class="am-pagination-next"><a href="">Next &raquo;</a></li>
-</ul>
+
+        <ul class="am-pagination am-pagination-centered">
+            <!-- class="am-pagination-prev" -->
+            <li ><a href="">&laquo; Prev</a></li>
+            <li class="am-active"><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li><a href="#">6</a></li>
+            <li><a href="#">7</a></li>
+            <li><a href="#">8</a></li>
+            <li><a href="#">9</a></li>
+            <li><a href="#">10</a></li>
+            <li><a href="#">11</a></li>
+            <li><a href="#">12</a></li>
+            <li><a href="#">13</a></li>
+            <li><a href="#">14</a></li>
+            <li><a href="#">15</a></li>
+            <!-- class="am-pagination-next" -->
+            <li ><a href="">Next &raquo;</a></li>
+        </ul>
     </div>
 
     <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
         <div class="blog-sidebar-widget blog-bor">
             <h2 class="blog-text-center blog-title"><span>About ME</span></h2>
             <!--<img src="assets/i/f14.jpg" alt="about me" class="blog-entry-img" >-->
-            <img src="../third-plugin/image/ying2.png" alt="嘤剑士-阿修萝" title="嘤剑士-阿修萝" class="blog-entry-img" >
+            <img src="../third-plugin/image/ying2.png" alt="嘤剑士-阿修萝" title="嘤剑士-阿修萝" class="blog-entry-img am-img-thumbnail" >
             <p>嘤剑士-阿修萝</p>
             <p>
                 这里是个性签名
@@ -410,7 +312,7 @@
 
 
     <a href="#">
-        <img src="../third-plugin/image/top.svg" title="top" style="width: 3rem;height: 3rem;position: fixed;bottom: 2rem;right: 0.5rem;z-index: 9999;" />
+        <img src="../third-plugin/image/top.svg" title="top" style="width: 5rem;height: 5rem;position: fixed;bottom: 2rem;right: 0.5rem;z-index: 9999;" />
     </a>
 </div>
 <!-- content end -->
