@@ -27,6 +27,10 @@
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
     <link type="text/css" rel="stylesheet" href="../third-plugin/KaTeX/0.3.0/katex.min.css">
     <script id="-cdnjs-cloudflare-com-ajax-libs-KaTeX-0-3-0-katex-min" type="text/javascript" src="../third-plugin/KaTeX/0.3.0/katex.min.js"></script>
+
+    <style>
+
+    </style>
 </head>
 
 <body id="blog-article-sidebar">
@@ -42,39 +46,41 @@
 
 <!-- nav start -->
 <nav class="am-g am-g-fixed blog-fixed blog-nav">
-<button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
 
-  <div class="am-collapse am-topbar-collapse" id="blog-collapse">
-    <ul class="am-nav am-nav-pills am-topbar-nav">
-      <li class="am-active"><a href="lw-index.html">首页</a></li>
-      <li class="am-dropdown" data-am-dropdown>
-        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-          首页布局 <span class="am-icon-caret-down"></span>
-        </a>
-        <ul class="am-dropdown-content">
-          <li><a href="lw-index.html">1. blog-index-standard</a></li>         
-          <li><a href="lw-index-nosidebar.html">2. blog-index-nosidebar</a></li>
-          <li><a href="lw-index-center.html">3. blog-index-layout</a></li>
-          <li><a href="lw-index-noslider.html">4. blog-index-noslider</a></li>
+    <div class="am-collapse am-topbar-collapse" id="blog-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav">
+            <li><a href="lw-index.html">首页</a></li>
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    首页布局 <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <li><a href="lw-index.html">1. blog-index-standard</a></li>
+                    <li><a href="lw-index-nosidebar.html">2. blog-index-nosidebar</a></li>
+                    <li><a href="lw-index-center.html">3. blog-index-layout</a></li>
+                    <li><a href="lw-index-noslider.html">4. blog-index-noslider</a></li>
+                </ul>
+            </li>
+            <li class="am-active"><a href="lw-article.html">标准文章</a></li>
+            <li><a href="lw-img.html">图片库</a></li>
+            <li><a href="lw-article-fullwidth.html">全宽页面</a></li>
+            <li><a href="lw-timeline.html">存档</a></li>
         </ul>
-      </li>
-      <li><a href="lw-article.html">标准文章</a></li>
-      <li><a href="lw-img.html">图片库</a></li>
-      <li><a href="lw-article-fullwidth.html">全宽页面</a></li>
-      <li><a href="lw-timeline.html">存档</a></li>
-    </ul>
-    <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
-      <div class="am-form-group">
-        <input type="text" class="am-form-field am-input-sm" placeholder="搜索">
-      </div>
-    </form>
-  </div>
+        <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
+            <div class="am-form-group">
+                <input type="text" class="am-form-field am-input-sm" placeholder="搜索">
+            </div>
+        </form>
+    </div>
+
 </nav>
+
 <!-- nav end -->
 <hr>
 <!-- content srart -->
 <div class="am-g am-g-fixed blog-fixed blog-content">
-    <div class="am-u-md-8 am-u-sm-12">
+    <div id="showFullWidthDiv1" class="am-u-md-8 am-u-sm-12">
       <article class="am-article blog-article-p">
         <div class="am-article-hd">
           <h1 class="am-article-title blog-text-center">我的文章哎</h1>
@@ -88,7 +94,9 @@
         <img src="assets/i/f10.jpg" alt="" class="blog-entry-img blog-article-margin">          
         <!--<p class="class="am-article-lead"">-->
             <div class="am-article-lead"><!-- class="am-article-lead" -->
-
+                <a href="#" onclick="showFullWidthDiv()">
+                    <img src="../third-plugin/image/full-screen.svg" title="全屏" style="width: 3rem;height: 3rem;  bottom: 2rem;right: 0.5rem;float: right;" />
+                </a>
                 <div id="layout">
                     <div class="btns">
                         <button onclick="location.href='./html-preview-markdown-to-html-custom-toc-container.html';">将 ToC 移到自定义容器层</button>
@@ -155,7 +163,9 @@
         <hr>
     </div>
 
-    <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
+
+
+    <div id="showFullWidthDiv2" class="am-u-md-4 am-u-sm-12 blog-sidebar">
         <div class="blog-sidebar-widget blog-bor">
             <h2 class="blog-text-center blog-title"><span>About ME</span></h2>
             <img src="assets/i/f161.jpg" alt="about me" class="blog-entry-img" >
@@ -260,7 +270,24 @@
 <script src="../third-plugin/editor.md/lib/flowchart.min.js"></script>
 <script src="../third-plugin/editor.md/lib/jquery.flowchart.min.js"></script>
 <script src="../third-plugin/editor.md/editormd.js"></script>
+
+<script>
+    // $("#top_nav").load('index/top-nav.html');
+</script>
+
+
 <script type="text/javascript">
+    function showFullWidthDiv() {
+        var v1 = $("#showFullWidthDiv1").hasClass('am-u-md-8');
+        console.log(v1);
+        if (v1) {
+            $("#showFullWidthDiv2").hide();
+            $("#showFullWidthDiv1").removeClass('am-u-md-8');
+        } else {
+            $("#showFullWidthDiv1").addClass('am-u-md-8');
+            $("#showFullWidthDiv2").show();
+        }
+    }
     $(function() {
         var testEditormdView;
 
