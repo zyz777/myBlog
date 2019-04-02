@@ -260,29 +260,38 @@
         </div>
         <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g ">
             <h2 class="blog-title"><span>TAG cloud</span></h2>
-            <div class="am-u-sm-12 blog-clear-padding">
-            <a href="" class="blog-tag">amaze</a>
+            <div id="TAG_cloud" class="am-u-sm-12 blog-clear-padding">
+         <!--   <a href="" class="blog-tag">amaze</a>
             <a href="" class="blog-tag">妹纸 UI</a>
             <a href="" class="blog-tag">HTML5</a>
             <a href="" class="blog-tag">这是标签</a>
             <a href="" class="blog-tag">Impossible</a>
-            <a href="" class="blog-tag">开源前端框架</a>
+            <a href="" class="blog-tag">开源前端框架</a>-->
             </div>
         </div>
         <div class="blog-sidebar-widget blog-bor">
-            <h2 class="blog-title"><span>么么哒</span></h2>
-            <ul class="am-list">
-                <li><a href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a></li>
+            <h2 class="blog-title"><span>Recommend</span></h2>
+            <ul class="am-list" id="recommend_ul" style="text-align: left">
+               <!-- <li><a href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a></li>
                 <li><a href="#">我把最深沉的秘密放在那里。</a></li>
                 <li><a href="#">你不懂我，我不怪你。</a></li>
-                <li><a href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a></li>
+                <li><a href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a></li>-->
+            </ul>
+        </div>
+        <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-title"><span>Hot</span></h2>
+            <ul class="am-list" id="hot_ul" style="text-align: left">
+                <!--<li><a href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a></li>
+                <li><a href="#">我把最深沉的秘密放在那里。</a></li>
+                <li><a href="#">你不懂我，我不怪你。</a></li>
+                <li><a href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a></li>-->
             </ul>
         </div>
     </div>
 
 
     <a href="#">
-        <img src="../third-plugin/image/top.png" title="top" style="width: 3rem;height: 3rem;position: fixed;bottom: 2rem;right: 0.5rem;z-index: 9999;" />
+        <img src="../third-plugin/image/top.svg" title="top" style="width: 3rem;height: 3rem;position: fixed;bottom: 2rem;right: 0.5rem;z-index: 9999;" />
     </a>
 </div>
 <!-- content end -->
@@ -290,12 +299,13 @@
 
 
   <footer class="blog-footer">
+
     <div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-footer-padding">
-        <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
+       <!-- <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
             <h3>模板简介</h3>
             <p class="am-text-sm">这是一个使用amazeUI做的简单的前端模板。<br> 博客/ 资讯类 前端模板 <br> 支持响应式，多种布局，包括主页、文章页、媒体页、分类页等<br>嗯嗯嗯，不知道说啥了。外面的世界真精彩<br><br>
             Amaze UI 使用 MIT 许可证发布，用户可以自由使用、复制、修改、合并、出版发行、散布、再授权及贩售 Amaze UI 及其副本。</p>
-        </div>
+        </div>-->
         <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
             <h3>社交账号</h3>
             <p>
@@ -305,10 +315,10 @@
                 <a href=""><span class="am-icon-reddit am-icon-fw blog-icon blog-icon"></span></a>
                 <a href=""><span class="am-icon-weixin am-icon-fw blog-icon blog-icon"></span></a>
             </p>
-            <h3>Credits</h3>
-            <p>我们追求卓越，然时间、经验、能力有限。Amaze UI 有很多不足的地方，希望大家包容、不吝赐教，给我们提意见、建议。感谢你们！</p>          
+            <!--<h3>Credits</h3>-->
+            <!--<p>我们追求卓越，然时间、经验、能力有限。Amaze UI 有很多不足的地方，希望大家包容、不吝赐教，给我们提意见、建议。感谢你们！</p>          -->
         </div>
-        <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
+       <!-- <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
               <h1>我们站在巨人的肩膀上</h1>
              <h3>Heroes</h3>
             <p>
@@ -320,9 +330,9 @@
                     <li>...</li>
                 </ul>
             </p>
-        </div>
-    </div>    
-    <div class="blog-text-center">© 2015 AllMobilize, Inc. Licensed under MIT license. Made with love By LWXYFER</div>    
+        </div>-->
+    </div>
+    <div class="blog-text-center">© 2019 Made with love By zyz</div>
   </footer>
 
 
@@ -333,7 +343,7 @@
 <script src="assets/js/jquery.min.js"></script>
 <!--<![endif]-->
 <!--[if lte IE 8 ]>
-<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<!--<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>-->
 
 <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
 <script src="assets/js/amazeui.ie8polyfill.min.js"></script>
@@ -342,6 +352,31 @@
 
 <script>
     // $("#top_nav").load('index/top-nav.html');
+    $.get('tagCloud.json', function (data) {
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var o = data[i];
+            html += ' <a href="'+o.url+'" class="blog-tag">'+o.label+'</a>';
+        }
+        $("#TAG_cloud").append(html);
+    });
+    $.get('recommend.json', function (data) {
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var o = data[i];
+            html += ' <li><a href="'+o.url+'"><img style="width: 2rem" src="../third-plugin/image/recommend.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
+        }
+        $("#recommend_ul").append(html);
+    });
+    $.get('recommend.json', function (data) {
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var o = data[i];
+            html += ' <li><a href="'+o.url+'"><img style="width: 2rem" src="../third-plugin/image/hot.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
+        }
+        $("#hot_ul").append(html);
+    });
+
 </script>
 
 </body>
