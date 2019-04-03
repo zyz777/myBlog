@@ -41,17 +41,23 @@
 <script type="text/html" id="isCommentTpl">
     {{#
         var checkedFn = function(){
-        return d.isComment ? 'checked':'';
+            if(d.isComment == null || d.isComment == '') {
+                return 'disabled';
+            }
+            return  d.isComment ? 'checked':'';
         };
     }}
     <!--lay-text="开启|关闭"-->
-    <input type="checkbox" name="isComment" lay-skin="switch"    {{ checkedFn() }} >
+    <input type="checkbox" name="isComment" lay-skin="switch"    {{ checkedFn() }}  >
 </script>
 <script type="text/html" id="isRecommendationTpl">
     {{#
-    var checkedFn = function(){
-    return d.isRecommendation ? 'checked':'';
-    };
+        var checkedFn = function(){
+            if(d.isRecommendation == null || d.isRecommendation == '') {
+            return 'disabled';
+            }
+           return d.isRecommendation ? 'checked':'';
+        };
     }}
     <!--lay-text="开启|关闭"-->
     <input type="checkbox" name="isRecommendation" lay-skin="switch"    {{ checkedFn() }} >
@@ -59,6 +65,9 @@
 <script type="text/html" id="isTopTpl">
     {{#
     var checkedFn = function(){
+    if(d.isTop == null || d.isTop == '') {
+    return 'disabled';
+    }
     return d.isTop ? 'checked':'';
     };
     }}

@@ -19,7 +19,7 @@
 <script src="../../layui/layui.js"></script>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs layui-icon layui-icon-ok-circle" lay-event="submit" title="提交"></a>
-    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
+    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="编辑">
         <i class="layui-icon">&#xe642;</i>
     </a>
     <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
@@ -44,26 +44,26 @@
         table.render({
             elem: '#articleDraftListTable'
             ,height: 'full-20'
-            ,url: 'articleList.json' //数据接口
+            // ,url: 'articleList.json' //数据接口
+            ,url: '/console/article/findDraftPage' //数据接口
             // ,method:'POST'   //laui 修改请求方式
             // ,request: {
             //     pageName: 'currentPageNo' //页码的参数名称，默认：page
             //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
             // }
-            // , response: {
-            //     statusName: 'code' //数据状态的字段名称，默认：code
-            //     ,countName: 'count' //数据总数的字段名称，默认：count
-            //     ,dataName: 'data' //默数据列表的字段名称，默认：data
-            //
-            // }
-            ,title: '用户表'
+            , response: {
+                statusName: 'code' //数据状态的字段名称，默认：code
+                ,countName: 'totalCount' //数据总数的字段名称，默认：count
+                ,dataName: 'data' //默数据列表的字段名称，默认：data
+            }
+            ,title: '文章草稿列表'
             ,page: true //开启分页
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
-                ,{field: 'title', width: 155, title: '标题', width:80}
-                ,{field: 'createDate', width: 155, title: '创建时间', width: 135, sort: true}
-                ,{field: 'createDate', width: 155, title: '修改时间', width: 135, sort: true}
+                ,{field: 'title', width: 170, title: '标题'}
+                ,{field: 'createTime', width: 170, title: '创建时间',  sort: true}
+                ,{field: 'updateTime', width: 170, title: '修改时间',  sort: true}
                 ,{title: '操作', width: 155, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
@@ -79,8 +79,9 @@
                     layer.msg('删除');
                     break;
                 case 'edit':
-                    layer.msg('编辑');
-                    editForm(data);
+                    loadMarkdown(data);
+                    break;
+                case 'submit':
                     break;
             };
         });
@@ -91,18 +92,19 @@
             switch(eventType){
                 case 'new':
                     layer.msg('新增');
-                    // window.location.href = './articleForm.html';
-                    loadMarkdown();
                     break;
             };
         });
     });
 
 
-    function loadMarkdown() {
-        var confirm = parent.layer.confirm('articleManage/articleForm.html', {
+    function loadMarkdown(data) {
+        var md = data.content;
+        var id = data.id;
+
+        var confirm = parent.layer.confirm('articleManage/articleModify.html', {
             type: 2,
-            btn: ['提交','保存草稿','取消'], //按钮
+            btn: ['保存草稿'], //按钮
             title: '新增文章',
             skin: 'layui-layer-lan',
             // area: '500px',
@@ -111,16 +113,18 @@
             maxmin: true,
             yes: function(index, layero){
                 //按钮【按钮一】的回调
-                parent.layer.msg('提交按钮');
-            }
-            ,btn2: function(index, layero){
-                //按钮【按钮二】的回调
-                parent.layer.msg('保存草稿按钮');
-                return false;  //开启该代码可禁止点击该按钮关闭
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                var status = contentWindow.saveDraft();
+                if (status != 'success') {
+                    return false;
+                }
             }
             ,btn3: function(index, layero){
                 //按钮【按钮二】的回调
-                parent.layer.msg('取消按钮');
+                parent.layer.msg('关闭');
                 // return false;  //开启该代码可禁止点击该按钮关闭
             }
             ,cancel: function(){
@@ -129,6 +133,12 @@
                 // return false; // 开启该代码可禁止点击该按钮关闭
             },
             success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                contentWindow.setIdAndMd(id, md);
+
                 parent.layer.full(confirm);//默认最大化
             }
         });

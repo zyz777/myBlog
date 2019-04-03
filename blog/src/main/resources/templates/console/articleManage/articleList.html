@@ -41,17 +41,23 @@
 <script type="text/html" id="isCommentTpl">
     {{#
         var checkedFn = function(){
-        return d.isComment ? 'checked':'';
+            if(d.isComment == null || d.isComment == '') {
+                return 'disabled';
+            }
+            return  d.isComment ? 'checked':'';
         };
     }}
     <!--lay-text="开启|关闭"-->
-    <input type="checkbox" name="isComment" lay-skin="switch"    {{ checkedFn() }} >
+    <input type="checkbox" name="isComment" lay-skin="switch"    {{ checkedFn() }}  >
 </script>
 <script type="text/html" id="isRecommendationTpl">
     {{#
-    var checkedFn = function(){
-    return d.isRecommendation ? 'checked':'';
-    };
+        var checkedFn = function(){
+            if(d.isRecommendation == null || d.isRecommendation == '') {
+            return 'disabled';
+            }
+           return d.isRecommendation ? 'checked':'';
+        };
     }}
     <!--lay-text="开启|关闭"-->
     <input type="checkbox" name="isRecommendation" lay-skin="switch"    {{ checkedFn() }} >
@@ -59,6 +65,9 @@
 <script type="text/html" id="isTopTpl">
     {{#
     var checkedFn = function(){
+    if(d.isTop == null || d.isTop == '') {
+    return 'disabled';
+    }
     return d.isTop ? 'checked':'';
     };
     }}
@@ -126,8 +135,6 @@
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             switch(eventType){
                 case 'new':
-                    layer.msg('新增');
-                    // window.location.href = './articleForm.html';
                     loadMarkdown();
                     break;
             };
@@ -138,7 +145,7 @@
     function loadMarkdown() {
         var confirm = parent.layer.confirm('articleManage/articleForm.html', {
             type: 2,
-            btn: ['提交','保存草稿','取消'], //按钮
+            btn: ['保存草稿'], //按钮
             title: '新增文章',
             skin: 'layui-layer-lan',
             // area: '500px',
@@ -147,16 +154,18 @@
             maxmin: true,
             yes: function(index, layero){
                 //按钮【按钮一】的回调
-                parent.layer.msg('提交按钮');
-            }
-            ,btn2: function(index, layero){
-                //按钮【按钮二】的回调
-                parent.layer.msg('保存草稿按钮');
-                return false;  //开启该代码可禁止点击该按钮关闭
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                var status = contentWindow.saveDraft();
+                if (status != 'success') {
+                    return false;
+                }
             }
             ,btn3: function(index, layero){
                 //按钮【按钮二】的回调
-                parent.layer.msg('取消按钮');
+                parent.layer.msg('关闭');
                 // return false;  //开启该代码可禁止点击该按钮关闭
             }
             ,cancel: function(){
