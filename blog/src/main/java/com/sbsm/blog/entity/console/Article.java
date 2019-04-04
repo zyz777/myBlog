@@ -1,5 +1,6 @@
 package com.sbsm.blog.entity.console;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sbsm.blog.entity.BaseEntity;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * 文章列表
  */
 @Data
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Article extends BaseEntity {
 
     private String title;
@@ -25,7 +27,8 @@ public class Article extends BaseEntity {
 
     private Boolean isDraft;
 
-    private List<Tag> tags;
+//    private List<Tag> tags;
+    private String[] tags;
 
     public Article(Integer id) {
         this.id = id;

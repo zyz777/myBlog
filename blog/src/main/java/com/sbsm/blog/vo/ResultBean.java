@@ -32,15 +32,17 @@ public class ResultBean<T> {
         return code;
     }
 
-    public void setCode(int code) {
+    public ResultBean setCode(int code) {
         this.code = code;
+        return this;
     }
 
     public String getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public ResultBean setMsg(String msg) {
         this.msg = msg;
+        return this;
     }
 }

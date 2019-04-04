@@ -18,20 +18,20 @@ public class ArticleController extends BaseController {
     @Autowired
     private ArticleService articleService;
 
-    @ModelAttribute("get")
+   /* @ModelAttribute("get")
     public Article get(@RequestParam(value = "id", required = false) Integer id) {
         if (id == null) {
             return new Article();
         }
         return new Article();
-    }
+    }*/
 
     /**
-     * 保存草稿
+     * 保存草稿的 markdown 内容
      * @param article
      */
-    @RequestMapping("/saveDraft")
-    public ResultBean saveDraft(@RequestBody Article article) {
+    @RequestMapping(value = "/saveDraft", method = RequestMethod.POST)
+    public ResultBean saveArticleDraft(@RequestBody Article article) {
         log.info(JsonUtil.toJson(article));
 
         article.setIsDraft(true);
@@ -41,15 +41,36 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * 发表文章
+     * 保存文章信息(除内容之外)
      * @param article
+     * @return
      */
-    @RequestMapping("/save")
-    public void save(@ModelAttribute("get") @RequestBody Article article) {
-        log.info(JsonUtil.toJson(article));
+    @RequestMapping(value = "/saveArticleInfo", method = RequestMethod.POST)
+    public ResultBean saveArticleInfo(@RequestBody Article article) {
+        if (article.getId() == null) {
+            return new ResultBean<>().setCode(-1).setMsg("文章id不能为空");
+        }
+        articleService.saveArticleInfo(article);
+        return new ResultBean<>();
+    }
 
-        article.setIsDraft(false);
-        articleService.save(article);
+    /**
+     * 发表文章
+     * @param id
+     */
+    @RequestMapping(value = "/release/{id}", method = RequestMethod.GET)
+    public ResultBean release(@PathVariable("id") Integer id) {
+        articleService.updateIsDraft(id, false);
+        return new ResultBean<>();
+    }
+    /**
+     * 删除文章
+     * @param id
+     */
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public ResultBean delete(@PathVariable("id") Integer id) {
+        articleService.delete(id);
+        return new ResultBean<>();
     }
 
     /**
@@ -60,7 +81,7 @@ public class ArticleController extends BaseController {
     public ResultPage<Article> findDraftPage(int page, int limit) {
         log.info("page = " + page + ", limit = " + limit);
         page--;
-        ResultPage<Article> rp = articleService.findDraftPage(page*limit, limit, new Article());
+        ResultPage<Article> rp = articleService.findDraftPage(page, limit, new Article());
         return rp;
     }
 

@@ -91,7 +91,7 @@
             switch(eventType){
                 case 'new':
                     layer.msg('新增');
-                    // window.location.href = './articleForm.html';
+                    // window.location.href = './articleContentForm.html';
                     loadMarkdown();
                     break;
             };
@@ -100,7 +100,7 @@
 
 
     function loadMarkdown() {
-        var confirm = parent.layer.confirm('articleManage/articleForm.html', {
+        var confirm = parent.layer.confirm('articleManage/articleContentForm.html', {
             type: 2,
             btn: ['提交','保存草稿','取消'], //按钮
             title: '新增文章',

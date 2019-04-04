@@ -32,19 +32,6 @@ public class ArticleService extends BaseService {
         article.setIsTop(BooleanUtil.valueOfOrDefault(article.getIsTop(), false));
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void saveDraft(Article article) {
-        if (article.getId() == null) {
-            log.info("insert");
-            article.preInsert();
-            articleDao.insert(article);
-        } else {
-            log.info("update");
-            article.preUpdate();
-            articleDao.update(article);
-        }
-    }
-
     public ResultPage<Article> findDraftPage(int page, int limit, Article article) {
         List<Article> draftList = findDraftList(page, limit, article);
         int count = countByIsDraftAndDelFlag(true, false);
@@ -55,16 +42,36 @@ public class ArticleService extends BaseService {
 
 
     public List<Article> findDraftList(int page, int limit, Article article) {
-        Map<String, Object> map = new HashMap<>(3);
-        map.put("page", page);
-        map.put("limit", limit);
-        map.put("article", article);
-        return articleDao.findDraftList(page, limit, article);
+        return articleDao.findDraftList(page*limit, limit, article);
     }
 
     public int countByIsDraftAndDelFlag(boolean isDraft, boolean isDel) {
         return articleDao.countByIsDraftAndDelFlag(isDraft, isDel);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveDraft(Article article) {
+        if (article.getId() == null) {
+            log.info("insert");
+            article.preInsert();
+            articleDao.insert(article);
+        } else {
+            log.info("update");
+            article.preUpdate();
+            articleDao.updateContent(article);
+        }
+    }
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveArticleInfo(Article article) {
+        article.preUpdate();
+        articleDao.update(article);
+    }
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateIsDraft(Integer id, boolean isDraft) {
+        articleDao.updateIsDraft(id, isDraft);
+    }
 
+    public void delete(Integer id) {
+        articleDao.delete(id);
+    }
 }

@@ -14,4 +14,8 @@ public interface ArticleDao extends BaseDao<Article> {
     List<Article> findDraftList(int page, int limit, Article article);
 
     int countByIsDraftAndDelFlag(boolean isDraft, boolean isDel);
+
+    void updateContent(Article article);
+
+    void updateIsDraft(Integer id, boolean isDraft);
 }

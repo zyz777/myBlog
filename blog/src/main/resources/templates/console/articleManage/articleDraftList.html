@@ -10,7 +10,7 @@
 
 <div>
 
-    <table id="articleDraftListTable" lay-filter="articleDraftListTable">
+    <table id="articleDraftListTable" lay-filter="articleDraftListTable" >
     </table>
 
 </div>
@@ -18,17 +18,21 @@
 
 <script src="../../layui/layui.js"></script>
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs layui-icon layui-icon-ok-circle" lay-event="submit" title="提交"></a>
+    <!-- layui-icon-ok-circle -->
+    <a class="layui-btn layui-btn-xs layui-icon " lay-event="release" title="发布">发布</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="编辑">
-        <i class="layui-icon">&#xe642;</i>
+        <!--<i class="layui-icon">&#xe642;</i>-->编辑
+    </a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="editContent" title="编辑">
+        <!--<i class="layui-icon">&#xe642;</i>-->编辑md
     </a>
     <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
-        <i class="layui-icon">&#xe640;</i>
+        <!--<i class="layui-icon">&#xe640;</i>-->删除
     </a>
 </script>
 <script type="text/html" id="barDemo2">
-    <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="new">
-        <i class="layui-icon">&#x1005;</i> 批量提交
+    <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="releaseMore">
+        <i class="layui-icon">&#x1005;</i> 批量发布
     </a>
     <a class="layui-btn  layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delMore">
         <i class="layui-icon">&#xe640;</i> 批量删除
@@ -36,10 +40,50 @@
 </script>
 <script>
     var layer;
+    var table;
+    var $;
     layui.use(['table', 'layer'], function(){
-        var table = layui.table;
+        table = layui.table;
         layer = layui.layer;
+        $ = layui.jquery;
 
+        loadPage();
+
+        //todo 步骤二  监听事件, '操作'单元格的事件
+        table.on('tool(articleDraftListTable)', function(obj){
+            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            var data = obj.data;
+            switch(eventType){
+                case 'del':
+                    delArticle(data);
+                    break;
+                case 'edit':
+                    loadArticleInfo(data);
+                    break;
+                case 'editContent':
+                    loadMarkdown(data);
+                    break;
+                case 'release':
+                    releaseArticle(data);
+                    break;
+            };
+        });
+
+        //todo 步骤三 监听工具栏事件
+        table.on('toolbar(articleDraftListTable)', function(obj){
+            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            switch(eventType){
+                case 'releaseMore':
+                    layer.msg('批量发布');
+                    break;
+                case 'delMore':
+                    layer.msg('批量删除');
+                    break;
+            };
+        });
+    });
+
+    function loadPage() {
         //第一个实例
         table.render({
             elem: '#articleDraftListTable'
@@ -62,50 +106,158 @@
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
                 ,{field: 'title', width: 170, title: '标题'}
+                ,{field: 'descn', width: 170, title: '摘要'}
                 ,{field: 'createTime', width: 170, title: '创建时间',  sort: true}
                 ,{field: 'updateTime', width: 170, title: '修改时间',  sort: true}
-                ,{title: '操作', width: 155, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
+                ,{title: '操作', width: 228, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
             totalRow: false,
         });
+    }
 
-        //todo 步骤二  监听事件, '操作'单元格的事件
-        table.on('tool(articleDraftListTable)', function(obj){
-            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
-            var data = obj.data;
-            switch(eventType){
-                case 'del':
-                    layer.msg('删除');
-                    break;
-                case 'edit':
-                    loadMarkdown(data);
-                    break;
-                case 'submit':
-                    break;
-            };
+    function delArticle(data) {
+        parent.layer.confirm('确定要删除此文章吗?', {
+            btn: ['确定','取消'] //按钮
+            ,shadeClose:true
+            ,yes: function (index, layero) {
+                $.ajax({
+                    type: 'get',
+                    url: '/console/article/delete/'+data.id,
+                    async: true,
+                    cache: false,
+                    dataType: 'json',
+                    success: function (rs, textStatus, jqXHR) {
+                        if (rs.code == 0) {
+                            parent.layer.alert('删除成功');
+                            loadPage();//刷新列表
+                        } else {
+                            parent.layer.alert(rs.msg);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        // this.closeLoading();
+                        console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                        parent.layer.alert(textStatus);
+                    },
+                    statusCode: {
+                        404: function () {
+                            parent.layer.alert("404 访问路径不正确");
+                        },
+                        415: function () {
+                            parent.layer.alert("415 内容类型不匹配");
+                        },
+                        400: function () {
+                            parent.layer.alert("400 bad请求");
+                        },
+                        500: function () {
+                            parent.layer.alert("500 服务器异常");
+                        }
+                    },
+                });
+                parent.layer.close(index);
+            }
+            ,btn2: function (index, layero) {
+                console.info('否');
+            }
+        });
+    }
+
+    function releaseArticle(data) {
+        parent.layer.confirm('确定发布此文章吗?', {
+            btn: ['确定','取消'] //按钮
+            ,shadeClose:true
+            ,yes: function (index, layero) {
+                $.ajax({
+                    type: 'get',
+                    url: '/console/article/release/'+data.id,
+                    async: true,
+                    cache: false,
+                    dataType: 'json',
+                    success: function (rs, textStatus, jqXHR) {
+                        if (rs.code == 0) {
+                            parent.layer.alert('保存成功');
+                            loadPage();//刷新列表
+                        } else {
+                            parent.layer.alert(rs.msg);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        // this.closeLoading();
+                        console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                        parent.layer.alert(textStatus);
+                    },
+                    statusCode: {
+                        404: function () {
+                            parent.layer.alert("404 访问路径不正确");
+                        },
+                        415: function () {
+                            parent.layer.alert("415 内容类型不匹配");
+                        },
+                        400: function () {
+                            parent.layer.alert("400 bad请求");
+                        },
+                        500: function () {
+                            parent.layer.alert("500 服务器异常");
+                        }
+                    },
+                });
+                parent.layer.close(index);
+            }
+            ,btn2: function (index, layero) {
+                console.info('否');
+            }
+        });
+    }
+
+    function loadArticleInfo(data) {
+
+        parent.layer.open({
+            type: 2,
+            title: '修改文章信息',
+            btn: ['保存','取消'],
+            shadeClose: true,
+            area: ['400px', '90%'],
+            content: 'articleManage/articleInfoForm.html', //iframe的url
+            yes: function(index, layero){
+                //按钮【按钮一】的回调
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                firstChild.contentDocument.getElementById('saveArticleInfo').click();
+                loadPage();
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('关闭');
+                // return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                contentWindow.initFormFieldVal(data);
+            }
         });
 
-        //todo 步骤三 监听工具栏事件
-        table.on('toolbar(articleDraftListTable)', function(obj){
-            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
-            switch(eventType){
-                case 'new':
-                    layer.msg('新增');
-                    break;
-            };
-        });
-    });
 
+    }
 
     function loadMarkdown(data) {
         var md = data.content;
         var id = data.id;
 
-        var confirm = parent.layer.confirm('articleManage/articleModify.html', {
+        var confirm = parent.layer.confirm('articleManage/articleContentModify.html', {
             type: 2,
             btn: ['保存草稿'], //按钮
-            title: '新增文章',
+            title: '编辑文章',
             skin: 'layui-layer-lan',
             // area: '500px',
             // area: 'auto',
