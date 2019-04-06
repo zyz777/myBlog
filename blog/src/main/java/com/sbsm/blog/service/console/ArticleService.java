@@ -71,7 +71,22 @@ public class ArticleService extends BaseService {
         articleDao.updateIsDraft(id, isDraft);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateMoreIsDraft(Integer[] ids, boolean isDraft) {
+        for (Integer id : ids) {
+            articleDao.updateIsDraft(id, isDraft);
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(Integer id) {
         articleDao.delete(id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteMore(Integer[] ids) {
+        for (Integer id : ids) {
+            articleDao.delete(id);
+        }
     }
 }

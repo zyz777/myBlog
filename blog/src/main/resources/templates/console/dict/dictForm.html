@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body>
+
+<div>
+
+    <form class="layui-form layui-form-pane" action=""  lay-filter="dictForm">
+        <div class="layui-form-item layui-hide">
+            <div class="layui-input-block">
+                <input type="text" name="id" disabled autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">标签</label>
+            <div class="layui-input-block">
+                <input type="text" name="label" lay-verify="required" autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">键值</label>
+            <div class="layui-input-block">
+                <input type="text" name="value" lay-verify="required" autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <input type="text" name="type" lay-verify="required" autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="descn" placeholder="请输入内容, 字符长度不能超过255" lay-verify="descn" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item" id="createTimeDiv">
+            <div class="layui-inline">
+                <label class="layui-form-label">创建时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="createTime" id="createTime"
+                           placeholder="yyyy-MM-dd HH:mm:ss" disabled autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="updateTimeDiv">
+            <div class="layui-inline">
+                <label class="layui-form-label">修改时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="updateTime" id="updateTime"
+                           placeholder="yyyy-MM-dd HH:mm:ss" disabled autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item" style="display: none;">
+            <button class="layui-btn " lay-submit lay-filter="saveDict" id="saveDict">跳转式提交</button>
+        </div>
+    </form>
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script>
+    var form;
+    var $;
+    layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
+        form = layui.form;
+        $ = layui.jquery;
+        var layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate
+            , upload = layui.upload;;
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+
+        var event = {
+           initTagSelect: function () {
+               $.ajax({
+                   type:'get',
+                   url: '/console/tag/findAll',
+                   dataType: 'json',
+                   success: function (rs, arg1, arg2) {
+                       $('#tagSelect').html('');
+                       var data = rs.data;
+                       var optionHtml = ' <option value="">直接选择或搜索选择</option>';
+                       for (var i = 0; i < data.length; i++) {
+                           var o = data[i];
+                           var value = o.value;
+                           var name = o.name;
+                           optionHtml += '<option value="'+value+'">'+name+'</option>';
+                       }
+                       $('#tagSelect').append(optionHtml);
+                       form.render('select');
+                   },
+                   error: function (arg1, arg2, arg3) {
+                       console.log( arg1, arg2, arg3);
+                   }
+               })
+           },
+        };
+
+
+
+        form.verify({
+            descn : function (value, item) {
+                if (value.length > 255) {
+                    return '字符数不能超过 255 个';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(saveDict)', function(data){
+            var field = data.field;
+
+            $.ajax({
+                type: 'POST',
+                url: '/console/dict/save',
+                dataType: 'json',
+                data: JSON.stringify(field),//往后台发送的是data.field，即一个{name：value}的数据结构
+                cache: false,
+                contentType: 'application/json;charset=UTF-8',
+                async: false,
+                beforeSend: function(xhr) {
+                    parent.layer.msg('正在提交', {
+                        icon: 16,
+                        // ,shade: 0.01,
+                        shadeClose: false
+                    });
+                },
+                success: function (rs, textStatus, jqXHR) {
+                    // this.closeLoading();
+                    if (rs.code == 0) {
+                        parent.layer.alert('保存成功');
+                        status = 'success';
+                    } else {
+                        status = 'error';
+                        parent.layer.alert(rs.msg);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    // this.closeLoading();
+                    console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                    parent.layer.alert(textStatus);
+                },
+                statusCode: {
+                    404: function () {
+                        parent.layer.alert("404 访问路径不正确");
+                    },
+                    415: function () {
+                        parent.layer.alert("415 内容类型不匹配");
+                    },
+                    400: function () {
+                        parent.layer.alert("400 bad请求");
+                    },
+                    500: function () {
+                        parent.layer.alert("500 服务器异常");
+                    }
+                },
+            });
+            return false;
+        });
+
+    });
+
+    function initFormFieldVal(data) {
+        layui.use(['form'], function () {
+            $ = layui.jquery;
+            if (data == null) {
+                $("#createTimeDiv").addClass('layui-hide');
+                $("#updateTimeDiv").addClass('layui-hide');
+                return;
+            }
+            form = layui.form;
+            //表单初始赋值
+            form.val('dictForm', {
+                "id": data.id,
+                "label": data.label,
+                "value": data.value,
+                "type": data.type,
+                "createTime": data.createTime
+                ,"updateTime": data.updateTime
+                ,"descn": data.descn
+            });
+        });
+
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -9,6 +9,7 @@ import com.sbsm.blog.vo.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -63,6 +64,19 @@ public class ArticleController extends BaseController {
         articleService.updateIsDraft(id, false);
         return new ResultBean<>();
     }
+
+    /**
+     * 发表多篇文章
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/release", method = RequestMethod.POST)
+    public ResultBean releaseMore(@RequestBody Integer[] ids) {
+        articleService.updateMoreIsDraft(ids, false);
+        return new ResultBean<>();
+    }
+
+
     /**
      * 删除文章
      * @param id
@@ -70,6 +84,16 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public ResultBean delete(@PathVariable("id") Integer id) {
         articleService.delete(id);
+        return new ResultBean<>();
+    }
+
+    /**
+     * 删除多篇文章
+     * @param ids
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultBean deleteMore(@RequestBody Integer[] ids) {
+        articleService.deleteMore(ids);
         return new ResultBean<>();
     }
 

@@ -57,6 +57,9 @@
             text-align: center;
             font-weight: bold;
         }
+        #pagination_ul>li>.am-active {
+            background-color: #3bb4f2;
+        }
     </style>
 </head>
 
@@ -155,7 +158,7 @@
 <!-- content srart -->
 <div class="am-g am-g-fixed blog-fixed">
     <div class="am-u-md-8 am-u-sm-12">
-
+        <div id="articleListDiv">
         <article class="am-g blog-entry-article">
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
                 <img src="assets/i/f10.jpg" alt="" class="am-u-sm-12">
@@ -231,31 +234,11 @@
                 <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
             </div>
         </article>
+        </div>
 
 
+        <ul class="am-pagination am-pagination-centered" id="pagination_ul">
 
-
-
-        <ul class="am-pagination am-pagination-centered">
-            <!-- class="am-pagination-prev" -->
-            <li ><a href="">&laquo; Prev</a></li>
-            <li class="am-active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">6</a></li>
-            <li><a href="#">7</a></li>
-            <li><a href="#">8</a></li>
-            <li><a href="#">9</a></li>
-            <li><a href="#">10</a></li>
-            <li><a href="#">11</a></li>
-            <li><a href="#">12</a></li>
-            <li><a href="#">13</a></li>
-            <li><a href="#">14</a></li>
-            <li><a href="#">15</a></li>
-            <!-- class="am-pagination-next" -->
-            <li ><a href="">Next &raquo;</a></li>
         </ul>
     </div>
 
@@ -357,7 +340,33 @@
   </footer>
 
 
+<!-- todo 这个div用来拼接 文章列表 -->
+<div style="display: none" id="articleAppendDiv">
 
+    <article class="am-g blog-entry-article">
+        <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+            <img id="coverImg" src="assets/i/f10.jpg" alt="" class="am-u-sm-12">
+        </div>
+        <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+            <span id="statusSpan" class="am-badge am-badge-danger am-radius">new</span>
+            <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;<span id="updateTimeSpan">2015/10/9</span></span>
+            &nbsp;
+            <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;"><span id="readNumSpan">1234567890</span></span>
+            <h1><a href="" id="titleA">我本楚狂人，凤歌笑孔丘</a></h1>
+            <p id="descnP">我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。
+                我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。
+                我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。
+            </p>
+            <p id="tagsP">
+                <!--<a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;spring</a>-->
+                <!--<a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;java</a>-->
+                <!--<a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;html</a>-->
+            </p>
+            <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2.5rem;">&nbsp;&nbsp;continue reading</a></p>
+        </div>
+    </article>
+
+</div>
 
 
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -396,6 +405,88 @@
             html += ' <li><a href="'+o.url+'"><img style="width: 2rem" src="../third-plugin/image/hot.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
         }
         $("#hot_ul").append(html);
+    });
+
+    function findArticle(pageNo) {
+        var pageSize = 5;
+        $.ajax({
+            type: 'get',
+            url: 'article.json',
+            data: {
+                pageNo: pageNo,
+                pageSize: pageSize,
+                v: '1'
+            },
+            dataType: 'json',
+            success: function (rs) {
+                console.log(rs);
+                var totalCount = rs.totalCount;
+                //拼接 分页
+                this.pagination(totalCount);
+                //拼接 文章列表
+                this.article(rs.data);
+            },
+            error: function (rs) {
+                console.log(rs);
+            },
+            pagination: function (totalCount) {
+                //清空
+                $("#pagination_ul").html('');
+
+                var pageHtml = '  <li ><a href="">&laquo; Prev</a></li>';
+                var totalPage = totalCount / pageSize;
+                if (totalCount % pageSize != 0) {
+                    totalPage += 1;
+                }
+                for (var i = 1; i <= totalPage; i++) {
+                    if (i == pageNo) {
+                        pageHtml += '<li ><a href="#" onclick="findArticle('+i+')" class="am-active">'+i+'</a></li>';
+                    } else {
+                        pageHtml += '<li ><a href="#" onclick="findArticle('+i+')" >'+i+'</a></li>';
+                    }
+                }
+                pageHtml += ' <li ><a href="">Next &raquo;</a></li>';
+
+                $("#pagination_ul").append(pageHtml);
+            },
+            article: function (data) {
+                $('#articleListDiv').html('');
+
+                for (var i = 0; i < data.length; i++) {
+                    var o = data[i];
+                    var imgUrl = o.imgUrl;
+                    if (imgUrl == null || imgUrl == '') {
+                        //默认图片
+                        $('#articleAppendDiv #coverImg').attr('src', '../third-plugin/image/ying2.png');
+                    } else {
+                        $('#articleAppendDiv #coverImg').attr('src', imgUrl);
+                    }
+                    var status = o.status;
+                    if (status == null || status == '') {
+                        $('#articleAppendDiv #statusSpan').hide();
+                    } else {
+                        $('#articleAppendDiv #statusSpan').text(status);
+                    }
+                    $('#articleAppendDiv #updateTimeSpan').text(o.updateTime);
+                    $('#articleAppendDiv #readNumSpan').text(o.readNum);
+                    $('#articleAppendDiv #titleA').attr('href', o.url);
+                    $('#articleAppendDiv #titleA').text(o.title);
+                    $('#articleAppendDiv #descnP').text(o.descn);
+
+                    var tags = o.tags;
+                    var tagHtml = '';
+                    for (var j = 0; j < tags.length; j++) {
+                        tagHtml += ' <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;'+tags[j]+'</a>';
+                    }
+                    $('#articleAppendDiv #tagsP').append(tagHtml);
+                    var resultHtml = $('#articleAppendDiv').html();
+                    $('#articleListDiv').append(resultHtml);
+                }
+            }
+        });
+    }
+    $(function () {
+        findArticle(1);
     });
 
 </script>

@@ -31,7 +31,7 @@
     </a>
 </script>
 <script type="text/html" id="barDemo2">
-    <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="releaseMore">
+    <a class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" id="releaseMore" lay-event="releaseMore">
         <i class="layui-icon">&#x1005;</i> 批量发布
     </a>
     <a class="layui-btn  layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delMore">
@@ -74,11 +74,10 @@
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             switch(eventType){
                 case 'releaseMore':
-                    layer.msg('批量发布');
-                    //layui.table.checkStatus('table1').data;   // table1为表格id
+                    releaseMore();
                     break;
                 case 'delMore':
-                    layer.msg('批量删除');
+                    delMore();
                     break;
             };
         });
@@ -164,6 +163,62 @@
         });
     }
 
+    function delMore() {
+        var datas = table.checkStatus('articleDraftListTable').data;   // articleDraftListTable 为表格id
+        if (datas.length > 0) {
+            var arr = [];
+            for (var i = 0; i < datas.length; i++) {
+                arr.push(datas[i].id);
+            }
+            parent.layer.confirm('确定要删除这些文章吗?', {
+                btn: ['确定','取消'] //按钮
+                ,shadeClose:true
+                ,yes: function (index, layero) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/console/article/delete',
+                        async: true,
+                        cache: false,
+                        dataType: 'json',
+                        data: JSON.stringify(arr),
+                        contentType: 'application/json;charset=UTF-8',
+                        success: function (rs, textStatus, jqXHR) {
+                            if (rs.code == 0) {
+                                parent.layer.alert('删除成功');
+                                loadPage();//刷新列表
+                            } else {
+                                parent.layer.alert(rs.msg);
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            // this.closeLoading();
+                            console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                            parent.layer.alert(textStatus);
+                        },
+                        statusCode: {
+                            404: function () {
+                                parent.layer.alert("404 访问路径不正确");
+                            },
+                            415: function () {
+                                parent.layer.alert("415 内容类型不匹配");
+                            },
+                            400: function () {
+                                parent.layer.alert("400 bad请求");
+                            },
+                            500: function () {
+                                parent.layer.alert("500 服务器异常");
+                            }
+                        },
+                    });
+                    parent.layer.close(index);
+                }
+                ,btn2: function (index, layero) {
+                    console.info('否');
+                }
+            });
+        }
+    }
+
     function releaseArticle(data) {
         parent.layer.confirm('确定发布此文章吗?', {
             btn: ['确定','取消'] //按钮
@@ -177,7 +232,7 @@
                     dataType: 'json',
                     success: function (rs, textStatus, jqXHR) {
                         if (rs.code == 0) {
-                            parent.layer.alert('保存成功');
+                            parent.layer.alert('发布成功');
                             loadPage();//刷新列表
                         } else {
                             parent.layer.alert(rs.msg);
@@ -210,6 +265,63 @@
             }
         });
     }
+
+    function releaseMore() {
+        var datas = table.checkStatus('articleDraftListTable').data;   // articleDraftListTable 为表格id
+        if (datas.length > 0) {
+            var arr = [];
+            for (var i = 0; i < datas.length; i++) {
+                arr.push(datas[i].id);
+            }
+            parent.layer.confirm('确定发布这些文章吗?', {
+                btn: ['确定','取消'] //按钮
+                ,shadeClose:true
+                ,yes: function (index, layero) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/console/article/release',
+                        async: true,
+                        cache: false,
+                        dataType: 'json',
+                        data: JSON.stringify(arr),
+                        contentType: 'application/json;charset=UTF-8',
+                        success: function (rs, textStatus, jqXHR) {
+                            if (rs.code == 0) {
+                                parent.layer.alert('发布成功');
+                                loadPage();//刷新列表
+                            } else {
+                                parent.layer.alert(rs.msg);
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            // this.closeLoading();
+                            console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                            parent.layer.alert(textStatus);
+                        },
+                        statusCode: {
+                            404: function () {
+                                parent.layer.alert("404 访问路径不正确");
+                            },
+                            415: function () {
+                                parent.layer.alert("415 内容类型不匹配");
+                            },
+                            400: function () {
+                                parent.layer.alert("400 bad请求");
+                            },
+                            500: function () {
+                                parent.layer.alert("500 服务器异常");
+                            }
+                        },
+                    });
+                    parent.layer.close(index);
+                }
+                ,btn2: function (index, layero) {
+                    console.info('否');
+                }
+            });
+        }
+    }
+
 
     function loadArticleInfo(data) {
 

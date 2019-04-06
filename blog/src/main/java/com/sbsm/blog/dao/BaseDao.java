@@ -20,4 +20,7 @@ public interface BaseDao<T> {
 
     List<T> findAll(T t);
 
+    List<T> findPage(int rowIndex, int limit, T t);
+
+    int countByDelFlag(boolean isDel);
 }

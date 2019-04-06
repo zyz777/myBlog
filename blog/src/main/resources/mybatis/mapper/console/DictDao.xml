@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sbsm.blog.dao.console.DictDao">
+
+
+    <insert id="insert" parameterType="com.sbsm.blog.entity.console.Dict">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `dict`(`create_time`, `update_time`, `remark`, `del_flag`, `label`, `value`, `type`,
+        `descn`) VALUES (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{label}, #{value}, #{type},
+        #{descn})
+    </insert>
+
+    <update id="update">
+        UPDATE `dict`
+        SET
+        `update_time` = #{updateTime},
+        `remark` = #{remark},
+        `label` = #{label},
+        `value` = #{value},
+        `type` =  #{type},
+        `descn` =  #{descn}
+        WHERE
+            `id` = #{id};
+    </update>
+
+    <update id="delete">
+        UPDATE `dict` SET `update_time` = now(), `del_flag`=1 WHERE `id` = #{arg0}
+    </update>
+
+    <select id="findPage" resultType="com.sbsm.blog.entity.console.Dict">
+        select *,`create_time` createTime, `update_time` updateTime  from `dict` where `del_flag`=0
+        order by `update_time` desc
+        limit #{arg0}, #{arg1}
+    </select>
+
+    <select id="countByDelFlag" resultType="Integer">
+        select count(*) from `dict` where `del_flag`=#{arg0}
+    </select>
+
+
+</mapper>
