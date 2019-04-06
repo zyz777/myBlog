@@ -21,11 +21,11 @@
 <!-- 行的按钮 -->
 <script type="text/html" id="barDemo">
    <!-- <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
-   <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
-       <i class="layui-icon">&#xe642;</i>
+   <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="编辑">
+      <!-- <i class="layui-icon">&#xe642;</i>-->编辑
    </a>
    <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
-       <i class="layui-icon">&#xe640;</i>
+      <!-- <i class="layui-icon">&#xe640;</i>-->删除
    </a>
 </script>
 
@@ -39,43 +39,14 @@
     </a>
 </script>
 <script>
+    var table;
+    var $;
     layui.use(['table','laypage'], function(){
-        var table = layui.table;
+        table = layui.table;
+        $ = layui.jquery;
         var laypage = layui.laypage;
 
-        //第一个实例
-        table.render({
-            elem: '#categoryListTable'
-            ,height: 'full-20'
-            ,url: 'categoryList.json' //数据接口
-            // ,method:'POST'   //laui 修改请求方式
-            // ,request: {
-            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
-            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            // }
-            // , response: {
-            //     statusName: 'code' //数据状态的字段名称，默认：code
-            //     ,countName: 'count' //数据总数的字段名称，默认：count
-            //     ,dataName: 'data' //默数据列表的字段名称，默认：data
-            //
-            // }
-            ,title: '用户表'
-            ,page: true //开启分页
-            ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'},
-                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-                ,{field: 'name', title: '名称', width:80}
-                ,{field: 'pId', title: '父级分类id', width:80, sort: true}
-                ,{field: 'pName', title: '父级分类', width:80}
-                ,{field: 'descn', title: '描述', width: 177}
-                ,{field: 'sort', title: '排序', width: 80, sort: true}
-                ,{field: 'isEnable', title: '可用', width: 80, sort: true}
-                ,{field: 'icon', title: '图标', width: 80}
-                ,{title: '操作', width: 100, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
-            ]],
-            toolbar: '#barDemo2',
-            totalRow: false,
-        });
+        loadPage();
 
         //todo 步骤二  监听事件, '操作'单元格的事件
         table.on('tool(categoryListTable)', function(obj){
@@ -83,27 +54,215 @@
             var data = obj.data;
             switch(eventType){
                 case 'del':
-                    layer.msg('删除');
+                    del(data);
                     break;
                 case 'edit':
-                    layer.msg('编辑');
                     editForm(data);
                     break;
             };
         });
         //todo 步骤三 监听工具栏事件
         table.on('toolbar(categoryListTable)', function(obj){
-            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            var eventType = obj.event;
             switch(eventType){
                 case 'new':
-                    layer.msg('新增');
-                    // window.location.href = './articleContentForm.html';
-                    loadMarkdown();
+                    editForm(null);
+                    break;
+                case 'delMore':
+                    delMore();
                     break;
             };
         });
 
     });
+
+
+    function del(data) {
+        parent.layer.confirm('确定要删除吗?', {
+            btn: ['确定','取消'] //按钮
+            ,shadeClose:true
+            ,yes: function (index, layero) {
+                $.ajax({
+                    type: 'get',
+                    url: '/console/category/delete/'+data.id,
+                    async: true,
+                    cache: false,
+                    dataType: 'json',
+                    success: function (rs, textStatus, jqXHR) {
+                        if (rs.code == 0) {
+                            parent.layer.alert('删除成功');
+                            loadPage();//刷新列表
+                        } else {
+                            parent.layer.alert(rs.msg);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        // this.closeLoading();
+                        console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                        parent.layer.alert(textStatus);
+                    },
+                    statusCode: {
+                        404: function () {
+                            parent.layer.alert("404 访问路径不正确");
+                        },
+                        415: function () {
+                            parent.layer.alert("415 内容类型不匹配");
+                        },
+                        400: function () {
+                            parent.layer.alert("400 bad请求");
+                        },
+                        500: function () {
+                            parent.layer.alert("500 服务器异常");
+                        }
+                    },
+                });
+                parent.layer.close(index);
+            }
+            ,btn2: function (index, layero) {
+                console.info('否');
+            }
+        });
+    }
+
+    function delMore() {
+        var datas = table.checkStatus('categoryListTable').data;   // articleDraftListTable 为表格id
+        if (datas.length > 0) {
+            var arr = [];
+            for (var i = 0; i < datas.length; i++) {
+                arr.push(datas[i].id);
+            }
+            parent.layer.confirm('确定要删除吗?', {
+                btn: ['确定','取消'] //按钮
+                ,shadeClose:true
+                ,yes: function (index, layero) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/console/category/delete',
+                        async: true,
+                        cache: false,
+                        dataType: 'json',
+                        data: JSON.stringify(arr),
+                        contentType: 'application/json;charset=UTF-8',
+                        success: function (rs, textStatus, jqXHR) {
+                            if (rs.code == 0) {
+                                parent.layer.alert('删除成功');
+                                loadPage();//刷新列表
+                            } else {
+                                parent.layer.alert(rs.msg);
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            // this.closeLoading();
+                            console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                            parent.layer.alert(textStatus);
+                        },
+                        statusCode: {
+                            404: function () {
+                                parent.layer.alert("404 访问路径不正确");
+                            },
+                            415: function () {
+                                parent.layer.alert("415 内容类型不匹配");
+                            },
+                            400: function () {
+                                parent.layer.alert("400 bad请求");
+                            },
+                            500: function () {
+                                parent.layer.alert("500 服务器异常");
+                            }
+                        },
+                    });
+                    parent.layer.close(index);
+                }
+                ,btn2: function (index, layero) {
+                    console.info('否');
+                }
+            });
+        }
+    }
+
+
+    function editForm(data) {
+        parent.layer.open({
+            type: 2,
+            title: '分类配置',
+            btn: ['保存','取消'],
+            shadeClose: true,
+            area: ['400px', '70%'],
+            skin: 'layui-layer-molv',
+            content: 'articleManage/categoryForm.html', //iframe的url
+            yes: function(index, layero){
+                //按钮【按钮一】的回调
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                firstChild.contentDocument.getElementById('saveCategory').click();
+                loadPage();
+                if (data == null) {
+                    // parent.layer.close(index);
+                }
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('关闭');
+                // return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                contentWindow.initFormFieldVal(data);
+            }
+        });
+    }
+
+    function loadPage() {
+        //第一个实例
+        table.render({
+            elem: '#categoryListTable'
+            ,height: 'full-20'
+            ,url: '/console/category/findPage' //数据接口
+            // ,method:'POST'   //laui 修改请求方式
+            // ,request: {
+            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
+            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            // }
+            , response: {
+                statusName: 'code' //数据状态的字段名称，默认：code
+                ,countName: 'totalCount' //数据总数的字段名称，默认：count
+                ,dataName: 'data' //默数据列表的字段名称，默认：data
+
+            }
+            ,title: '分类表'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
+                ,{field: 'cid', title: 'cid', width:80, hide: true}
+                ,{field: 'name', title: '名称', width:177}
+                ,{field: 'pId', title: '父级分类id', width:80, hide: true}
+                ,{field: 'pCid', title: '父级分类cid', width:80, hide: true}
+                ,{field: 'pName', title: '父级分类', width:80, hide: true}
+                ,{field: 'descn', title: '描述', width: 177}
+                ,{field: 'sort', title: '排序', width:80,  sort: true}
+                ,{field: 'isEnable', title: '可用' }
+                ,{field: 'icon', title: '图标' }
+                ,{field: 'createTime', title: '创建时间', width: 170, sort: true}
+                ,{field: 'updateTime', title: '修改时间', width: 170, sort: true}
+                ,{title: '操作', width: 135, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
+            ]],
+            toolbar: '#barDemo2',
+            totalRow: false,
+        });
+    }
+
+
 </script>
 </body>
 </html>

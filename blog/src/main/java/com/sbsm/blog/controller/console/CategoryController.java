@@ -1,38 +1,38 @@
 package com.sbsm.blog.controller.console;
 
 import com.sbsm.blog.controller.BaseController;
+import com.sbsm.blog.entity.console.Category;
 import com.sbsm.blog.entity.console.Dict;
-import com.sbsm.blog.service.console.DictService;
+import com.sbsm.blog.service.console.CategoryService;
 import com.sbsm.blog.vo.ResultBean;
 import com.sbsm.blog.vo.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 分类管理
+ */
 @RestController
-@RequestMapping("/console/dict")
-public class DictController extends BaseController {
-
+@RequestMapping("/console/category")
+public class CategoryController extends BaseController {
+    
     @Autowired
-    private DictService dictService;
+    private CategoryService categoryService;
 
-    /**
-     * 字典列表
-     * @return
-     */
+
     @RequestMapping("/findPage")
-    public ResultPage<Dict> findPage(int page, int limit) {
+    public ResultPage<Category> findPage(int page, int limit) {
         log.info("page = " + page + ", limit = " + limit);
         page--;
-        ResultPage<Dict> rp = dictService.findPage(page, limit, new Dict());
+        ResultPage<Category> rp = categoryService.findPage(page, limit, new Category());
         return rp;
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResultBean<Dict> save(@RequestBody Dict dict) {
-        dictService.save(dict);
-        return new ResultBean<>(new Dict(dict.getId()));
+    public ResultBean<Category> save(@RequestBody Category category) {
+        categoryService.save(category);
+        return new ResultBean<>(new Category(category.getId()));
     }
-
 
     /**
      * 删除
@@ -40,7 +40,7 @@ public class DictController extends BaseController {
      */
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public ResultBean delete(@PathVariable("id") Integer id) {
-        dictService.delete(id);
+        categoryService.delete(id);
         return new ResultBean<>();
     }
 
@@ -50,8 +50,9 @@ public class DictController extends BaseController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultBean deleteMore(@RequestBody Integer[] ids) {
-        dictService.deleteMore(ids);
+        categoryService.deleteMore(ids);
         return new ResultBean<>();
     }
-
+    
+    
 }

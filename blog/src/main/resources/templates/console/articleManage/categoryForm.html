@@ -15,25 +15,31 @@
                 <input type="text" name="id" disabled autocomplete="off"  class="layui-input">
             </div>
         </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">标签</label>
+        <div class="layui-form-item layui-hide">
             <div class="layui-input-block">
-                <input type="text" name="label" lay-verify="required" autocomplete="off"  class="layui-input">
+                <input type="text" name="pCid" disabled autocomplete="off"  class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">键值</label>
+            <label class="layui-form-label">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="value" lay-verify="required" autocomplete="off"  class="layui-input">
+                <input type="text" name="name" lay-verify="required" autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item"  lay-filter="tagSelectDiv">
+            <label class="layui-form-label">父级分类</label>
+            <div class="layui-input-inline">
+                <select  id="pCategorySelect" lay-search=""  lay-filter="pCategorySelect">
+                </select>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">类型</label>
+            <label class="layui-form-label">排序</label>
             <div class="layui-input-block">
-                <input type="text" name="type" lay-verify="required" autocomplete="off"  class="layui-input">
+                <input type="number" name="sort"  lay-verify="required|number"  autocomplete="off"  class="layui-input">
             </div>
         </div>
 
@@ -67,7 +73,7 @@
 
 
         <div class="layui-form-item" style="display: none;">
-            <button class="layui-btn " lay-submit lay-filter="saveDict" id="saveDict">跳转式提交</button>
+            <button class="layui-btn " lay-submit lay-filter="saveCategory" id="saveCategory">跳转式提交</button>
         </div>
     </form>
 </div>
@@ -88,6 +94,50 @@
             elem: '#date'
         });
 
+        var event = {
+           initTagSelect: function () {
+               $.ajax({
+                   type:'get',
+                   url: '/console/tag/findAll',
+                   dataType: 'json',
+                   success: function (rs, arg1, arg2) {
+                       $('#pCategorySelect').html('');
+                       var data = rs.data;
+                       var optionHtml = ' <option value="">直接选择或搜索选择</option>';
+                       for (var i = 0; i < data.length; i++) {
+                           var o = data[i];
+                           var value = o.value;
+                           var name = o.name;
+                           optionHtml += '<option value="'+value+'">'+name+'</option>';
+                       }
+                       $('#pCategorySelect').append(optionHtml);
+                       form.render('select');
+                   },
+                   error: function (arg1, arg2, arg3) {
+                       console.log( arg1, arg2, arg3);
+                   }
+               })
+           },
+        };
+
+        form.on('select(pCategorySelect)', function(data){
+            var selectedOption = data.elem.selectedOptions[0];
+            var text = selectedOption.text;
+            var value = selectedOption.value;
+
+            var cb = $('#tagCheckboxDiv > #cb'+value);
+            if (cb.length > 0) {
+                cb.attr('checked', true);
+                $(cb[0].nextSibling).addClass('layui-form-checked');
+                // form.render('checkbox');
+                return;
+            }
+
+            var cbHtml = '<input type="checkbox" id="cb'+value+'" name="tags['+value+']" value="'+value+'" checked title="'+text+'">';
+            $('#tagCheckboxDiv').append(cbHtml);
+            form.render('checkbox');
+        });
+
         form.verify({
             descn : function (value, item) {
                 if (value.length > 255) {
@@ -97,12 +147,12 @@
         });
 
         //监听提交
-        form.on('submit(saveDict)', function(data){
+        form.on('submit(saveCategory)', function(data){
             var field = data.field;
 
             $.ajax({
                 type: 'POST',
-                url: '/console/dict/save',
+                url: '/console/category/save',
                 dataType: 'json',
                 data: JSON.stringify(field),//往后台发送的是data.field，即一个{name：value}的数据结构
                 cache: false,
@@ -162,9 +212,9 @@
             //表单初始赋值
             form.val('dictForm', {
                 "id": data.id,
-                "label": data.label,
-                "value": data.value,
-                "type": data.type,
+                "pCid": data.pCid,
+                "name": data.name,
+                "sort": data.sort,
                 "createTime": data.createTime
                 ,"updateTime": data.updateTime
                 ,"descn": data.descn
