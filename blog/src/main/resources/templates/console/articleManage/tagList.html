@@ -26,6 +26,10 @@
    <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
        <!--<i class="layui-icon">&#xe640;</i>-->删除
    </a>
+   <!-- layui-bg-gray -->
+   <a class="layui-btn layui-btn-xs layui-bg-green"  lay-event="record" title="日志">
+       <!--<i class="layui-icon">&#xe640;</i>-->日志
+   </a>
 </script>
 
 <!-- 上方工具条 -->
@@ -250,7 +254,7 @@
                 ,{field: 'descn', title: '描述', width:80}
                 ,{field: 'createTime', title: '创建时间', width: 170, sort: true}
                 ,{field: 'updateTime', title: '修改时间', width: 170, sort: true}
-                ,{title: '操作', width: 155, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
+                ,{title: '操作', width: 160, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
             totalRow: false,

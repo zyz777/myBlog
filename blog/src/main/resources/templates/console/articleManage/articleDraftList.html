@@ -29,6 +29,10 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
         <!--<i class="layui-icon">&#xe640;</i>-->删除
     </a>
+    <!-- layui-bg-gray -->
+    <a class="layui-btn layui-btn-xs layui-bg-gray"  lay-event="record" title="日志">
+        <!--<i class="layui-icon">&#xe640;</i>-->日志
+    </a>
 </script>
 <script type="text/html" id="barDemo2">
     <a class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" id="releaseMore" lay-event="releaseMore">
@@ -65,6 +69,9 @@
                     break;
                 case 'release':
                     releaseArticle(data);
+                    break;
+                case 'record':
+                    layer.msg('日志')
                     break;
             };
         });
@@ -109,7 +116,7 @@
                 ,{field: 'descn', width: 170, title: '摘要'}
                 ,{field: 'createTime', width: 170, title: '创建时间',  sort: true}
                 ,{field: 'updateTime', width: 170, title: '修改时间',  sort: true}
-                ,{title: '操作', width: 228, toolbar: '#barDemo', fixed: 'right', event:'aa'}
+                ,{title: '操作', width: 273, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
             totalRow: false,
