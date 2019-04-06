@@ -9,14 +9,25 @@ import lombok.Data;
 @Data
 public class Tag extends BaseEntity {
 
+    private String tid;
     private String name;
-    private String value;
+    private String descn;
+
+    public Tag(String name, String descn) {
+        this.name = name;
+        this.descn = descn;
+    }
+
+    @Override
+    public void preInsert() {
+        super.preInsert();
+        this.tid = getCreateTime().getTime()+"";
+    }
 
     public Tag() {
     }
 
-    public Tag(String value, String name) {
-        this.name = name;
-        this.value = value;
+    public Tag(Integer id) {
+        this.id=id;
     }
 }
