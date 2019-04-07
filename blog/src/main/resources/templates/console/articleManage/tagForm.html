@@ -15,6 +15,11 @@
                 <input type="text" name="id" disabled autocomplete="off"  class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item layui-hide">
+            <div class="layui-input-block">
+                <input type="text" name="tid" disabled autocomplete="off"  class="layui-input">
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">名称</label>
@@ -76,7 +81,7 @@
         var layer = layui.layer
             , layedit = layui.layedit
             , laydate = layui.laydate
-            , upload = layui.upload;;
+            , upload = layui.upload;
         //日期
         laydate.render({
             elem: '#date'
@@ -200,6 +205,7 @@
             //表单初始赋值
             form.val('dictForm', {
                 "id": data.id,
+                "tid": data.tid,
                 "name": data.name,
                 "createTime": data.createTime
                 ,"updateTime": data.updateTime

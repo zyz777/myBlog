@@ -27,6 +27,7 @@
         UPDATE `tag` SET `update_time` = now(), `del_flag`=1 WHERE `id` = #{arg0}
     </update>
 
+
     <select id="findPage" resultType="com.sbsm.blog.entity.console.Tag">
         select *,`create_time` createTime, `update_time` updateTime  from `tag` where `del_flag`=0
         order by `update_time` desc

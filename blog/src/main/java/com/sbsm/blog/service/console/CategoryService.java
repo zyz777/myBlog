@@ -3,7 +3,9 @@ package com.sbsm.blog.service.console;
 import com.sbsm.blog.dao.console.CategoryDao;
 import com.sbsm.blog.entity.console.Category;
 import com.sbsm.blog.entity.console.Category;
+import com.sbsm.blog.entity.console.Log;
 import com.sbsm.blog.service.BaseService;
+import com.sbsm.blog.utils.ConstantUtil;
 import com.sbsm.blog.vo.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class CategoryService extends BaseService {
+public class CategoryService extends BaseService<Category> {
 
     @Autowired
     private CategoryDao categoryDao;
 
     public ResultPage<Category> findPage(int page, int limit, Category category) {
         List<Category> list = categoryDao.findPage(page * limit, limit, category);
+        for (Category c : list) {
+            List<Log> logs = logService.findAll(new Log(c.getCid(), ConstantUtil.CATEGORY));
+            c.setLogs(logs);
+        }
+
         int count = countByDelFlag(false);
         ResultPage<Category> rp = new ResultPage<>(list);
         rp.setTotalCount(count);
@@ -35,9 +42,11 @@ public class CategoryService extends BaseService {
         if (category.getId() == null) {
             category.preInsert();
             categoryDao.insert(category);
+            logService.save(ConstantUtil.CATEGORY, category.getCid(), "新增分类信息");
         } else {
             category.preUpdate();
             categoryDao.update(category);
+            logService.save(ConstantUtil.CATEGORY, category.getCid(), "修改分类信息");
         }
     }
 

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class DictService extends BaseService {
+public class DictService extends BaseService<Dict> {
 
     @Autowired
     private DictDao dictDao;

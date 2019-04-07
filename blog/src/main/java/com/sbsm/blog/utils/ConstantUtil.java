@@ -7,11 +7,17 @@ public class ConstantUtil {
     /**
      * 图片上架
      */
-    private static final String UP = "up";
+    public static final String UP = "up";
     /**
      * 图片下架
      */
-    private static final String DOWN = "down";
+    public static final String DOWN = "down";
+
+
+    public static final String ARTICLE = "article";
+    public static final String CATEGORY = "category";
+    public static final String TAG = "tag";
+
 
 
 }

@@ -2,8 +2,10 @@ package com.sbsm.blog.service.console;
 
 import com.sbsm.blog.dao.console.ArticleDao;
 import com.sbsm.blog.entity.console.Article;
+import com.sbsm.blog.entity.console.Log;
 import com.sbsm.blog.service.BaseService;
 import com.sbsm.blog.utils.BooleanUtil;
+import com.sbsm.blog.utils.ConstantUtil;
 import com.sbsm.blog.utils.JsonUtil;
 import com.sbsm.blog.vo.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ArticleService extends BaseService {
+public class ArticleService extends BaseService<Article> {
 
     @Autowired
     private ArticleDao articleDao;
@@ -34,6 +36,11 @@ public class ArticleService extends BaseService {
 
     public ResultPage<Article> findDraftPage(int page, int limit, Article article) {
         List<Article> draftList = findDraftList(page, limit, article);
+        for (Article a : draftList) {
+            List<Log> logs = logService.findAll(new Log(a.getAid(), ConstantUtil.ARTICLE));
+            a.setLogs(logs);
+        }
+
         int count = countByIsDraftAndDelFlag(true, false);
         ResultPage<Article> rp = new ResultPage<>(draftList);
         rp.setTotalCount(count);
@@ -51,20 +58,22 @@ public class ArticleService extends BaseService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveDraft(Article article) {
+        String content = "新增草稿文章内容";
         if (article.getId() == null) {
-            log.info("insert");
             article.preInsert();
             articleDao.insert(article);
         } else {
-            log.info("update");
             article.preUpdate();
             articleDao.updateContent(article);
+            content = "修改草稿文章内容";
         }
+        logService.save(ConstantUtil.ARTICLE, article.getAid(), content);
     }
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveArticleInfo(Article article) {
         article.preUpdate();
         articleDao.update(article);
+        logService.save(ConstantUtil.ARTICLE, article.getAid(), "保存文章相关信息");
     }
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateIsDraft(Integer id, boolean isDraft) {

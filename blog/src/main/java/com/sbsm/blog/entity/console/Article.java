@@ -27,7 +27,15 @@ public class Article extends BaseEntity {
 
     private Boolean isDraft;
 
-//    private List<Tag> tags;
+    private String aid;
+
+    @Override
+    public void preInsert() {
+        super.preInsert();
+        this.aid = getCreateTime().getTime()+"";
+    }
+
+    //    private List<Tag> tags;
     private String[] tags;
 
     public Article(Integer id) {

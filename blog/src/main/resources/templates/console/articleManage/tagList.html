@@ -63,11 +63,14 @@
                 case 'edit':
                     editForm(data);
                     break;
+                case 'record':
+                    recordDetail(data);
+                    break;
             };
         });
         //todo 步骤三 监听工具栏事件
         table.on('toolbar(tagList)', function(obj){
-            var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
+            var eventType = obj.event;
             switch(eventType){
                 case 'new':
                     editForm(null);
@@ -79,7 +82,28 @@
         });
     });
 
-
+    function recordDetail(data) {
+        parent.layer.open({
+            type: 2,
+            title: '操作日志',
+            shadeClose: true,
+            area: ['400px', '70%'],
+            skin: 'layui-layer-molv',
+            content: 'common/timeline.html', //iframe的url
+            cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                contentWindow.timeline(data.logs);
+            }
+        });
+    }
 
     function del(data) {
         parent.layer.confirm('确定要删除吗?', {

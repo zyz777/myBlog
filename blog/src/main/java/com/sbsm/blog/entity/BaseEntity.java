@@ -1,9 +1,11 @@
 package com.sbsm.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sbsm.blog.entity.console.Log;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class BaseEntity {
@@ -18,6 +20,8 @@ public class BaseEntity {
     protected String remark;
 
     protected int delFlag;
+
+    private List<Log> logs;
 
     public void preInsert() {
         this.createTime = new Date();

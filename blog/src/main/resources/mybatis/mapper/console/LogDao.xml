@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sbsm.blog.dao.console.LogDao">
+
+
+    <insert id="insert" parameterType="com.sbsm.blog.entity.console.Log">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `log` ( `create_time`, `remark`, `del_flag`, `content`, `type`, `bind_id` )
+        VALUES
+                        ( #{createTime},  #{remark}, #{delFlag}, #{content}, #{type}, #{bindId} )
+    </insert>
+
+
+    <select id="findAll" resultType="com.sbsm.blog.entity.console.Log">
+        select *,`create_time` createTime, `bind_id` bindId from `log`
+        where `del_flag`=0
+        <if test="bindId != null and bindId != ''">
+            and `bind_id`=#{bindId}
+        </if>
+        <if test="type != null and type != ''">
+            and `type` = #{type}
+        </if>
+        order by `create_time` desc
+    </select>
+
+</mapper>
