@@ -62,6 +62,9 @@
             <if test="id != null">
                 and `id` = #{id}
             </if>
+            <if test="arId != null and arId != ''">
+                and `ar_id`= #{arId}
+            </if>
         </where>
         limit 0,1
     </select>

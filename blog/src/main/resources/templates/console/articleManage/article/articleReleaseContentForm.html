@@ -14,42 +14,46 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md6">
             <div class="layui-card">
-                <div class="layui-card-header">请填写本次版本更新内容</div>
+                <div class="layui-card-header"><h3 style="font-weight: bold; color: darkblue;">请填写本次版本更新内容</h3></div>
                 <div class="layui-card-body">
 
 
-                    <form class="layui-form layui-form-pane" action=""  lay-filter="articleInfoForm">
+                    <form class="layui-form layui-form-pane" action=""  lay-filter="articleReleaseContentForm">
                         <div class="layui-form-item layui-hide">
                             <div class="layui-input-block">
                                 <input type="text" name="id" disabled autocomplete="off"  class="layui-input">
                             </div>
                         </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">标题</label>
+                        <div class="layui-form-item layui-hide">
                             <div class="layui-input-block">
-                                <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                                <input type="text" name="arId" disabled autocomplete="off"  class="layui-input">
                             </div>
                         </div>
 
                         <div class="layui-form-item">
-                            <label class="layui-form-label">版本号</label>
+                            <label class="layui-form-label"><span style="color: red; font-weight: bold">*&nbsp;</span>文章标题</label>
                             <div class="layui-input-block">
-                                <input type="text" name="version" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                                <input type="text" name="title" lay-verify="required" readonly autocomplete="off" placeholder="请输入标题" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color: red; font-weight: bold">*&nbsp;</span>版本号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="version" lay-verify="required" autocomplete="off" placeholder="请输入版本号，提交后无法更改" class="layui-input">
                             </div>
                         </div>
 
                         <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">更新内容</label>
+                            <label class="layui-form-label"><span style="color: red; font-weight: bold">*&nbsp;</span>更新内容</label>
                             <div class="layui-input-block">
                                 <!--<textarea name="descn" placeholder="请输入内容, 字符长度不能超过2000" lay-verify="required|descn" class="layui-textarea"></textarea>-->
 
-                                <textarea class="layui-textarea" id="LAY_demo1" style="display: none" placeholder="请输入内容, 字符长度不能超过2000">
-                                  <!--把编辑器的初始内容放在这textarea即可-->
+                                <textarea class="layui-textarea" lay-verify="content" id="LAY_demo1" name="content" style="display: none" >
                                 </textarea>
 
                                 <div class="site-demo-button layui-hide" style="margin-top: 20px;">
-                                    <button class="layui-btn site-demo-layedit" data-type="content">获取编辑器内容</button>
+                                    <button id="getContent" class="layui-btn site-demo-layedit" data-type="content">获取编辑器内容</button>
                                     <button class="layui-btn site-demo-layedit" data-type="text">获取编辑器纯文本内容</button>
                                     <!--<button class="layui-btn site-demo-layedit" data-type="selection">获取编辑器选中内容</button>-->
                                 </div>
@@ -57,7 +61,7 @@
                         </div>
 
                         <div class="layui-form-item" style="display: none;">
-                            <button class="layui-btn " lay-submit lay-filter="saveArticleInfo" id="saveArticleInfo">跳转式提交</button>
+                            <button class="layui-btn " lay-submit lay-filter="save" id="save">跳转式提交</button>
                         </div>
                     </form>
 
@@ -67,11 +71,10 @@
         </div>
         <div class="layui-col-md6">
             <div class="layui-card">
-                <div class="layui-card-header">历史版本更新内容</div>
+                <div class="layui-card-header"><h3 style="font-weight: bold; color: darkblue;">历史版本更新内容</h3></div>
                 <div class="layui-card-body">
 
-                <div>
-                    <div class="layui-collapse" lay-filter="test">
+                    <div class="layui-collapse" lay-filter="test" id="historyVersionDiv">
                         <div class="layui-colla-item" >
                             <h2 class="layui-colla-title">为什么JS社区大量采用未发布或者未广泛支持的语言特性？</h2>
                             <div class="layui-colla-content">
@@ -101,7 +104,6 @@
                     </div>
 
                 </div>
-                </div>
             </div>
         </div>
     </div>
@@ -109,7 +111,8 @@
 
 <script src="../../../layui/layui.js"></script>
 <script>
-    layui.use(['element', 'layer', 'layedit'], function(){
+    var form;
+    layui.use(['element', 'layer', 'layedit', 'form'], function(){
         /*var element = layui.element;
         var layer = layui.layer;
 
@@ -120,6 +123,8 @@
 
         var layedit = layui.layedit
             ,$ = layui.jquery;
+        form = layui.form;
+        var layer = layui.layer;
 
         //构建一个默认的编辑器
         var index = layedit.build('LAY_demo1', {
@@ -143,8 +148,9 @@
 
         //编辑器外部操作
         var active = {
-            content: function(){
-                alert(layedit.getContent(index)); //获取编辑器内容
+            content: function(){  //获取编辑器内容
+                var content = layedit.getContent(index);
+                $('#LAY_demo1').text(content);
             }
             ,text: function(){
                 alert(layedit.getText(index)); //获取编辑器纯文本内容
@@ -165,7 +171,116 @@
             ,height: 100
         })*/
 
+
+
+        // content
+        form.verify({
+            content : function (value, item) {
+                $('#getContent').click();
+                var content = $('#LAY_demo1').text();
+                console.log(content);
+                if (content == null || content.trim() == '') {
+                    return '更新内容不能为空';
+                }
+            }
+        });
+        //LAY_demo1
+
+
+
+        //监听提交
+        form.on('submit(save)', function(data){
+            /*parent.layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })*/
+            // $('#getContent').click();
+            var content = $('#LAY_demo1').text();
+            if (content == null || content.trim() == '') {
+                // layer.msg('必填项不能为空');
+                return;
+            }
+
+            var field = data.field;
+            console.log(content, field);
+            $.ajax({
+                type: 'POST',
+                url: '/console/article/saveInfo',
+                dataType: 'json',
+                data: JSON.stringify(field),//往后台发送的是data.field，即一个{name：value}的数据结构
+                cache: false,
+                contentType: 'application/json;charset=UTF-8',
+                async: false,
+                beforeSend: function(xhr) {
+                    parent.layer.msg('正在提交', {
+                        icon: 16,
+                        // ,shade: 0.01,
+                        shadeClose: false
+                    });
+                },
+                success: function (rs, textStatus, jqXHR) {
+                    // this.closeLoading();
+                    if (rs.code == 0) {
+                        parent.layer.alert('保存成功');
+                        status = 'success';
+                    } else {
+                        status = 'error';
+                        parent.layer.alert(rs.msg);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    // this.closeLoading();
+                    console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                    parent.layer.alert(textStatus);
+                },
+                statusCode: {
+                    404: function () {
+                        parent.layer.alert("404 访问路径不正确");
+                    },
+                    415: function () {
+                        parent.layer.alert("415 内容类型不匹配");
+                    },
+                    400: function () {
+                        parent.layer.alert("400 bad请求");
+                    },
+                    500: function () {
+                        parent.layer.alert("500 服务器异常");
+                    }
+                },
+            });
+            return false;
+        });
+
     });
+
+    function initFormFieldVal(data) {
+        layui.use(['form'], function () {
+            form = layui.form;
+            var $ = layui.jquery;
+            //表单初始赋值
+            form.val('articleReleaseContentForm', {
+                "id": data.id,
+                "arId": data.arId,
+                "adId": data.adId,
+                "title": data.title // "name": "value"
+                ,"createTime": data.createTime
+                ,"updateTime": data.updateTime
+                ,"descn": data.descn
+                ,"imgUrl": data.imgUrl
+            });
+
+
+            // $('#historyVersionDiv').html('');
+            var html = '<div class="layui-colla-item" >' +
+                '                            <h2 class="layui-colla-title">为什么JS社区大量采用未发布或者未广泛支持的语言特性？</h2>' +
+                '                            <div class="layui-colla-content">' +
+                '                                <p>有不少其他答案说是因为JS太差。我下面的答案已经说了，这不是根本性的原因。但除此之外，我还要纠正一些对JS具体问题的误解。JS当初是被作为脚本语言设计的，所以某些问题并不是JS设计得差或者是JS设计者的失误。比如var的作用域问题，并不是“错误”，而是当时绝大部分脚本语言都是这样的，如perl/php/sh等。模块的问题也是，脚本语言几乎都没有模块/命名空间功能。弱类型、for-in之类的问题也是，只不过现在用那些老的脚本语言的人比较少，所以很多人都误以为是JS才有的坑。另外有人说JS是半残语言，满足不了开发需求，1999年就该死。半残这个嘛，就夸张了。JS虽然有很多问题，但是设计总体还是优秀的。——来自知乎@贺师俊</p>' +
+                '                            </div>' +
+                '                        </div>';
+            // $('#historyVersionDiv').append(html);
+        });
+
+    }
+
 </script>
 
 </body>

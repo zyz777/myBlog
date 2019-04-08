@@ -77,6 +77,11 @@
                     loadMarkdown(data);
                     break;
                 case 'release':
+                    var title = data.title;
+                    if (title == null || title == '') {
+                        layer.tips('文章标题不能为空，请先进行编辑', this);
+                        return;
+                    }
                     releaseArticle(data);
                     break;
                 case 'record':
@@ -266,7 +271,7 @@
         console.log(data);
         parent.layer.open({
             type: 2,
-            title: '修改文章信息',
+            title: '发布文章',
             btn: ['保存','取消'],
             shadeClose: true,
             area: ['80%', '90%'],
@@ -278,7 +283,8 @@
                 var childNode = layeroElement.childNodes[1];
                 var firstChild = childNode.firstChild;
                 var contentWindow = firstChild.contentWindow;
-                firstChild.contentDocument.getElementById('saveArticleInfo').click();
+                firstChild.contentDocument.getElementById('save').click();
+                parent.layer.close(index);
                 loadPage();
             }
             ,btn2: function(index, layero){
@@ -296,7 +302,7 @@
                 var childNode = layeroElement.childNodes[1];
                 var firstChild = childNode.firstChild;
                 var contentWindow = firstChild.contentWindow;
-                // contentWindow.initFormFieldVal(data);
+                contentWindow.initFormFieldVal(data);
             }
         });
     }

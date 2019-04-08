@@ -6,17 +6,10 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Log extends BaseEntity {
+public class ArticleVersion extends BaseEntity {
 
+    private String version;
     private String content;
-    private String type;
-    private String bindId;
+    private String arId;
 
-    public Log(String bindId, String type) {
-        this.bindId = bindId;
-        this.type=type;
-    }
-
-    public Log() {
-    }
 }

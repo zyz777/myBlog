@@ -2,10 +2,8 @@ package com.sbsm.blog.controller.console;
 
 import com.sbsm.blog.controller.BaseController;
 import com.sbsm.blog.entity.console.ArticleDraft;
-import com.sbsm.blog.entity.console.ArticleDraft;
+import com.sbsm.blog.entity.console.ArticleVersion;
 import com.sbsm.blog.service.console.ArticleDraftService;
-import com.sbsm.blog.service.console.ArticleService;
-import com.sbsm.blog.utils.JsonUtil;
 import com.sbsm.blog.vo.ResultBean;
 import com.sbsm.blog.vo.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +71,12 @@ public class ArticleDraftController extends BaseController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultBean deleteMore(@RequestBody Integer[] ids) {
         articleDraftService.deleteMore(ids);
+        return new ResultBean<>();
+    }
+
+    @RequestMapping(value = "/releaseArticle", method = RequestMethod.POST)
+    public ResultBean releaseArticle(@RequestBody ArticleVersion articleVersion) {
+        articleDraftService.releaseArticle(articleVersion);
         return new ResultBean<>();
     }
 

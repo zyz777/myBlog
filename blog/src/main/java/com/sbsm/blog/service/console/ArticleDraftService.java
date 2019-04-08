@@ -2,6 +2,7 @@ package com.sbsm.blog.service.console;
 
 import com.sbsm.blog.dao.console.ArticleDraftDao;
 import com.sbsm.blog.entity.console.ArticleDraft;
+import com.sbsm.blog.entity.console.ArticleVersion;
 import com.sbsm.blog.entity.console.Log;
 import com.sbsm.blog.service.BaseService;
 import com.sbsm.blog.utils.ConstantUtil;
@@ -89,5 +90,21 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
         for (Integer id : ids) {
             articleDraftDao.delete(id);
         }
+    }
+
+    /**
+     * 发表文章
+     * @param articleVersion
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void releaseArticle(ArticleVersion articleVersion) {
+        //todo 1. 根据 arId 查询  draft表
+
+        //todo 2. 根据 isNew 判断， release表不存在，则把draft表的数据插入，如果存在，就更新版本号和内容，标题等
+
+        //todo 3. 新增 version表的数据
+
+        //todo 4. 删除 draft
+
     }
 }
