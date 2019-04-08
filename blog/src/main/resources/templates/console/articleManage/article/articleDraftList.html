@@ -261,44 +261,6 @@
         }
     }
 
-    /*
-
-    $.ajax({
-                    type: 'get',
-                    url: '/console/article/release/'+data.id,
-                    async: true,
-                    cache: false,
-                    dataType: 'json',
-                    success: function (rs, textStatus, jqXHR) {
-                        if (rs.code == 0) {
-                            parent.layer.alert('发布成功');
-                            loadPage();//刷新列表
-                        } else {
-                            parent.layer.alert(rs.msg);
-                        }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        // this.closeLoading();
-                        console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
-                        parent.layer.alert(textStatus);
-                    },
-                    statusCode: {
-                        404: function () {
-                            parent.layer.alert("404 访问路径不正确");
-                        },
-                        415: function () {
-                            parent.layer.alert("415 内容类型不匹配");
-                        },
-                        400: function () {
-                            parent.layer.alert("400 bad请求");
-                        },
-                        500: function () {
-                            parent.layer.alert("500 服务器异常");
-                        }
-                    },
-                });
-
-    */
 
     function releaseArticle(data) {
         console.log(data);

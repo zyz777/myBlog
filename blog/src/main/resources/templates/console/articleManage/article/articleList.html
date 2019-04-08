@@ -21,11 +21,12 @@
 <!-- 行的按钮 -->
 <script type="text/html" id="barDemo">
     <!--<a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
-    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="查看/编辑">
-        <i class="layui-icon">&#xe642;</i>
-    </a>
     <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del" title="删除">
-        <i class="layui-icon">&#xe640;</i>
+        <!--<i class="layui-icon">&#xe640;</i>-->删除
+    </a>
+    <!-- layui-bg-gray -->
+    <a class="layui-btn layui-btn-xs layui-bg-green"  lay-event="record" title="日志">
+        <!--<i class="layui-icon">&#xe640;</i>-->日志
     </a>
 </script>
 
@@ -38,75 +39,68 @@
 <script type="text/html" id="isCommentTpl">
     {{#
         var checkedFn = function(){
-            if(d.isComment == null || d.isComment == '') {
-                return 'disabled';
-            }
             return  d.isComment ? 'checked':'';
         };
     }}
     <!--lay-text="开启|关闭"-->
-    <input type="checkbox" name="isComment" lay-skin="switch"    {{ checkedFn() }}  >
+    <input type="checkbox" name="isComment" lay-skin="switch" data-id="{{d.id}}" lay-filter="isComment"  {{ checkedFn() }}  >
 </script>
 <script type="text/html" id="isRecommendationTpl">
     {{#
         var checkedFn = function(){
-            if(d.isRecommendation == null || d.isRecommendation == '') {
-            return 'disabled';
-            }
-           return d.isRecommendation ? 'checked':'';
+           return d.isRecommend ? 'checked':'';
         };
     }}
     <!--lay-text="开启|关闭"-->
-    <input type="checkbox" name="isRecommendation" lay-skin="switch"    {{ checkedFn() }} >
+    <input type="checkbox" name="isRecommendation" lay-skin="switch" data-id="{{d.id}}" lay-filter="isRecommendation"   {{ checkedFn() }} >
 </script>
 <script type="text/html" id="isTopTpl">
     {{#
     var checkedFn = function(){
-    if(d.isTop == null || d.isTop == '') {
-    return 'disabled';
-    }
     return d.isTop ? 'checked':'';
     };
     }}
     <!--lay-text="开启|关闭"-->
-    <input type="checkbox" name="isTop" lay-skin="switch"    {{ checkedFn() }} >
+    <input type="checkbox" name="isTop" lay-skin="switch" lay-filter="isTop"  data-id="{{d.id}}" {{ checkedFn() }} >
 </script>
 <script>
     var layer;
-    layui.use(['table', 'layer'], function(){
+    var $;
+    layui.use(['table', 'layer', 'form'], function(){
         var table = layui.table;
         layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
 
         //第一个实例
         table.render({
             elem: '#articleListTable'
             ,height: 'full-20'
-            ,url: 'articleList.json' //数据接口
+            ,url: '/console/articleRelease/findPage' //数据接口
             // ,method:'POST'   //laui 修改请求方式
             // ,request: {
             //     pageName: 'currentPageNo' //页码的参数名称，默认：page
             //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
             // }
-            // , response: {
-            //     statusName: 'code' //数据状态的字段名称，默认：code
-            //     ,countName: 'count' //数据总数的字段名称，默认：count
-            //     ,dataName: 'data' //默数据列表的字段名称，默认：data
-            //
-            // }
-            ,title: '用户表'
+            , response: {
+                statusName: 'code' //数据状态的字段名称，默认：code
+                ,countName: 'totalCount' //数据总数的字段名称，默认：count
+                ,dataName: 'data' //默数据列表的字段名称，默认：data
+            }
+            ,title: '文章发行表'
             ,page: true //开启分页
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
                 ,{field: 'title', title: '标题', width:80}
-                ,{field: 'isComment', title: '评论', sort: true, templet: '#isCommentTpl'}
+                ,{field: 'isComment', title: '评论', templet: '#isCommentTpl'}
                 ,{field: 'isRecommendation', title: '推荐', templet: '#isRecommendationTpl'}
                 ,{field: 'isTop', title: '置顶', templet: '#isTopTpl'}
-                ,{field: 'browseNum', title: '浏览量', sort: true}
-                ,{field: 'commentNum', title: '评论量', sort: true}
-                ,{field: 'likeNum', title: '喜欢', sort: true}
+                ,{field: 'browseNum', title: '浏览量' }
+                ,{field: 'commentNum', title: '评论量'}
+                ,{field: 'likeNum', title: '喜欢'}
                 ,{field: 'createDate', title: '发布时间', width: 135, sort: true}
-                ,{title: '操作', width: 100, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
+                ,{title: '操作', width: 110, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
             totalRow: false,
@@ -114,15 +108,15 @@
 
         //todo 步骤二  监听事件, '操作'单元格的事件
         table.on('tool(articleListTable)', function(obj){
+            console.log(obj);
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             var data = obj.data;
             switch(eventType){
                 case 'del':
                     layer.msg('删除');
                     break;
-                case 'edit':
-                    layer.msg('编辑');
-                    editForm(data);
+                case 'record':
+                    recordDetail(data);
                     break;
             };
         });
@@ -131,13 +125,104 @@
         table.on('toolbar(articleListTable)', function(obj){
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             switch(eventType){
-
+                case 'delMore':
+                    layer.tips('请先选择', this)
+                    break;
             };
         });
+
+        //监听指定开关
+        form.on('switch(isComment)', function(obj){
+            // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+            //obj.elem.checked
+            var id = $(obj.elem).data('id');
+            console.log(id);
+            var msg = updateBool(id, 'isComment', obj.elem.checked);
+            layer.tips(msg, obj.othis);
+        });
+        form.on('switch(isRecommendation)', function(obj){
+            //obj.elem.checked
+            var id = $(obj.elem).data('id');
+            console.log(id);
+            var msg = updateBool(id, 'isRecommend', obj.elem.checked)
+            layer.tips(msg, obj.othis);
+        });
+        form.on('switch(isTop)', function(obj){
+            //obj.elem.checked
+            var id = $(obj.elem).data('id');
+            console.log(id);
+            var msg = updateBool(id, 'isTop', obj.elem.checked)
+            layer.tips(msg, obj.othis);
+        });
+
     });
 
+    function updateBool(id, field, result) {
+        var rsMsg = '';
+        $.ajax({
+            type: 'post',
+            url: '/console/articleRelease/updateBoolean',
+            async: false,
+            cache: false,
+            dataType: 'json',
+            data: {
+                id: id,
+                field: field,
+                result: result
+            },
+            // contentType: 'application/json;charset=UTF-8',
+            success: function (rs, textStatus, jqXHR) {
+                if (rs.code == 0) {
+                    rsMsg = '修改成功';
+                } else {
+                    rsMsg = '修改失败';
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // this.closeLoading();
+                console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                rsMsg = "textStatus: "+textStatus;
+            },
+            statusCode: {
+                404: function () {
+                   rsMsg ="404 访问路径不正确";
+                },
+                415: function () {
+                   rsMsg ="415 内容类型不匹配";
+                },
+                400: function () {
+                   rsMsg ="400 bad请求";
+                },
+                500: function () {
+                   rsMsg ="500 服务器异常";
+                }
+            },
+        });
+        return rsMsg;
+    }
 
-
+    function recordDetail(data) {
+        parent.layer.open({
+            type: 2,
+            title: '操作日志',
+            shadeClose: true,
+            area: ['400px', '70%'],
+            skin: 'layui-layer-molv',
+            content: 'common/timeline.html', //iframe的url
+            cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                contentWindow.timeline(data.logs);
+            }
+        });
+    }
 
 </script>
 </body>

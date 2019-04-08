@@ -26,6 +26,12 @@ public class LogService extends BaseService<Log> {
         return logDao.findAll(log);
     }
 
+    /**
+     *
+     * @param type
+     * @param bindId
+     * @param content
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public void save(String type, String bindId, String content) {
         Log log = new Log();

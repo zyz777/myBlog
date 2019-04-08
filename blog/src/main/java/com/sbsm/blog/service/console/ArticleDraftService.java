@@ -72,11 +72,11 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
 
     /**
      * 查询总数
-     * @param b
+     * @param isDel
      * @return
      */
-    private int countByDelFlag(boolean b) {
-        return articleDraftDao.countByDelFlag(b);
+    private int countByDelFlag(boolean isDel) {
+        return articleDraftDao.countByDelFlag(isDel);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
