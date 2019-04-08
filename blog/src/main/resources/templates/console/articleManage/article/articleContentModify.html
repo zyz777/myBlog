@@ -20,16 +20,16 @@
 </div>
 
 <input type="hidden" id="articleId" />
-<input type="hidden" id="aid" />
+<input type="hidden" id="arId" />
 
 <script src="../../../third-plugin/editor.md/examples/js/jquery.min.js"></script>
 <script src="../../../third-plugin/editor.md/editormd.js"></script>
 <script>
     var testEditor;
 
-    function setIdAndMd(id, aid, md) {
+    function setIdAndMd(id, arId, md) {
         $("#articleId").val(id);
-        $('#aid').val(aid);
+        $('#arId').val(arId);
 
         testEditor = editormd("test-editormd", {
             width: "90%",
@@ -78,17 +78,17 @@
     function saveDraft() {
         var markdown = testEditor.getMarkdown();
         var articleId = $('#articleId').val();
-        var aid = $('#aid').val();
-        console.log('articleId = ' + articleId, 'aid = ' + aid);
+        var arId = $('#arId').val();
+        console.log('articleId = ' + articleId, 'arId = ' + arId);
         var status;
 
         $.ajax({
             type: 'post',
-            url: '/console/article/saveDraft',
+            url: '/console/articleDraft/saveContent',
             data: JSON.stringify({
                 id: articleId,
                 content: markdown,
-                aid: aid
+                arId: arId
             }),
             dataType: 'json',
             cache: false,
@@ -107,7 +107,7 @@
                     parent.layer.alert('保存成功');
                     status = 'success';
                     $('#articleId').val(rs.data.id);
-                    $('#aid').val(rs.data.aid);
+                    $('#arId').val(rs.data.arId);
                 } else {
                     status = 'error';
                     parent.layer.alert(rs.msg);

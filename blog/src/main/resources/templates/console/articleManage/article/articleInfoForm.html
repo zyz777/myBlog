@@ -17,7 +17,12 @@
         </div>
         <div class="layui-form-item layui-hide">
             <div class="layui-input-block">
-                <input type="text" name="aid" disabled autocomplete="off"  class="layui-input">
+                <input type="text" name="adId" disabled autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <div class="layui-input-block">
+                <input type="text" name="arId" disabled autocomplete="off"  class="layui-input">
             </div>
         </div>
 
@@ -241,7 +246,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/console/article/saveArticleInfo',
+                url: '/console/articleDraft/saveInfo',
                 dataType: 'json',
                 data: JSON.stringify(field),//往后台发送的是data.field，即一个{name：value}的数据结构
                 cache: false,
@@ -295,7 +300,8 @@
             //表单初始赋值
             form.val('articleInfoForm', {
                 "id": data.id,
-                "aid": data.aid,
+                "arId": data.arId,
+                "adId": data.adId,
                 "title": data.title // "name": "value"
                 ,"createTime": data.createTime
                 ,"updateTime": data.updateTime

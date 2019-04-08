@@ -1,0 +1,93 @@
+package com.sbsm.blog.service.console;
+
+import com.sbsm.blog.dao.console.ArticleDraftDao;
+import com.sbsm.blog.entity.console.ArticleDraft;
+import com.sbsm.blog.entity.console.Log;
+import com.sbsm.blog.service.BaseService;
+import com.sbsm.blog.utils.ConstantUtil;
+import com.sbsm.blog.vo.ResultPage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ArticleDraftService extends BaseService<ArticleDraft> {
+
+    @Autowired
+    private ArticleDraftDao articleDraftDao;
+
+    public ArticleDraft findOne(Integer id) {
+        if (id == null) {
+            return null;
+        }
+        Optional<ArticleDraft> one = articleDraftDao.findOne(new ArticleDraft(id));
+        return one.orElse(null);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveContent(ArticleDraft articleDraft) {
+        String content = "新增文章内容";
+        ArticleDraft one = findOne(articleDraft.getId());
+        if (one == null) {
+            articleDraft.preInsert();
+            articleDraft.setIsNew(true);
+            articleDraftDao.insert(articleDraft);
+        } else {
+            content = "修改文章内容";
+            articleDraft.preUpdate();
+            articleDraftDao.updateContent(articleDraft);
+        }
+
+        logService.save(ConstantUtil.ARTICLE, articleDraft.getArId(), content);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveInfo(ArticleDraft articleDraft) {
+        articleDraftDao.update(articleDraft);
+        logService.save(ConstantUtil.ARTICLE, articleDraft.getArId(), "保存文章信息");
+    }
+
+    /**
+     * 分页查询
+     * @param page
+     * @param limit
+     * @param articleDraft
+     * @return
+     */
+    public ResultPage<ArticleDraft> findPage(int page, int limit, ArticleDraft articleDraft) {
+        List<ArticleDraft> list = articleDraftDao.findPage(page * limit, limit, articleDraft);
+        for (ArticleDraft data : list) {
+            List<Log> logs = logService.findAll(new Log(data.getArId(), ConstantUtil.ARTICLE));
+            data.setLogs(logs);
+        }
+        int count = countByDelFlag(false);
+        ResultPage<ArticleDraft> rp = new ResultPage<>(list);
+        rp.setTotalCount(count);
+        return rp;
+    }
+
+    /**
+     * 查询总数
+     * @param b
+     * @return
+     */
+    private int countByDelFlag(boolean b) {
+        return articleDraftDao.countByDelFlag(b);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(Integer id) {
+        articleDraftDao.delete(id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteMore(Integer[] ids) {
+        for (Integer id : ids) {
+            articleDraftDao.delete(id);
+        }
+    }
+}

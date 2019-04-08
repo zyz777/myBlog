@@ -19,10 +19,10 @@
 <script src="../../../layui/layui.js"></script>
 <script type="text/html" id="barDemo">
 
-    {{# if (d.id == 1) { }}
-    <a class="layui-btn layui-btn-xs layui-icon " lay-event="release" title="首次发布">首次发布</a>
-    {{# } else  { }}
+    {{# if (d.isNew == false) { }}
     <a class="layui-btn layui-btn-xs layui-icon " lay-event="release" style="background-color: #1e9fff;" title="新版发布">新版发布</a>
+    {{# } else  { }}
+    <a class="layui-btn layui-btn-xs layui-icon " lay-event="release" title="首次发布">首次发布</a>
     {{# }  }}
 
 
@@ -107,7 +107,7 @@
             type: 2,
             title: '操作日志',
             shadeClose: true,
-            area: ['400px', '70%'],
+            area: ['300px', '65%'],
             skin: 'layui-layer-molv',
             content: 'common/timeline.html', //iframe的url
             cancel: function(){
@@ -131,7 +131,7 @@
             elem: '#articleDraftListTable'
             ,height: 'full-20'
             // ,url: 'articleList.json' //数据接口
-            ,url: '/console/article/findDraftPage' //数据接口
+            ,url: '/console/articleDraft/findPage' //数据接口
             // ,method:'POST'   //laui 修改请求方式
             // ,request: {
             //     pageName: 'currentPageNo' //页码的参数名称，默认：page
@@ -165,7 +165,7 @@
             ,yes: function (index, layero) {
                 $.ajax({
                     type: 'get',
-                    url: '/console/article/delete/'+data.id,
+                    url: '/console/articleDraft/delete/'+data.id,
                     async: true,
                     cache: false,
                     dataType: 'json',
@@ -218,7 +218,7 @@
                 ,yes: function (index, layero) {
                     $.ajax({
                         type: 'post',
-                        url: '/console/article/delete',
+                        url: '/console/articleDraft/delete',
                         async: true,
                         cache: false,
                         dataType: 'json',
@@ -301,6 +301,7 @@
     */
 
     function releaseArticle(data) {
+        console.log(data);
         parent.layer.open({
             type: 2,
             title: '修改文章信息',
@@ -407,7 +408,7 @@
             shadeClose: true,
             area: ['400px', '90%'],
             skin: 'layui-layer-molv',
-            content: 'articleManage/articleInfoForm.html', //iframe的url
+            content: 'articleManage/article/articleInfoForm.html', //iframe的url
             yes: function(index, layero){
                 //按钮【按钮一】的回调
                 var layeroElement = layero[0];
@@ -433,6 +434,7 @@
                 var firstChild = childNode.firstChild;
                 var contentWindow = firstChild.contentWindow;
                 contentWindow.initFormFieldVal(data);
+                console.log(data);
             }
         });
 
@@ -440,9 +442,9 @@
     }
 
     function loadMarkdown(data) {
-        var contentUrl = 'articleManage/articleContentModify.html';
+        var contentUrl = 'articleManage/article/articleContentModify.html';
         if (data == null) {
-            contentUrl = 'articleManage/articleContentForm.html';
+            contentUrl = 'articleManage/article/articleContentForm.html';
         }
 
         // var confirm = parent.layer.confirm('articleManage/articleContentModify.html', {
@@ -466,6 +468,7 @@
                 if (status != 'success') {
                     return false;
                 }
+                loadPage();
             }
             ,btn3: function(index, layero){
                 //按钮【按钮二】的回调
@@ -479,14 +482,15 @@
             },
             success: function(layero, index){
                 if (data != null) {
+                    console.log(data);
                     var md = data.content;
                     var id = data.id;
-                    var aid = data.aid;
+                    var arId = data.arId;
                     var layeroElement = layero[0];
                     var childNode = layeroElement.childNodes[1];
                     var firstChild = childNode.firstChild;
                     var contentWindow = firstChild.contentWindow;
-                    contentWindow.setIdAndMd(id,aid, md);
+                    contentWindow.setIdAndMd(id,arId, md);
                 }
                 parent.layer.full(confirm);//默认最大化
             }
