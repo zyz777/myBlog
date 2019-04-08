@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
 </head>
 <body>
 
@@ -15,6 +15,13 @@
                 <input type="text" name="id" disabled autocomplete="off"  class="layui-input">
             </div>
         </div>
+
+        <div class="layui-form-item layui-hide">
+            <div class="layui-input-block">
+                <input type="text" name="cid" disabled autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+
         <div class="layui-form-item layui-hide">
             <div class="layui-input-block">
                 <input type="text" name="pCid" disabled autocomplete="off"  class="layui-input">
@@ -78,7 +85,7 @@
     </form>
 </div>
 
-<script src="../../layui/layui.js"></script>
+<script src="../../../layui/layui.js"></script>
 <script>
     var form;
     var $;
@@ -212,6 +219,7 @@
             //表单初始赋值
             form.val('dictForm', {
                 "id": data.id,
+                "cid": data.cid,
                 "pCid": data.pCid,
                 "name": data.name,
                 "sort": data.sort,

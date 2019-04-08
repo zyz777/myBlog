@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../../layui/css/layui.css">
-    <link rel="stylesheet" href="../../third-plugin/editor.md/examples/css/style.css" />
-    <link rel="stylesheet" href="../../third-plugin/editor.md/css/editormd.css" />
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../../third-plugin/editor.md/examples/css/style.css" />
+    <link rel="stylesheet" href="../../../third-plugin/editor.md/css/editormd.css" />
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
 </head>
 <body>
@@ -20,9 +20,10 @@
 </div>
 
 <input type="hidden" id="articleId" />
+<input type="hidden" id="aid" />
 
-<script src="../../third-plugin/editor.md/examples/js/jquery.min.js"></script>
-<script src="../../third-plugin/editor.md/editormd.js"></script>
+<script src="../../../third-plugin/editor.md/examples/js/jquery.min.js"></script>
+<script src="../../../third-plugin/editor.md/editormd.js"></script>
 <script>
     var testEditor;
     $(function () {
@@ -30,7 +31,7 @@
             testEditor = editormd("test-editormd", {
                 width: "90%",
                 height: 740,
-                path : '../../third-plugin/editor.md/lib/',
+                path : '../../../third-plugin/editor.md/lib/',
                 theme : "dark",
                 previewTheme : "dark",
                 editorTheme : "pastel-on-dark",
@@ -75,7 +76,8 @@
     function saveDraft() {
         var markdown = testEditor.getMarkdown();
         var articleId = $('#articleId').val();
-        console.log('articleId = ' + articleId);
+        var aid = $('#aid').val();
+        console.log('articleId = ' + articleId, 'aid = ' + aid);
         var status;
 
         $.ajax({
@@ -83,7 +85,8 @@
             url: '/console/article/saveDraft',
             data: JSON.stringify({
                 id: articleId,
-                content: markdown
+                content: markdown,
+                aid: aid
             }),
             dataType: 'json',
             cache: false,
@@ -102,6 +105,7 @@
                     parent.layer.alert('保存成功');
                     status = 'success';
                     $('#articleId').val(rs.data.id);
+                    $('#aid').val(rs.data.aid);
                 } else {
                     status = 'error';
                     parent.layer.alert(rs.msg);

@@ -39,15 +39,16 @@ public class TagService extends BaseService<Tag> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void save(Tag tag) {
+        String content = "新增标签信息";
         if (tag.getId() == null) {
             tag.preInsert();
             tagDao.insert(tag);
-            logService.save(ConstantUtil.TAG, tag.getTid(), "新增标签信息");
         } else {
             tag.preUpdate();
             tagDao.update(tag);
-            logService.save(ConstantUtil.TAG, tag.getTid(), "修改标签信息");
+            content = "修改标签信息";
         }
+        logService.save(ConstantUtil.TAG, tag.getTid(), content);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

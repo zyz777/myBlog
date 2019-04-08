@@ -24,8 +24,11 @@ public class ArticleService extends BaseService<Article> {
     @Autowired
     private ArticleDao articleDao;
 
-    public Article get(Article article) {
-        return new Article();
+    public Article findOne(Article article) {
+        return articleDao.findOne(article).orElse(null);
+    }
+    public Article findOne(Integer id) {
+        return articleDao.findOne(new Article(id)).orElse(null);
     }
 
     public void save(Article article) {
@@ -75,15 +78,30 @@ public class ArticleService extends BaseService<Article> {
         articleDao.update(article);
         logService.save(ConstantUtil.ARTICLE, article.getAid(), "保存文章相关信息");
     }
+
+    /**
+     * 发表文章
+     * @param id
+     * @param isDraft
+     */
     @Transactional(propagation = Propagation.REQUIRED)
-    public void updateIsDraft(Integer id, boolean isDraft) {
-        articleDao.updateIsDraft(id, isDraft);
+    public void release(Integer id, boolean isDraft) {
+        Article article = this.findOne(id);
+        articleDao.updateIsDraft(article.getId(), isDraft);
+        logService.save(ConstantUtil.ARTICLE, article.getAid(), "发表此文章");
     }
 
+    /**
+     * 批量发表文章
+     * @param ids
+     * @param isDraft
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateMoreIsDraft(Integer[] ids, boolean isDraft) {
-        for (Integer id : ids) {
-            articleDao.updateIsDraft(id, isDraft);
+        List<Article> list = articleDao.findByIds(ids);
+        for (Article article : list) {
+            articleDao.updateIsDraft(article.getId(), isDraft);
+            logService.save(ConstantUtil.ARTICLE, article.getAid(), "发表此文章");
         }
     }
 

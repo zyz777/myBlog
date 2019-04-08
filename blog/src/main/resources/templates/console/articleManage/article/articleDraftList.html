@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
     <title>Title</title>
-    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
 
@@ -16,10 +16,16 @@
 </div>
 
 
-<script src="../../layui/layui.js"></script>
+<script src="../../../layui/layui.js"></script>
 <script type="text/html" id="barDemo">
-    <!-- layui-icon-ok-circle -->
-    <a class="layui-btn layui-btn-xs layui-icon " lay-event="release" title="发布">发布</a>
+
+    {{# if (d.id == 1) { }}
+    <a class="layui-btn layui-btn-xs layui-icon " lay-event="release" title="首次发布">首次发布</a>
+    {{# } else  { }}
+    <a class="layui-btn layui-btn-xs layui-icon " lay-event="release" style="background-color: #1e9fff;" title="新版发布">新版发布</a>
+    {{# }  }}
+
+
     <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="edit" title="编辑">
         <!--<i class="layui-icon">&#xe642;</i>-->编辑
     </a>
@@ -35,9 +41,12 @@
     </a>
 </script>
 <script type="text/html" id="barDemo2">
-    <a class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" id="releaseMore" lay-event="releaseMore">
-        <i class="layui-icon">&#x1005;</i> 批量发布
+    <a class="layui-btn  layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="new">
+        <i class="layui-icon">&#xe608;</i> 新增文章内容
     </a>
+   <!-- <a class="layui-btn layui-btn-radius  layui-btn-sm" id="releaseMore" lay-event="releaseMore">
+        <i class="layui-icon">&#x1005;</i> 批量发布
+    </a>-->
     <a class="layui-btn  layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delMore">
         <i class="layui-icon">&#xe640;</i> 批量删除
     </a>
@@ -71,7 +80,7 @@
                     releaseArticle(data);
                     break;
                 case 'record':
-                    layer.msg('日志')
+                    recordDetail(data);
                     break;
             };
         });
@@ -81,14 +90,40 @@
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             switch(eventType){
                 case 'releaseMore':
-                    releaseMore();
+                    // releaseMore();
                     break;
                 case 'delMore':
                     delMore();
                     break;
+                case 'new':
+                    loadMarkdown(null);
+                    break;
             };
         });
     });
+
+    function recordDetail(data) {
+        parent.layer.open({
+            type: 2,
+            title: '操作日志',
+            shadeClose: true,
+            area: ['400px', '70%'],
+            skin: 'layui-layer-molv',
+            content: 'common/timeline.html', //iframe的url
+            cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                contentWindow.timeline(data.logs);
+            }
+        });
+    }
 
     function loadPage() {
         //第一个实例
@@ -116,7 +151,7 @@
                 ,{field: 'descn', width: 170, title: '摘要'}
                 ,{field: 'createTime', width: 170, title: '创建时间',  sort: true}
                 ,{field: 'updateTime', width: 170, title: '修改时间',  sort: true}
-                ,{title: '操作', width: 273, toolbar: '#barDemo', fixed: 'right', event:'aa'}
+                ,{title: '操作', width: 296, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',
             totalRow: false,
@@ -226,12 +261,9 @@
         }
     }
 
-    function releaseArticle(data) {
-        parent.layer.confirm('确定发布此文章吗?', {
-            btn: ['确定','取消'] //按钮
-            ,shadeClose:true
-            ,yes: function (index, layero) {
-                $.ajax({
+    /*
+
+    $.ajax({
                     type: 'get',
                     url: '/console/article/release/'+data.id,
                     async: true,
@@ -265,14 +297,50 @@
                         }
                     },
                 });
-                parent.layer.close(index);
+
+    */
+
+    function releaseArticle(data) {
+        parent.layer.open({
+            type: 2,
+            title: '修改文章信息',
+            btn: ['保存','取消'],
+            shadeClose: true,
+            area: ['80%', '90%'],
+            skin: 'layui-layer-molv',
+            content: 'articleManage/article/articleReleaseContentForm.html', //iframe的url
+            yes: function(index, layero){
+                //按钮【按钮一】的回调
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                firstChild.contentDocument.getElementById('saveArticleInfo').click();
+                loadPage();
             }
-            ,btn2: function (index, layero) {
-                console.info('否');
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('关闭');
+                // return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                // contentWindow.initFormFieldVal(data);
             }
         });
     }
 
+    /**
+     * @Deprecated '批量发布' 函数无用
+     */
     function releaseMore() {
         var datas = table.checkStatus('articleDraftListTable').data;   // articleDraftListTable 为表格id
         if (datas.length > 0) {
@@ -372,10 +440,13 @@
     }
 
     function loadMarkdown(data) {
-        var md = data.content;
-        var id = data.id;
+        var contentUrl = 'articleManage/articleContentModify.html';
+        if (data == null) {
+            contentUrl = 'articleManage/articleContentForm.html';
+        }
 
-        var confirm = parent.layer.confirm('articleManage/articleContentModify.html', {
+        // var confirm = parent.layer.confirm('articleManage/articleContentModify.html', {
+        var confirm =  parent.layer.open({
             type: 2,
             btn: ['保存草稿'], //按钮
             title: '编辑文章',
@@ -384,6 +455,7 @@
             // area: 'auto',
             area: ['50%', '50%'],
             maxmin: true,
+            content: contentUrl,
             yes: function(index, layero){
                 //按钮【按钮一】的回调
                 var layeroElement = layero[0];
@@ -406,12 +478,16 @@
                 // return false; // 开启该代码可禁止点击该按钮关闭
             },
             success: function(layero, index){
-                var layeroElement = layero[0];
-                var childNode = layeroElement.childNodes[1];
-                var firstChild = childNode.firstChild;
-                var contentWindow = firstChild.contentWindow;
-                contentWindow.setIdAndMd(id, md);
-
+                if (data != null) {
+                    var md = data.content;
+                    var id = data.id;
+                    var aid = data.aid;
+                    var layeroElement = layero[0];
+                    var childNode = layeroElement.childNodes[1];
+                    var firstChild = childNode.firstChild;
+                    var contentWindow = firstChild.contentWindow;
+                    contentWindow.setIdAndMd(id,aid, md);
+                }
                 parent.layer.full(confirm);//默认最大化
             }
         });

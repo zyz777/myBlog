@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
     <title>分类列表</title>
-    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
 
@@ -16,7 +16,7 @@
 </div>
 
 
-<script src="../../layui/layui.js"></script>
+<script src="../../../layui/layui.js"></script>
 
 <!-- 行的按钮 -->
 <script type="text/html" id="barDemo">
@@ -63,6 +63,9 @@
                 case 'edit':
                     editForm(data);
                     break;
+                case 'record':
+                    recordDetail(data);
+                    break;
             };
         });
         //todo 步骤三 监听工具栏事件
@@ -80,6 +83,28 @@
 
     });
 
+    function recordDetail(data) {
+        parent.layer.open({
+            type: 2,
+            title: '操作日志',
+            shadeClose: true,
+            area: ['400px', '70%'],
+            skin: 'layui-layer-molv',
+            content: 'common/timeline.html', //iframe的url
+            cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentWindow = firstChild.contentWindow;
+                contentWindow.timeline(data.logs);
+            }
+        });
+    }
 
     function del(data) {
         parent.layer.confirm('确定要删除吗?', {

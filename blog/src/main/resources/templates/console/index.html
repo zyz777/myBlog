@@ -82,10 +82,10 @@
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;"><i class="layui-icon layui-icon-read"></i>&nbsp;&nbsp;文章管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" layui-url="./articleManage/articleList.html">&nbsp;&nbsp;文章列表</a></dd>
-                        <dd><a href="javascript:;" layui-url="./articleManage/articleDraftList.html">&nbsp;&nbsp;草稿列表</a></dd>
-                        <dd><a href="javascript:;" layui-url="./articleManage/categoryList.html">&nbsp;&nbsp;分类列表</a></dd>
-                        <dd><a href="javascript:;" layui-url="./articleManage/tagList.html">&nbsp;&nbsp;标签列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="./articleManage/article/articleList.html">&nbsp;&nbsp;文章列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="./articleManage/article/articleDraftList.html">&nbsp;&nbsp;草稿列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="./articleManage/category/categoryList.html">&nbsp;&nbsp;分类列表</a></dd>
+                        <dd><a href="javascript:;" layui-url="./articleManage/tag/tagList.html">&nbsp;&nbsp;标签列表</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -162,7 +162,7 @@
 
     //JavaScript代码区域
     layui.config({
-        base: '../third-plugin/tabrightmenu/module/',
+        base: '../third-plugin/tabrightmenu/module/'
     }).use(['element','layer', 'tabrightmenu',  'form'], function(){
         var element = layui.element;
         $ = layui.$;
@@ -234,7 +234,9 @@
         });
 
         //todo 步骤二  页面初始化时, 加载'首页'
-        activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./articleManage/articleDetail.html");
+        // activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./articleManage/articleDetail.html");
+        activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "index2.html");
+        // activity.tabAdd('首页', '首页', '首页'+'选项卡的内容', "./articleManage/article/articleReleaseContentForm.html");
 
     });
 

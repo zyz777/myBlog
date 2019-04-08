@@ -7,7 +7,7 @@
 
 </head>
 <body>
-<div style="margin-top: 0.5rem; margin-left: 0.2rem">
+<div style="margin-top: 0.5rem; margin-left: 0.2rem; margin-right: 0.5rem">
     <ul class="layui-timeline" id="timeUl">
         <li class="layui-timeline-item">
             <i class="layui-icon layui-timeline-axis"></i>
@@ -74,7 +74,22 @@
                     '            <i class="layui-icon layui-timeline-axis"></i>' +
                     '            <div class="layui-timeline-content layui-text">' +
                     '                <h3 class="layui-timeline-title">'+o.createTime+'</h3>' +
-                    '                <p>' + o.content +
+                    '                <p>'
+                +
+                '<div style="padding: 5px; background-color: #F2F2F2;">' +
+                    '    <div class="layui-row layui-col-space15">' +
+                    '        <div class="layui-col-md12">' +
+                    '            <div class="layui-card">' +
+                    '                <div class="layui-card-header">标题</div>' +
+                    '                <div class="layui-card-body">' +
+                    '                    ' +o.content
+                    '                </div>' +
+                    '            </div>' +
+                    '        </div>' +
+                    '    </div>' +
+                    '</div>'
+
+                        +
                 '                </p>' +
                 '            </div>' +
                 '        </li>';

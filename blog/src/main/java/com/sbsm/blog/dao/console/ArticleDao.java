@@ -18,4 +18,5 @@ public interface ArticleDao extends BaseDao<Article> {
     void updateContent(Article article);
 
     void updateIsDraft(Integer id, boolean isDraft);
+
 }

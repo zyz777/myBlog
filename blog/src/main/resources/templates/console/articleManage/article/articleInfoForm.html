@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
 </head>
 <body>
 
@@ -13,6 +13,11 @@
         <div class="layui-form-item layui-hide">
             <div class="layui-input-block">
                 <input type="text" name="id" disabled autocomplete="off"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <div class="layui-input-block">
+                <input type="text" name="aid" disabled autocomplete="off"  class="layui-input">
             </div>
         </div>
 
@@ -108,7 +113,7 @@
     </form>
 </div>
 
-<script src="../../layui/layui.js"></script>
+<script src="../../../layui/layui.js"></script>
 <script>
     var form;
     layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
@@ -290,6 +295,7 @@
             //表单初始赋值
             form.val('articleInfoForm', {
                 "id": data.id,
+                "aid": data.aid,
                 "title": data.title // "name": "value"
                 ,"createTime": data.createTime
                 ,"updateTime": data.updateTime

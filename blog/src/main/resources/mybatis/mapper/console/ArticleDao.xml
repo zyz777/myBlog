@@ -9,9 +9,9 @@
         </selectKey>
         INSERT INTO `article`(`create_time`, `update_time`, `remark`, `del_flag`, `title`, `descn`,
         `content`, `img_url`, `is_comment`, `is_recommend`, `is_top`, `browse_num`, `comment_num`, `like_num`,
-        `is_draft`) VALUES (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{title}, #{descn},
+        `is_draft`, `aid`) VALUES (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{title}, #{descn},
         #{content}, #{imgUrl}, #{isComment}, #{isRecommend}, #{isTop}, #{browseNum}, #{commentNum}, #{likeNum},
-        #{isDraft})
+        #{isDraft}, #{aid})
     </insert>
 
     <update id="update" parameterType="com.sbsm.blog.entity.console.Article">
@@ -53,14 +53,36 @@
          `id` = #{arg0}
     </update>
 
+    <sql id="columns">
+        `create_time` createTime, `update_time` updateTime, `is_draft` isDraft
+    </sql>
+
     <select id="countByIsDraftAndDelFlag" resultType="Integer">
         select count(*) from `article` where `is_draft`=#{arg0} and `del_flag`=#{arg1}
     </select>
 
     <select id="findDraftList" resultType="com.sbsm.blog.entity.console.Article">
-        select *,`create_time` createTime, `update_time` updateTime, `is_draft` isDraft  from `article` where `is_draft`=1 and `del_flag`=0
+        select *, <include refid="columns" /> from `article` where `is_draft`=1 and `del_flag`=0
         order by `update_time` desc
         limit #{arg0}, #{arg1}
+    </select>
+
+    <select id="findOne" resultType="com.sbsm.blog.entity.console.Article">
+        select *, <include refid="columns" /> from `article`
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+        </where>
+        limit 0,1
+    </select>
+
+    <select id="findByIds" resultType="com.sbsm.blog.entity.console.Article">
+        select *, <include refid="columns" /> from `article`
+        where `id` in
+        <foreach collection="array" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
     </select>
 
 </mapper>

@@ -39,15 +39,16 @@ public class CategoryService extends BaseService<Category> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void save(Category category) {
+        String content = "新增分类信息";
         if (category.getId() == null) {
             category.preInsert();
             categoryDao.insert(category);
-            logService.save(ConstantUtil.CATEGORY, category.getCid(), "新增分类信息");
         } else {
             category.preUpdate();
             categoryDao.update(category);
-            logService.save(ConstantUtil.CATEGORY, category.getCid(), "修改分类信息");
+            content = "修改分类信息";
         }
+        logService.save(ConstantUtil.CATEGORY, category.getCid(), content);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

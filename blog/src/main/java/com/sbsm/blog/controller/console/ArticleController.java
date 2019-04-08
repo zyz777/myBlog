@@ -38,7 +38,8 @@ public class ArticleController extends BaseController {
         article.setIsDraft(true);
         articleService.saveDraft(article);
 
-        return new ResultBean<>(new Article(article.getId()));
+        article.setContent(null);
+        return new ResultBean<>(article);
     }
 
     /**
@@ -61,7 +62,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/release/{id}", method = RequestMethod.GET)
     public ResultBean release(@PathVariable("id") Integer id) {
-        articleService.updateIsDraft(id, false);
+        articleService.release(id, false);
         return new ResultBean<>();
     }
 
