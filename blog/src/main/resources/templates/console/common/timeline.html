@@ -63,10 +63,17 @@
     var $;
     function timeline(logs) {
         console.log('logs', logs);
+
         layui.use(['jquery'], function(){
             $ = layui.jquery;
 
             $('#timeUl').html('');
+
+            if (logs == null) {
+                $('#timeUl').append('<h2>无操作日志</h2>');
+                return;
+            }
+
             var html = '';
             for (var i = 0; i < logs.length; i++) {
                 var o = logs[i];

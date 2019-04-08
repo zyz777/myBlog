@@ -85,4 +85,16 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
         articleReleaseDao.updateBoolean(one);
         logService.save(ConstantUtil.ARTICLE, arId, content);
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(Integer id) {
+        articleReleaseDao.delete(id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteMore(Integer[] ids) {
+        for (Integer id : ids) {
+            articleReleaseDao.delete(id);
+        }
+    }
 }

@@ -66,54 +66,22 @@
 <script>
     var layer;
     var $;
+    var table;
     layui.use(['table', 'layer', 'form'], function(){
-        var table = layui.table;
+        table = layui.table;
         layer = layui.layer;
         var form = layui.form;
         $ = layui.jquery;
 
-        //第一个实例
-        table.render({
-            elem: '#articleListTable'
-            ,height: 'full-20'
-            ,url: '/console/articleRelease/findPage' //数据接口
-            // ,method:'POST'   //laui 修改请求方式
-            // ,request: {
-            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
-            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            // }
-            , response: {
-                statusName: 'code' //数据状态的字段名称，默认：code
-                ,countName: 'totalCount' //数据总数的字段名称，默认：count
-                ,dataName: 'data' //默数据列表的字段名称，默认：data
-            }
-            ,title: '文章发行表'
-            ,page: true //开启分页
-            ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'},
-                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
-                ,{field: 'title', title: '标题', width:80}
-                ,{field: 'isComment', title: '评论', templet: '#isCommentTpl'}
-                ,{field: 'isRecommendation', title: '推荐', templet: '#isRecommendationTpl'}
-                ,{field: 'isTop', title: '置顶', templet: '#isTopTpl'}
-                ,{field: 'browseNum', title: '浏览量' }
-                ,{field: 'commentNum', title: '评论量'}
-                ,{field: 'likeNum', title: '喜欢'}
-                ,{field: 'createDate', title: '发布时间', width: 135, sort: true}
-                ,{title: '操作', width: 110, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
-            ]],
-            toolbar: '#barDemo2',
-            totalRow: false,
-        });
+        loadPage();
 
         //todo 步骤二  监听事件, '操作'单元格的事件
         table.on('tool(articleListTable)', function(obj){
-            console.log(obj);
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             var data = obj.data;
             switch(eventType){
                 case 'del':
-                    layer.msg('删除');
+                    del(data);
                     break;
                 case 'record':
                     recordDetail(data);
@@ -126,7 +94,8 @@
             var eventType = obj.event;//如果点击到空白的地方, event就是上面定义的 "aa"
             switch(eventType){
                 case 'delMore':
-                    layer.tips('请先选择', this)
+                    // layer.tips('请先选择', this)
+                    delMore();
                     break;
             };
         });
@@ -199,6 +168,145 @@
             },
         });
         return rsMsg;
+    }
+
+    function del(data) {
+        parent.layer.confirm('确定要删除此文章吗?', {
+            btn: ['确定','取消'] //按钮
+            ,shadeClose:true
+            ,yes: function (index, layero) {
+                $.ajax({
+                    type: 'get',
+                    url: '/console/articleRelease/delete/'+data.id,
+                    async: true,
+                    cache: false,
+                    dataType: 'json',
+                    success: function (rs, textStatus, jqXHR) {
+                        if (rs.code == 0) {
+                            parent.layer.alert('删除成功');
+                            loadPage();//刷新列表
+                        } else {
+                            parent.layer.alert(rs.msg);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        // this.closeLoading();
+                        console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                        parent.layer.alert(textStatus);
+                    },
+                    statusCode: {
+                        404: function () {
+                            parent.layer.alert("404 访问路径不正确");
+                        },
+                        415: function () {
+                            parent.layer.alert("415 内容类型不匹配");
+                        },
+                        400: function () {
+                            parent.layer.alert("400 bad请求");
+                        },
+                        500: function () {
+                            parent.layer.alert("500 服务器异常");
+                        }
+                    },
+                });
+                parent.layer.close(index);
+            }
+            ,btn2: function (index, layero) {
+                console.info('否');
+            }
+        });
+    }
+
+    function delMore() {
+        var datas = table.checkStatus('articleListTable').data;   // articleListTable 为表格id
+        if (datas.length > 0) {
+            var arr = [];
+            for (var i = 0; i < datas.length; i++) {
+                arr.push(datas[i].id);
+            }
+            parent.layer.confirm('确定要删除这些文章吗?', {
+                btn: ['确定','取消'] //按钮
+                ,shadeClose:true
+                ,yes: function (index, layero) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/console/articleRelease/delete',
+                        async: true,
+                        cache: false,
+                        dataType: 'json',
+                        data: JSON.stringify(arr),
+                        contentType: 'application/json;charset=UTF-8',
+                        success: function (rs, textStatus, jqXHR) {
+                            if (rs.code == 0) {
+                                parent.layer.alert('删除成功');
+                                loadPage();//刷新列表
+                            } else {
+                                parent.layer.alert(rs.msg);
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            // this.closeLoading();
+                            console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                            parent.layer.alert(textStatus);
+                        },
+                        statusCode: {
+                            404: function () {
+                                parent.layer.alert("404 访问路径不正确");
+                            },
+                            415: function () {
+                                parent.layer.alert("415 内容类型不匹配");
+                            },
+                            400: function () {
+                                parent.layer.alert("400 bad请求");
+                            },
+                            500: function () {
+                                parent.layer.alert("500 服务器异常");
+                            }
+                        },
+                    });
+                    parent.layer.close(index);
+                }
+                ,btn2: function (index, layero) {
+                    console.info('否');
+                }
+            });
+        }
+    }
+
+    function loadPage() {
+        //第一个实例
+        table.render({
+            elem: '#articleListTable'
+            ,height: 'full-20'
+            ,url: '/console/articleRelease/findPage' //数据接口
+            // ,method:'POST'   //laui 修改请求方式
+            // ,request: {
+            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
+            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            // }
+            , response: {
+                statusName: 'code' //数据状态的字段名称，默认：code
+                ,countName: 'totalCount' //数据总数的字段名称，默认：count
+                ,dataName: 'data' //默数据列表的字段名称，默认：data
+            }
+            ,title: '文章发行表'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
+                ,{field: 'title', title: '标题', width:180}
+                ,{field: 'isComment', title: '评论', templet: '#isCommentTpl'}
+                ,{field: 'isRecommendation', title: '推荐', templet: '#isRecommendationTpl'}
+                ,{field: 'isTop', title: '置顶', templet: '#isTopTpl'}
+                ,{field: 'browseNum', title: '浏览量' }
+                ,{field: 'commentNum', title: '评论量'}
+                ,{field: 'likeNum', title: '喜欢'}
+                ,{field: 'createDate', title: '发布时间', width: 135, sort: true}
+                ,{title: '操作', width: 115, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
+            ]],
+            toolbar: '#barDemo2',
+            totalRow: false,
+        });
     }
 
     function recordDetail(data) {

@@ -37,4 +37,25 @@ public class ArticleReleaseController extends BaseController {
         return new ResultBean();
     }
 
+    /**
+     * 删除文章
+     * @param id
+     */
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public ResultBean delete(@PathVariable("id") Integer id) {
+        articleReleaseService.delete(id);
+        return new ResultBean<>();
+    }
+
+    /**
+     * 删除多篇文章
+     * @param ids
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultBean deleteMore(@RequestBody Integer[] ids) {
+        articleReleaseService.deleteMore(ids);
+        return new ResultBean<>();
+    }
+
+
 }
