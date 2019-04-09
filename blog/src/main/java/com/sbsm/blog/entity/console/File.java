@@ -7,4 +7,14 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class File extends BaseEntity {
+
+    private String fid;
+    private Long byteSize;
+    private String displaySize;
+    private String originalName;
+    private String nowName;
+    private String md5;
+    private String crc32;
+    private String url;
+
 }

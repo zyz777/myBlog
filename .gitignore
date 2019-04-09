@@ -4,3 +4,6 @@ blog/.mvn/*
 blog/mvnw.cmd
 blog/mvnw
 layui/layui.iml
+upload/mvnw
+upload/mvnw.cmd
+upload/.mvn/*
