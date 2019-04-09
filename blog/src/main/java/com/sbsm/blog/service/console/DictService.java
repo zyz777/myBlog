@@ -4,19 +4,20 @@ import com.sbsm.blog.dao.console.DictDao;
 import com.sbsm.blog.entity.console.Dict;
 import com.sbsm.blog.service.BaseService;
 import com.sbsm.blog.vo.ResultPage;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DictService extends BaseService<Dict> {
 
     @Autowired
     private DictDao dictDao;
-
 
     public ResultPage<Dict> findPage(int page, int limit, Dict dict) {
         List<Dict> list = dictDao.findPage(page * limit, limit, dict);
@@ -28,6 +29,22 @@ public class DictService extends BaseService<Dict> {
 
     private int countByDelFlag(boolean isDel) {
         return dictDao.countByDelFlag(isDel);
+    }
+
+    public Dict findOneByTypeAndLabel(String type, String label) {
+        if (StringUtils.isBlank(type) || StringUtils.isBlank(label)) {
+            return null;
+        }
+        Dict dict = new Dict();
+        dict.setType(type);
+        dict.setLabel(label);
+
+        return this.findOne(dict);
+    }
+
+    public Dict findOne(Dict dict) {
+        Optional<Dict> one = dictDao.findOne(dict);
+        return one.orElse(null);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -52,4 +69,8 @@ public class DictService extends BaseService<Dict> {
             dictDao.delete(id);
         }
     }
+
+
+
+
 }

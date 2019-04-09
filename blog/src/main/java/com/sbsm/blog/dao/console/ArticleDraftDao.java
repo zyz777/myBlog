@@ -9,4 +9,10 @@ public interface ArticleDraftDao extends BaseDao<ArticleDraft> {
     void updateContent(ArticleDraft articleDraft);
 
     void logicDelete(Integer id);
+
+//    void saveArticleTagMapping(ArticleDraft articleDraft);
+
+    void deleteArticleTagMapping(String arId);
+
+    void saveArticleTagMapping(String arId, String tid);
 }

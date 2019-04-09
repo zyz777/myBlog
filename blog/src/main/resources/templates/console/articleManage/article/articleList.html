@@ -295,13 +295,13 @@
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
                 ,{field: 'title', title: '标题', width:180}
-                ,{field: 'isComment', title: '评论', templet: '#isCommentTpl'}
-                ,{field: 'isRecommendation', title: '推荐', templet: '#isRecommendationTpl'}
-                ,{field: 'isTop', title: '置顶', templet: '#isTopTpl'}
+                ,{field: 'isComment', title: '评论', width: 78, unresize:true, templet: '#isCommentTpl'}
+                ,{field: 'isRecommendation', title: '推荐', width: 78, unresize:true, templet: '#isRecommendationTpl'}
+                ,{field: 'isTop', title: '置顶', width: 78, unresize:true, templet: '#isTopTpl'}
                 ,{field: 'browseNum', title: '浏览量' }
                 ,{field: 'commentNum', title: '评论量'}
                 ,{field: 'likeNum', title: '喜欢'}
-                ,{field: 'createDate', title: '发布时间', width: 135, sort: true}
+                ,{field: 'updateTime', title: '发布时间', width: 165, sort: true}
                 ,{title: '操作', width: 115, sort: false, toolbar: '#barDemo', fixed: 'right', event:'aa'}
             ]],
             toolbar: '#barDemo2',

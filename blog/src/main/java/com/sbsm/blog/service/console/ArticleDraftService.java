@@ -8,6 +8,7 @@ import com.sbsm.blog.entity.console.Log;
 import com.sbsm.blog.service.BaseService;
 import com.sbsm.blog.utils.ConstantUtil;
 import com.sbsm.blog.vo.ResultPage;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,13 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveInfo(ArticleDraft articleDraft) {
         articleDraftDao.update(articleDraft);
+        articleDraftDao.deleteArticleTagMapping(articleDraft.getArId());
+        String[] tids = articleDraft.getTids();
+        if (ArrayUtils.isNotEmpty(tids)) {
+            for (String tid : tids) {
+                articleDraftDao.saveArticleTagMapping(articleDraft.getArId(), tid);
+            }
+        }
         logService.save(ConstantUtil.ARTICLE, articleDraft.getArId(), "保存文章信息");
     }
 

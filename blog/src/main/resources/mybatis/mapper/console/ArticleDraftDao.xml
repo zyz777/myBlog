@@ -12,6 +12,10 @@
                                     (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{arId}, #{title}, #{descn}, #{content}, #{imgUrl}, #{adId}, #{isNew}, cid )
     </insert>
 
+    <insert id="saveArticleTagMapping" parameterType="com.sbsm.blog.entity.console.ArticleDraft">
+             INSERT INTO `article_tag_mapping`(`ar_id`, `tid`) VALUES (#{arg0}, #{arg1})
+    </insert>
+
     <update id="update" parameterType="com.sbsm.blog.entity.console.ArticleDraft">
         UPDATE `article_draft`
         SET 
@@ -38,6 +42,10 @@
       delete from `article_draft` where `id` = #{arg0}
     </delete>
 
+    <delete id="deleteArticleTagMapping">
+        delete from `article_tag_mapping` where `ar_id` = #{arg0}
+    </delete>
+
     <update id="logicDelete">
          UPDATE `article_draft`
          SET
@@ -47,8 +55,10 @@
          `id` = #{arg0}
     </update>
 
+
+
     <sql id="columns">
-        `create_time` createTime, `update_time` updateTime, `is_new` isNew, `ar_id` arId, `ad_id` adId, `cid` c_id
+        `create_time` createTime, `update_time` updateTime, `is_new` isNew, `ar_id` arId, `ad_id` adId, `cid` c_id, `ar_id` ar_t_id, `ar_id` v_ar_id
     </sql>
 
     <select id="countByDelFlag" resultType="Integer">
@@ -57,7 +67,20 @@
 
     <resultMap id="resultMap" type="com.sbsm.blog.entity.console.ArticleDraft">
         <association property="category" column="c_id" select="com.sbsm.blog.dao.console.CategoryDao.findByCid"></association>
+        <collection property="tags" column="ar_t_id" select="findTagByArId"></collection>
+        <collection property="avs" column="v_ar_id" select="com.sbsm.blog.dao.console.ArticleVersionDao.findByArId"></collection>
     </resultMap>
+    
+
+    <select id="findTagByArId" resultType="com.sbsm.blog.entity.console.Tag">
+        SELECT
+            t.*, t.`create_time` createTime, t.`update_time` updateTime
+        FROM
+            `article_tag_mapping` atm
+            LEFT JOIN `tag` t ON t.`tid` = atm.`tid`
+        WHERE
+            atm.`ar_id` =#{arg0}
+    </select>
 
     <select id="findPage" resultMap="resultMap">
         select *, <include refid="columns" /> from `article_draft` where  `del_flag`=0

@@ -60,6 +60,21 @@
 
     {{ checkedFn() }}
 </script>
+<script type="text/html" id="tagTpl">
+    {{#
+        var checkedFn = function(){
+           if (d.tags == null || d.tags.length == 0) { return ; }
+            var text = [];
+                for(var i = 0; i < d.tags.length; i++) {
+                 var o = d.tags[i];
+                text.push(o.name);
+               }
+            return text.join();
+        };
+    }}
+
+    {{ checkedFn() }}
+</script>
 <script>
     var layer;
     var table;
@@ -164,7 +179,7 @@
                 ,{field: 'title', width: 170, title: '标题'}
                 ,{field: 'descn', width: 170, title: '摘要'}
                 ,{field: 'cid', width: 170, title: '分类', templet: '#categoryTpl'}
-                ,{field: 'tag', width: 170, title: '标签'}
+                ,{field: 'tags', width: 170, title: '标签', templet: '#tagTpl'}
                 ,{field: 'createTime', width: 170, title: '创建时间',  sort: true}
                 ,{field: 'updateTime', width: 170, title: '修改时间',  sort: true}
                 ,{title: '操作', width: 296, toolbar: '#barDemo', fixed: 'right', event:'aa'}

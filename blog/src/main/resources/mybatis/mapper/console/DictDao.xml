@@ -39,5 +39,22 @@
         select count(*) from `dict` where `del_flag`=#{arg0}
     </select>
 
+    <select id="findOne" resultType="com.sbsm.blog.entity.console.Dict">
+        select *,`create_time` createTime, `update_time` updateTime  from `dict`
+        <where>
+            `del_flag`=#{delFlag}
+            <if test="type != null and type != ''">
+                and `type` =  #{type}
+            </if>
+            <if test="label != null and label != ''">
+                and `label` = #{label}
+            </if>
+            <if test="value != null and value != ''">
+                and `value` = #{value}
+            </if>
+        </where>
+        limit 0,1
+    </select>
+
 
 </mapper>

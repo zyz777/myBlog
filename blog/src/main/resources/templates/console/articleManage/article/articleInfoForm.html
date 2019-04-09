@@ -63,15 +63,11 @@
             <label class="layui-form-label">封面</label>
 
             <div class="layui-input-inline">
-                <!--<img src="../../third-plugin/image/ying2.png" name="imgUrl" width="200">-->
-               <!-- <div class="layui-upload-list">
-                    <div class="layui-upload">
-                        <button type="button" class="layui-btn" id="uploadImg">上传图片</button>
-                        <hr class="layui-bg-orange">
+                <div class="layui-form-item layui-hide">
+                    <div class="layui-input-block">
+                        <input type="text" name="imgUrl" disabled autocomplete="off"  class="layui-input">
                     </div>
-                    <img class="layui-upload-img" id="demo1"  name="imgUrl" width="200">
-                    <p id="demoText"></p>
-                </div>-->
+                </div>
 
                 <div class="layui-upload" style="margin-left: 0.4rem;">
                     <button type="button" class="layui-btn" id="uploadImg">上传图片</button>
@@ -143,15 +139,17 @@
         //普通图片上传
         var uploadInst = upload.render({
             elem: '#uploadImg'
-            ,url: '/upload/'
+            ,url: '/console/file/upload/'
             ,done: function(res){
                 //如果上传失败
                 if(res.code > 0){
                     return layer.msg('上传失败');
                 }
                 //上传成功
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传成功</span>');
             }
-            ,auto: false
+            // ,auto: false
             ,error: function(){
                 //演示失败状态，并实现重传
                 var demoText = $('#demoText');
@@ -221,7 +219,7 @@
                     tagStr.push(value);
                 }
             }
-            field['tags']=tagStr;
+            field['tids']=tagStr;
 
             $.ajax({
                 type: 'POST',
@@ -331,6 +329,19 @@
 
             event.initTagSelect();
             event.initCategorySelect();
+
+            var tags = data.tags;
+            if (tags != null && tags.length > 0) {
+                var cbHtml = '';
+                for (var i = 0; i < tags.length; i++) {
+                    var o = tags[i];
+                    var value = o.tid;
+                    var text = o.name;
+                    cbHtml += '<input type="checkbox" id="cb'+value+'" name="tags['+value+']" value="'+value+'" checked title="'+text+'">';
+                }
+                $('#tagCheckboxDiv').append(cbHtml);
+            }
+            // form.render('checkbox');
 
             //表单初始赋值
             form.val('articleInfoForm', {
