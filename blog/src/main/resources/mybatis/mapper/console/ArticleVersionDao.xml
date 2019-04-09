@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sbsm.blog.dao.console.ArticleVersionDao">
+
+
+    <insert id="insert" parameterType="com.sbsm.blog.entity.console.ArticleVersion">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `article_version` ( `create_time`, `update_time`, `remark`, `del_flag`, `version`, `content`, `ar_id` )
+        VALUES
+                                      ( #{createTime}, #{updateTime}, #{remark}, #{delFlag},  #{version}, #{content}, #{arId} )
+    </insert>
+
+    <update id="update" parameterType="com.sbsm.blog.entity.console.ArticleVersion">
+        UPDATE `article_version`
+        SET
+        `remark` = #{remark},
+        `content` = #{content},
+        `update_time` = #{updateTime}
+        WHERE
+            `id` = #{id};
+    </update>
+
+
+    <sql id="columns">
+        `create_time` createTime, `update_time` updateTime, `ar_id` arId
+    </sql>
+
+
+    <select id="findOne" resultType="com.sbsm.blog.entity.console.ArticleVersion">
+        select *, <include refid="columns" /> from `article_version`
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="arId != null and arId != ''">
+                and `ar_id`= #{arId}
+            </if>
+            <if test="version != null and version != ''">
+                and `version`= #{version}
+            </if>
+        </where>
+        limit 0,1
+    </select>
+
+    <select id="findByArId" resultType="com.sbsm.blog.entity.console.ArticleVersion">
+        select *, <include refid="columns" /> from `article_version`
+        where `ar_id`= #{arg0}
+        order by `create_time` desc
+    </select>
+
+</mapper>

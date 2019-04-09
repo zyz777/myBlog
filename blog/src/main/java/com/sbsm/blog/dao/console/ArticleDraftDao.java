@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleDraftDao extends BaseDao<ArticleDraft> {
     void updateContent(ArticleDraft articleDraft);
+
+    void logicDelete(Integer id);
 }

@@ -20,6 +20,10 @@ public class CategoryService extends BaseService<Category> {
     @Autowired
     private CategoryDao categoryDao;
 
+    public List<Category> findAll(Category category) {
+        return categoryDao.findAll(category);
+    }
+
     public ResultPage<Category> findPage(int page, int limit, Category category) {
         List<Category> list = categoryDao.findPage(page * limit, limit, category);
         for (Category c : list) {
@@ -62,4 +66,6 @@ public class CategoryService extends BaseService<Category> {
             categoryDao.delete(id);
         }
     }
+
+
 }

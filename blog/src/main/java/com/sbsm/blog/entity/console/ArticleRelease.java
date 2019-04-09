@@ -22,6 +22,9 @@ public class ArticleRelease extends BaseEntity {
 
     private String arId;
     private String version;
+    private String cid;
+
+    private ArticleVersion av;
 
     public ArticleRelease() {
     }

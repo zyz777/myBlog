@@ -21,6 +21,9 @@ public class ArticleDraft extends BaseEntity {
     private String adId;
     private Boolean isNew;
 
+    private String cid;
+    private Category category;
+
     @Override
     public void preInsert() {
         super.preInsert();

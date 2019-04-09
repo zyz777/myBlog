@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<div>
+<div style="margin-top: 0.2rem;">
 
     <form class="layui-form layui-form-pane" action=""  lay-filter="articleInfoForm">
         <div class="layui-form-item layui-hide">
@@ -40,13 +40,20 @@
         </div>
 
         <div class="layui-form-item"  lay-filter="tagSelectDiv">
-            <label class="layui-form-label">标签</label>
+            <label class="layui-form-label">分类</label>
             <div class="layui-input-inline">
-                <select  id="tagSelect" lay-search=""  lay-filter="tagSelect">
+                <select  id="categorySelect" name="cid" lay-search="" lay-verify="required" lay-filter="categorySelect">
                 </select>
             </div>
         </div>
 
+        <div class="layui-form-item"  lay-filter="tagSelectDiv">
+            <label class="layui-form-label">标签</label>
+            <div class="layui-input-inline">
+                <select  id="tagSelect" lay-search="" lay-filter="tagSelect">
+                </select>
+            </div>
+        </div>
         <div class="layui-form-item" >
             <div class="layui-inline" id="tagCheckboxDiv" lay-filter="tagCheckboxDiv">
             </div>
@@ -175,34 +182,6 @@
             }
         });
 
-        var event = {
-           initTagSelect: function () {
-               $.ajax({
-                   type:'get',
-                   url: '/console/tag/findAll',
-                   dataType: 'json',
-                   success: function (rs, arg1, arg2) {
-                       $('#tagSelect').html('');
-                       var data = rs.data;
-                       var optionHtml = ' <option value="">直接选择或搜索选择</option>';
-                       for (var i = 0; i < data.length; i++) {
-                           var o = data[i];
-                           var value = o.value;
-                           var name = o.name;
-                           optionHtml += '<option value="'+value+'">'+name+'</option>';
-                       }
-                       $('#tagSelect').append(optionHtml);
-                       form.render('select');
-                   },
-                   error: function (arg1, arg2, arg3) {
-                       console.log( arg1, arg2, arg3);
-                   }
-               })
-           },
-        };
-
-        event.initTagSelect();
-
         form.on('select(tagSelect)', function(data){
             var selectedOption = data.elem.selectedOptions[0];
             var text = selectedOption.text;
@@ -297,11 +276,68 @@
     function initFormFieldVal(data) {
         layui.use(['form'], function () {
             form = layui.form;
+            var $ = layui.jquery;
+
+            var event = {
+                initTagSelect: function () {
+                    $.ajax({
+                        type:'get',
+                        url: '/console/tag/findAll',
+                        dataType: 'json',
+                        async: false,
+                        success: function (rs, arg1, arg2) {
+                            $('#tagSelect').html('');
+                            var data = rs.data;
+                            var optionHtml = ' <option value="">直接选择或搜索选择</option>';
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                var value = o.tid;
+                                var name = o.name;
+                                optionHtml += '<option value="'+value+'">'+name+'</option>';
+                            }
+                            $('#tagSelect').append(optionHtml);
+                            form.render('select');
+                        },
+                        error: function (arg1, arg2, arg3) {
+                            console.log( arg1, arg2, arg3);
+                        }
+                    })
+                },
+                initCategorySelect: function () {
+                    $.ajax({
+                        type:'get',
+                        url: '/console/category/findAll',
+                        dataType: 'json',
+                        async: false,
+                        success: function (rs, arg1, arg2) {
+                            $('#categorySelect').html('');
+                            var data = rs.data;
+                            var optionHtml = ' <option value="">直接选择或搜索选择</option>';
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                var value = o.cid;
+                                var name = o.name;
+                                optionHtml += '<option value="'+value+'">'+name+'</option>';
+                            }
+                            $('#categorySelect').append(optionHtml);
+                            form.render('select');
+                        },
+                        error: function (arg1, arg2, arg3) {
+                            console.log( arg1, arg2, arg3);
+                        }
+                    })
+                }
+            };
+
+            event.initTagSelect();
+            event.initCategorySelect();
+
             //表单初始赋值
             form.val('articleInfoForm', {
                 "id": data.id,
                 "arId": data.arId,
                 "adId": data.adId,
+                "cid": data.cid,
                 "title": data.title // "name": "value"
                 ,"createTime": data.createTime
                 ,"updateTime": data.updateTime

@@ -2,11 +2,13 @@ package com.sbsm.blog.service.console;
 
 import com.sbsm.blog.dao.console.ArticleDraftDao;
 import com.sbsm.blog.entity.console.ArticleDraft;
+import com.sbsm.blog.entity.console.ArticleRelease;
 import com.sbsm.blog.entity.console.ArticleVersion;
 import com.sbsm.blog.entity.console.Log;
 import com.sbsm.blog.service.BaseService;
 import com.sbsm.blog.utils.ConstantUtil;
 import com.sbsm.blog.vo.ResultPage;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,25 +22,33 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
 
     @Autowired
     private ArticleDraftDao articleDraftDao;
+    @Autowired
+    private ArticleReleaseService articleReleaseService;
+    @Autowired
+    private ArticleVersionService articleVersionService;
 
     public ArticleDraft findOne(Integer id) {
         if (id == null) {
             return null;
         }
-        Optional<ArticleDraft> one = articleDraftDao.findOne(new ArticleDraft(id));
+       return findOne(new ArticleDraft(id));
+    }
+
+    private ArticleDraft findOne(ArticleDraft articleDraft) {
+        Optional<ArticleDraft> one = articleDraftDao.findOne(articleDraft);
         return one.orElse(null);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveContent(ArticleDraft articleDraft) {
-        String content = "新增文章内容";
+        String content = "新增文章 Markdown 内容";
         ArticleDraft one = findOne(articleDraft.getId());
         if (one == null) {
             articleDraft.preInsert();
             articleDraft.setIsNew(true);
             articleDraftDao.insert(articleDraft);
         } else {
-            content = "修改文章内容";
+            content = "修改文章 Markdown 内容";
             articleDraft.preUpdate();
             articleDraftDao.updateContent(articleDraft);
         }
@@ -82,13 +92,13 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(Integer id) {
-        articleDraftDao.delete(id);
+        articleDraftDao.logicDelete(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteMore(Integer[] ids) {
         for (Integer id : ids) {
-            articleDraftDao.delete(id);
+            articleDraftDao.logicDelete(id);
         }
     }
 
@@ -98,13 +108,30 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public void releaseArticle(ArticleVersion articleVersion) {
+        if (StringUtils.isBlank(articleVersion.getArId())
+                || StringUtils.isBlank(articleVersion.getVersion())
+                || StringUtils.isBlank(articleVersion.getContent())) {
+            return;
+        }
+
         //todo 1. 根据 arId 查询  draft表
-
+        ArticleDraft articleDraft = new ArticleDraft();
+        articleDraft.setArId(articleVersion.getArId());
+        articleDraft = this.findOne(articleDraft);
+        if (articleDraft == null) {
+            return;
+        }
         //todo 2. 根据 isNew 判断， release表不存在，则把draft表的数据插入，如果存在，就更新版本号和内容，标题等
-
+        Boolean isNew = articleDraft.getIsNew();
+        articleReleaseService.saveFromDraft(articleDraft, articleVersion.getVersion(),
+                Boolean.TRUE.equals(isNew) ? ConstantUtil.INSERT : ConstantUtil.UPDATE);
         //todo 3. 新增 version表的数据
+        articleVersion.setId(null);
+        articleVersionService.save(articleVersion);
 
-        //todo 4. 删除 draft
-
+        //todo 4. 物理删除 draft
+        this.delete(articleDraft.getId());
     }
+
+
 }

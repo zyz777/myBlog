@@ -5,15 +5,48 @@
     <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
     <title>分类列表</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <style>
+        .layui-table, .layui-table-view {
+            margin: 0px 0px;
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
 
-<div>
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15" >
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <!--<div class="layui-card-header">卡片面板</div>
+                <div class="layui-card-body">
+                    卡片式面板面板通常用于非白色背景色的主体内<br>
+                    从而映衬出边框投影
+                </div>-->
+                <div style="display: inline-block; width: 180px; height: 200px; padding: 10px; border: 1px solid #ddd; overflow: auto;">
+                    <ul id="demo1"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md9">
+            <div class="layui-card">
+                <!--<div class="layui-card-header">卡片面板</div>
+                <div class="layui-card-body">
+                    结合 layui 的栅格系统<br>
+                    轻松实现响应式布局
+                </div>-->
+                <!--<div>-->
 
-    <table id="categoryListTable" lay-filter="categoryListTable">
-    </table>
+                    <table id="categoryListTable" lay-filter="categoryListTable">
+                    </table>
 
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
 
 
 <script src="../../../layui/layui.js"></script>
@@ -45,10 +78,131 @@
 <script>
     var table;
     var $;
-    layui.use(['table','laypage'], function(){
+    layui.use(['tree','table','laypage'], function(){
         table = layui.table;
         $ = layui.jquery;
         var laypage = layui.laypage;
+
+        layui.tree({
+            elem: '#demo1' //指定元素
+            ,target: '_blank' //是否新选项卡打开（比如节点返回href才有效）
+            ,click: function(item){ //点击节点回调
+                layer.msg('当前节名称：'+ item.name + '<br>全部参数：'+ JSON.stringify(item));
+                console.log(item);
+            }
+            ,nodes: [ //节点
+                {
+                    name: '常用文件夹'
+                    ,id: 1
+                    ,alias: 'changyong'
+                    ,children: [
+                        {
+                            name: '所有未读（设置跳转）'
+                            ,id: 11
+                            ,href: 'http://www.layui.com/'
+                            ,alias: 'weidu'
+                        }, {
+                            name: '置顶邮件'
+                            ,id: 12
+                        }, {
+                            name: '标签邮件'
+                            ,id: 13
+                        },
+                        {
+                            name: '所有未读（设置跳转）'
+                            ,id: 11
+                            ,href: 'http://www.layui.com/'
+                            ,alias: 'weidu'
+                        }, {
+                            name: '置顶邮件'
+                            ,id: 12
+                        }, {
+                            name: '标签邮件'
+                            ,id: 13
+                        }
+                    ]
+                }, {
+                    name: '我的邮箱'
+                    ,id: 2
+                    ,spread: true
+                    ,children: [
+                        {
+                            name: 'QQ邮箱'
+                            ,id: 21
+                            ,spread: true
+                            ,children: [
+                                {
+                                    name: '收件箱'
+                                    ,id: 211
+                                    ,children: [
+                                        {
+                                            name: '所有未读'
+                                            ,id: 2111
+                                        }, {
+                                            name: '置顶邮件'
+                                            ,id: 2112
+                                        }, {
+                                            name: '标签邮件'
+                                            ,id: 2113
+                                        }
+                                    ]
+                                }, {
+                                    name: '已发出的邮件'
+                                    ,id: 212
+                                }, {
+                                    name: '垃圾邮件'
+                                    ,id: 213
+                                }
+                            ]
+                        }, {
+                            name: '阿里云邮'
+                            ,id: 22
+                            ,children: [
+                                {
+                                    name: '收件箱'
+                                    ,id: 221
+                                }, {
+                                    name: '已发出的邮件'
+                                    ,id: 222
+                                }, {
+                                    name: '垃圾邮件'
+                                    ,id: 223
+                                }
+                            ]
+                        }
+                    ]
+                }
+                ,{
+                    name: '收藏夹'
+                    ,id: 3
+                    ,alias: 'changyong'
+                    ,children: [
+                        {
+                            name: '爱情动作片'
+                            ,id: 31
+                            ,alias: 'love'
+                        }, {
+                            name: '技术栈'
+                            ,id: 12
+                            ,children: [
+                                {
+                                    name: '前端'
+                                    ,id: 121
+                                }
+                                ,{
+                                    name: '全端'
+                                    ,id: 122
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
+
+
+
+
 
         loadPage();
 
@@ -218,7 +372,7 @@
             shadeClose: true,
             area: ['400px', '70%'],
             skin: 'layui-layer-molv',
-            content: 'articleManage/categoryForm.html', //iframe的url
+            content: 'articleManage/category/categoryForm.html', //iframe的url
             yes: function(index, layero){
                 //按钮【按钮一】的回调
                 var layeroElement = layero[0];

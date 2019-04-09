@@ -62,4 +62,8 @@ public class TagService extends BaseService<Tag> {
             tagDao.delete(id);
         }
     }
+
+    public List<Tag> findAll(Tag tag) {
+        return tagDao.findAll(tag);
+    }
 }

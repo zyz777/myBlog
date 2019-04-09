@@ -9,6 +9,8 @@ import com.sbsm.blog.vo.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 分类管理
  */
@@ -19,6 +21,12 @@ public class CategoryController extends BaseController {
     @Autowired
     private CategoryService categoryService;
 
+    @RequestMapping("/findAll")
+    public ResultBean findAll() {
+        List<Category> list = categoryService.findAll(new Category());
+        ResultBean rs = new ResultBean(list);
+        return rs;
+    }
 
     @RequestMapping("/findPage")
     public ResultPage<Category> findPage(int page, int limit) {

@@ -23,7 +23,7 @@ public class Tag extends BaseEntity {
     @Override
     public void preInsert() {
         super.preInsert();
-        this.tid = getCreateTime().getTime()+"";
+        this.tid = "t-"+getCreateTime().getTime();
     }
 
     public Tag() {

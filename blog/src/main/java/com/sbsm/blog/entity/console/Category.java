@@ -20,7 +20,7 @@ public class Category extends BaseEntity {
     @Override
     public void preInsert() {
         super.preInsert();
-        cid = getCreateTime().getTime()+"";
+        cid = "c-"+getCreateTime().getTime();
     }
 
     public Category() {

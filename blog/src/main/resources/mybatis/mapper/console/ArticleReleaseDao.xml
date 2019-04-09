@@ -9,10 +9,27 @@
         </selectKey>
         INSERT INTO `article_release`(`create_time`, `update_time`, `remark`, `del_flag`, `title`, `descn`,
         `content`, `img_url`, `is_comment`, `is_recommend`, `is_top`, `browse_num`, `comment_num`, `like_num`,
-        `ar_id`, `version` ) VALUES (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{title}, #{descn},
+        `ar_id`, `version`, `cid` ) VALUES (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{title}, #{descn},
         #{content}, #{imgUrl}, #{isComment}, #{isRecommend}, #{isTop}, #{browseNum}, #{commentNum}, #{likeNum},
-        #{arId}, #{version})
+        #{arId}, #{version}, #{cid})
     </insert>
+
+    <update id="update">
+        UPDATE `article_release`
+        SET
+        `update_time` = #{updateTime},
+        <if test="remark != null and remark != ''">
+            `remark` = #{remark},
+        </if>
+        `title` = #{title},
+        `descn` = #{descn},
+        `content` = #{content},
+        `img_url` = #{imgUrl},
+        `version` = #{version},
+        `cid` = #{cid}
+        WHERE
+            `id` = #{id};
+    </update>
 
     <update id="updateBoolean">
          UPDATE `article_release`
@@ -60,6 +77,9 @@
         <where>
             <if test="id != null">
                 and `id` = #{id}
+            </if>
+            <if test="arId != null and arId != ''">
+                and `ar_id` = #{arId}
             </if>
         </where>
         limit 0,1

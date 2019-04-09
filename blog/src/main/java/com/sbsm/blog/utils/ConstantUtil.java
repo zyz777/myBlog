@@ -1,6 +1,8 @@
 package com.sbsm.blog.utils;
 
 public class ConstantUtil {
+
+
     private ConstantUtil() {
     }
 
@@ -15,9 +17,11 @@ public class ConstantUtil {
 
 
     public static final String ARTICLE = "article";
+    public static final String ARTICLE_VERSION = "article_version";
     public static final String CATEGORY = "category";
     public static final String TAG = "tag";
-
+    public static final String INSERT = "insert";
+    public static final String UPDATE = "update";
 
 
 }

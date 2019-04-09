@@ -204,7 +204,7 @@
             console.log(content, field);
             $.ajax({
                 type: 'POST',
-                url: '/console/article/saveInfo',
+                url: '/console/articleDraft/releaseArticle',
                 dataType: 'json',
                 data: JSON.stringify(field),//往后台发送的是data.field，即一个{name：value}的数据结构
                 cache: false,

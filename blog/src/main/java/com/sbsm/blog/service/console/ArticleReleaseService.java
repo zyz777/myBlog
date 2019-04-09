@@ -1,10 +1,8 @@
 package com.sbsm.blog.service.console;
 
 import com.sbsm.blog.dao.console.ArticleReleaseDao;
-import com.sbsm.blog.entity.console.ArticleDraft;
+import com.sbsm.blog.entity.console.*;
 import com.sbsm.blog.entity.console.ArticleRelease;
-import com.sbsm.blog.entity.console.ArticleRelease;
-import com.sbsm.blog.entity.console.Log;
 import com.sbsm.blog.service.BaseService;
 import com.sbsm.blog.utils.ConstantUtil;
 import com.sbsm.blog.vo.ResultPage;
@@ -21,6 +19,8 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
 
     @Autowired
     private ArticleReleaseDao articleReleaseDao;
+    @Autowired
+    private ArticleVersionService articleVersionService;
 
     /**
      * 分页查询
@@ -31,9 +31,14 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
      */
     public ResultPage<ArticleRelease> findPage(int page, int limit, ArticleRelease articleRelease) {
         List<ArticleRelease> list = articleReleaseDao.findPage(page * limit, limit, articleRelease);
+        List<Log> logs = null;
+        ArticleVersion av = null;
         for (ArticleRelease data : list) {
-            List<Log> logs = logService.findAll(new Log(data.getArId(), ConstantUtil.ARTICLE));
+            logs = logService.findAll(new Log(data.getArId(), ConstantUtil.ARTICLE));
             data.setLogs(logs);
+
+            av = articleVersionService.findByArIdAndVersion(data.getArId(), data.getVersion());
+            data.setAv(av);
         }
         int count = countByDelFlag(false);
         ResultPage<ArticleRelease> rp = new ResultPage<>(list);
@@ -54,7 +59,11 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
         if (id == null) {
             return null;
         }
-        Optional<ArticleRelease> one = articleReleaseDao.findOne(new ArticleRelease(id));
+        return findOne(new ArticleRelease(id));
+    }
+
+    public ArticleRelease findOne(ArticleRelease articleRelease) {
+        Optional<ArticleRelease> one = articleReleaseDao.findOne(articleRelease);
         return one.orElse(null);
     }
 
@@ -96,5 +105,44 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
         for (Integer id : ids) {
             articleReleaseDao.delete(id);
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveFromDraft(ArticleDraft articleDraft, String version, String insertOrUpdate) {
+        ArticleRelease articleRelease = new ArticleRelease();
+        String arId = articleDraft.getArId();
+        articleRelease.setArId(arId);
+
+        ArticleRelease one = findOne(articleRelease);
+        if (one != null) {
+            articleRelease.setId(one.getId());
+        }
+
+        articleRelease.setCreateTime(articleDraft.getCreateTime());
+        articleRelease.setRemark(articleDraft.getRemark());
+
+        articleRelease.setTitle(articleDraft.getTitle());
+        articleRelease.setDescn(articleDraft.getDescn());
+        articleRelease.setContent(articleDraft.getContent());
+        articleRelease.setImgUrl(articleDraft.getImgUrl());
+
+        articleRelease.setVersion(version);
+        articleRelease.setCid(articleDraft.getCid());
+
+        String content = "发表文章 --> <br/>";
+        if (ConstantUtil.INSERT.equals(insertOrUpdate)) {
+            content += "状态: 首次发布<br/>版本号: " + version + "<br/>";
+
+            articleRelease.preUpdate();
+            articleRelease.setIsComment(true);
+            articleRelease.setIsRecommend(false);
+            articleRelease.setIsTop(false);
+            articleReleaseDao.insert(articleRelease);
+        } else {
+            content += "状态: 新版发布<br/>版本号: " + version + "<br/>";
+            articleRelease.preUpdate();
+            articleReleaseDao.update(articleRelease);
+        }
+        logService.save(ConstantUtil.ARTICLE, arId, content);
     }
 }

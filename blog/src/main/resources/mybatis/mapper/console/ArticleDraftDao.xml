@@ -7,9 +7,9 @@
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO `article_draft` (  `create_time`, `update_time`, `remark`, `del_flag`, `ar_id`, `title`, `descn`, `content`, `img_url`, `ad_id`, `is_new` )
+        INSERT INTO `article_draft` (  `create_time`, `update_time`, `remark`, `del_flag`, `ar_id`, `title`, `descn`, `content`, `img_url`, `ad_id`, `is_new`, `cid` )
         VALUES
-                                    (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{arId}, #{title}, #{descn}, #{content}, #{imgUrl}, #{adId}, #{isNew} )
+                                    (#{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{arId}, #{title}, #{descn}, #{content}, #{imgUrl}, #{adId}, #{isNew}, cid )
     </insert>
 
     <update id="update" parameterType="com.sbsm.blog.entity.console.ArticleDraft">
@@ -19,7 +19,8 @@
         `remark` = #{remark},
         `title` = #{title},
         `descn` = #{descn},
-        `img_url` = #{imgUrl}
+        `img_url` = #{imgUrl},
+        `cid` = #{cid}
         WHERE
             `id` = #{id};
     </update>
@@ -33,7 +34,11 @@
             `id` = #{id}
     </update>
 
-    <update id="delete">
+    <delete id="delete">
+      delete from `article_draft` where `id` = #{arg0}
+    </delete>
+
+    <update id="logicDelete">
          UPDATE `article_draft`
          SET
          `update_time` = now(),
@@ -43,22 +48,27 @@
     </update>
 
     <sql id="columns">
-        `create_time` createTime, `update_time` updateTime, `is_new` isNew, `ar_id` arId, `ad_id` adId
+        `create_time` createTime, `update_time` updateTime, `is_new` isNew, `ar_id` arId, `ad_id` adId, `cid` c_id
     </sql>
 
     <select id="countByDelFlag" resultType="Integer">
         select count(*) from `article_draft` where  `del_flag`=#{arg0}
     </select>
 
-    <select id="findPage" resultType="com.sbsm.blog.entity.console.ArticleDraft">
+    <resultMap id="resultMap" type="com.sbsm.blog.entity.console.ArticleDraft">
+        <association property="category" column="c_id" select="com.sbsm.blog.dao.console.CategoryDao.findByCid"></association>
+    </resultMap>
+
+    <select id="findPage" resultMap="resultMap">
         select *, <include refid="columns" /> from `article_draft` where  `del_flag`=0
         order by `update_time` desc
         limit #{arg0}, #{arg1}
     </select>
 
-    <select id="findOne" resultType="com.sbsm.blog.entity.console.ArticleDraft">
+    <select id="findOne" resultMap="resultMap">
         select *, <include refid="columns" /> from `article_draft`
         <where>
+            `del_flag`=#{delFlag}
             <if test="id != null">
                 and `id` = #{id}
             </if>
@@ -69,7 +79,7 @@
         limit 0,1
     </select>
 
-    <select id="findByIds" resultType="com.sbsm.blog.entity.console.ArticleDraft">
+    <select id="findByIds" resultMap="resultMap">
         select *, <include refid="columns" /> from `article_draft`
         where `id` in
         <foreach collection="array" open="(" separator="," close=")" item="item">
