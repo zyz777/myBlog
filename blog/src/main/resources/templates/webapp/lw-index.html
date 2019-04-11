@@ -362,7 +362,7 @@
                 <!--<a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;java</a>-->
                 <!--<a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;html</a>-->
             </p>
-            <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2.5rem;">&nbsp;&nbsp;continue reading</a></p>
+            <p><a href="" id="a_continueReading" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2.5rem;">&nbsp;&nbsp;continue reading</a></p>
         </div>
     </article>
 
@@ -387,7 +387,6 @@
      * */
     // $.get('tagCloud.json', function (data) {
     $.get('/webapp/index/tagCloud', function (rs) {
-        console.log(rs);
         var data = rs.data;
         var html = '';
         for (var i = 0; i < data.length; i++) {
@@ -396,19 +395,32 @@
         }
         $("#TAG_cloud").append(html);
     });
-    $.get('recommend.json', function (data) {
+    /**
+     * 推荐
+     * */
+    // $.get('recommend.json', function (data) {
+    $.get('/webapp/index/findArticle?remark=recommend&pageNo=1&pageSize=5', function (rs) {
+        var data = rs.data;
+        console.log('recommend', data);
         var html = '';
         for (var i = 0; i < data.length; i++) {
             var o = data[i];
-            html += ' <li><a href="'+o.url+'"><img style="width: 2rem" src="../third-plugin/image/recommend.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
+            html += ' <li><a href="lw-article-fullwidth.html?'+o.arId+'"><img style="width: 2rem" src="../third-plugin/image/recommend.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
         }
         $("#recommend_ul").append(html);
     });
-    $.get('recommend.json', function (data) {
+
+    /**
+     * 热门
+     * */
+    // $.get('recommend.json', function (data) {
+    $.get('/webapp/index/findArticle?remark=hot&pageNo=1&pageSize=5', function (rs) {
+        var data = rs.data;
+        console.log('hot', data);
         var html = '';
         for (var i = 0; i < data.length; i++) {
             var o = data[i];
-            html += ' <li><a href="'+o.url+'"><img style="width: 2rem" src="../third-plugin/image/hot.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
+            html += ' <li><a href="lw-article-fullwidth.html?'+o.arId+'"><img style="width: 2rem" src="../third-plugin/image/hot.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
         }
         $("#hot_ul").append(html);
     });
@@ -429,7 +441,6 @@
             },
             dataType: 'json',
             success: function (rs) {
-                console.log(rs);
                 var totalCount = rs.totalCount;
                 //拼接 分页
                 this.pagination(totalCount);
@@ -460,16 +471,15 @@
                 $("#pagination_ul").append(pageHtml);
             },
             article: function (data) {
+                console.log(data);
                 $('#articleListDiv').html('');
-
+                var resultHtml = '';
                 for (var i = 0; i < data.length; i++) {
                     var o = data[i];
                     var imgUrl = o.imgAbsUrl;
                     if (imgUrl == null || imgUrl == '') {
                         //默认图片
-                        $('#articleAppendDiv #coverImg').attr('src', '../third-plugin/image/ying2.png');
-                    } else {
-                        $('#articleAppendDiv #coverImg').attr('src', imgUrl);
+                       imgUrl = '../third-plugin/image/ying2.png';
                     }
                     var status = null;
                     if (o.avs != null) {
@@ -479,31 +489,40 @@
                             status = 'update';
                         }
                     }
-                    if (status == null || status == '') {
-                        $('#articleAppendDiv #statusSpan').hide();
-                    } else {
-                        $('#articleAppendDiv #statusSpan').text(status);
-                    }
-                    $('#articleAppendDiv #updateTimeSpan').text(o.updateTime);
-                    $('#articleAppendDiv #readNumSpan').text(o.readNum);
-                    $('#articleAppendDiv #titleA').attr('href', o.url);
-                    $('#articleAppendDiv #titleA').text(o.title);
-                    $('#articleAppendDiv #descnP').text(o.descn);
 
+                    resultHtml += ' <article class="am-g blog-entry-article">' +
+                        '        <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">' +
+                        '            <img  src="'+imgUrl+'" alt="" class="am-u-sm-12">' +
+                        '        </div>' +
+                        '        <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">' ;
+                    if (status != null && status != '') {
+                        resultHtml +=
+                            '            <span id="statusSpan" class="am-badge am-badge-danger am-radius">'+status+'</span>';
+                    }
+
+                    resultHtml +=
+                        '            <span title="更新时间"><img src="../third-plugin/image/date.svg" style="width: 1.8rem;">&nbsp;&nbsp;<span id="updateTimeSpan">'+o.updateTime+'</span></span>' +
+                        '            &nbsp;' +
+                        '            <span title="阅读量" ><img src="../third-plugin/image/readNum.svg" style="width: 2.5rem;"><span id="readNumSpan">'+o.browseNum+'</span></span>' +
+                        '            <h1><a href="lw-article-fullwidth.html?'+o.arId+'" id="titleA" title="'+o.title+'">'+o.title+'</a></h1>' +
+                        '            <p id="descnP">' +o.descn
+                        '            </p>' ;
                     var tags = o.tags;
                     if (tags != null) {
-                        $('#articleAppendDiv #tagsP').html('');
-                        var tagHtml = '';
+                        var tagHtml = '<p id="tagsP">';
                         for (var j = 0; j < tags.length; j++) {
                             var tag = tags[j];
                             tagHtml += ' <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;'+tag.name+'</a>';
                         }
-                        $('#articleAppendDiv #tagsP').append(tagHtml);
+                        resultHtml += tagHtml ;
+                        resultHtml += '</p>';
                     }
-
-                    var resultHtml = $('#articleAppendDiv').html();
-                    $('#articleListDiv').append(resultHtml);
+                    resultHtml +=
+                        '            <p><a href="lw-article-fullwidth.html?'+o.arId+'" title="'+o.title+'" id="a_continueReading" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2.5rem;">&nbsp;&nbsp;continue reading</a></p>' +
+                        '        </div>' +
+                        '    </article>';
                 }
+                $('#articleListDiv').append(resultHtml);
             }
         });
     }

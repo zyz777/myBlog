@@ -11,9 +11,9 @@ public class ArticleRelease extends Article {
     private Boolean isComment;
     private Boolean isRecommend;
     private Boolean isTop;
-    private Integer browseNum;
-    private Integer commentNum;
-    private Integer likeNum;
+    private int browseNum;
+    private int commentNum;
+    private int likeNum;
 
     private String version;
 

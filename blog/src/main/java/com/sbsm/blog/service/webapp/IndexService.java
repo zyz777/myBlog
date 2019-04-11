@@ -19,12 +19,19 @@ public class IndexService extends BaseService {
     @Autowired
     private TagService tagService;
 
-    public ResultPage<ArticleRelease> findArticle(int page, int limit) {
-        ResultPage<ArticleRelease> rp = articleReleaseService.findPage(page, limit, new ArticleRelease());
+    public ResultPage<ArticleRelease> findArticle(int page, int limit, ArticleRelease articleRelease) {
+        ResultPage<ArticleRelease> rp = articleReleaseService.findPage(page, limit, articleRelease);
         return rp;
     }
 
     public List<Tag> tagCloud() {
         return tagService.findAll(new Tag());
+    }
+
+    public ArticleRelease findArticleByArId(String arId) {
+        ArticleRelease articleRelease = new ArticleRelease();
+        articleRelease.setArId(arId);
+        ArticleRelease one = articleReleaseService.findOne(articleRelease);
+        return one;
     }
 }

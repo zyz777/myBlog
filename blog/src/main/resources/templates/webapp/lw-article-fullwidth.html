@@ -43,57 +43,101 @@
 <hr>
 
 <!-- nav start -->
-<nav class="am-g am-g-fixed blog-fixed blog-nav">
-<button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+<nav  class="am-g am-g-fixed blog-fixed blog-nav">
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
 
-  <div class="am-collapse am-topbar-collapse" id="blog-collapse">
-    <ul class="am-nav am-nav-pills am-topbar-nav">
-      <li class="am-active"><a href="lw-index.html">首页</a></li>
-      <li class="am-dropdown" data-am-dropdown>
-        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-          首页布局 <span class="am-icon-caret-down"></span>
-        </a>
-        <ul class="am-dropdown-content">
-          <li><a href="lw-index.html">1. blog-index-standard</a></li>         
-          <li><a href="lw-index-nosidebar.html">2. blog-index-nosidebar</a></li>
-          <li><a href="lw-index-center.html">3. blog-index-layout</a></li>
-          <li><a href="lw-index-noslider.html">4. blog-index-noslider</a></li>
+    <div class="am-collapse am-topbar-collapse" id="blog-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav "><!-- am-nav-tabs -->
+            <li><a href="lw-index.html">首页</a></li>
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    首页布局 <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <li><a href="lw-index.html">1. blog-index-standard</a></li>
+                    <li><a href="lw-index-nosidebar.html">2. blog-index-nosidebar</a></li>
+                    <li><a href="lw-index-center.html">3. blog-index-layout</a></li>
+                    <li><a href="lw-index-noslider.html">4. blog-index-noslider</a></li>
+                </ul>
+            </li>
+            <!-- <li><a href="lw-article.html">标准文章</a></li>
+             <li><a href="lw-img.html">图片库</a></li>
+             <li><a href="lw-article-fullwidth.html">全宽页面</a></li>
+             <li><a href="lw-timeline.html">存档</a></li>-->
+            <li><a href="lw-article.html">标签</a></li>
+            <li><a href="lw-article.html">分类</a></li>
+            <li><a href="lw-article.html">归档(时间轴)</a></li>
         </ul>
-      </li>
-      <li><a href="lw-article.html">标准文章</a></li>
-      <li><a href="lw-img.html">图片库</a></li>
-      <li><a href="lw-article-fullwidth.html">全宽页面</a></li>
-      <li><a href="lw-timeline.html">存档</a></li>
-    </ul>
-    <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
-      <div class="am-form-group">
-        <input type="text" class="am-form-field am-input-sm" placeholder="搜索">
-      </div>
-    </form>
-  </div>
+        <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
+            <div class="am-input-group am-input-group-primary">
+                <input type="text" class="am-form-field am-input-sm" placeholder="搜索">
+                <span class="am-input-group-btn">
+                    <button class="am-btn am-btn-primary" type="button"><span class="am-icon-search"></span></button>
+                  </span>
+            </div>
+        </form>
+    </div>
 </nav>
 <!-- nav end -->
 <hr>
+
+
+
+
 <!-- content srart -->
 <div class="am-g am-g-fixed blog-fixed blog-content">
     <div class="am-u-sm-12">
       <article class="am-article blog-article-p">
         <div class="am-article-hd">
-          <h1 class="am-article-title blog-text-center">我的文章哎</h1>
+          <h1 class="am-article-title blog-text-center" id="h1_title">标题</h1>
           <p class="am-article-meta blog-text-center">
-              <span><a href="#" class="blog-color">article &nbsp;</a></span>-
-              <span><a href="#">@amazeUI &nbsp;</a></span>-
-              <span><a href="#">2015/10/9</a></span>
+              <!-- class="blog-color" -->
+              <span><a href="#" id="">分类：<span id="span_category"></span> &nbsp;</a></span>-
+              <span><a href="#">作者：zyz777 &nbsp;</a></span>-
+              <span><a href="#">更新时间：<span id="span_updateTime"></span> &nbsp;</a></span>-
+              <span><a href="#">浏览量：<span id="span_browseNum"></span> &nbsp;</a></span>-
+              <span><a href="#">评论数：<span id="span_commentNum"></span></a></span>
+
           </p>
         </div>        
-        <div class="am-article-bd">
-        <img src="assets/i/f17.jpg" alt="" class="blog-entry-img blog-article-margin">
-            <!--<p class="class="am-article-lead"">-->
+        <div class="am-article-bd" style="margin-top: 1rem;">
+        <!--<img src="assets/i/f17.jpg" alt="" class="blog-entry-img blog-article-margin">-->
+         <!--   <div class="am-article-lead">
+                这里是放简介的地方
+            </div>
+-->
         <div class="am-article-lead"><!-- class="am-article-lead" -->
 
             <div id="layout">
                 <div class="btns">
-                    <button onclick="location.href='./html-preview-markdown-to-html-custom-toc-container.html';">将 ToC 移到自定义容器层</button>
+                    <!--<button onclick="location.href='./html-preview-markdown-to-html-custom-toc-container.html';">将 ToC 移到自定义容器层</button>-->
+                    <h3></h3>
+                    <div class="am-scrollable-horizontal">
+                        <table class="am-table am-table-bordered am-table-striped am-text-nowrap am-table-radius">
+                            <caption><b>文章修订计划</b></caption>
+                            <thead class="am-table-centered">
+                                <tr>
+                                    <th>版本号</th>
+                                    <th>更新内容</th>
+                                    <th>更新时间<!-- 创建时间 --></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody_releaseVersionInfo">
+                               <!-- <tr>
+                                    <td>v1.0</td>
+                                    <td>sdfsd</td>
+                                    <td>sdfsdf</td>
+                                </tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="btns">
+                    <!--<button onclick="location.href='./html-preview-markdown-to-html-custom-toc-container.html';">将 ToC 移到自定义容器层</button>-->
+                    <h3>简介：</h3>
+                    <p id="p_desc">
+
+                    </p>
                 </div>
                 <div id="test-editormd-view" class="markdown-body editormd-html-preview">
                 </div>
@@ -106,7 +150,9 @@
         
         <div class="am-g blog-article-widget blog-article-margin">
           <div class="am-u-lg-4 am-u-md-5 am-u-sm-7 am-u-sm-centered blog-text-center">
-            <span class="am-icon-tags"> &nbsp;</span><a href="#">标签</a> , <a href="#">TAG</a> , <a href="#">啦啦</a>
+            <div id="div_tags">
+                <!--<span class="am-icon-tags"> &nbsp;</span><a href="#">标签</a> , <a href="#">TAG</a> , <a href="#">啦啦</a>-->
+            </div>
             <hr>
             <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
             <a href=""><span class="am-icon-wechat am-icon-fw blog-icon"></span></a>
@@ -156,6 +202,10 @@
 
         <hr>
     </div>
+
+    <a href="#">
+        <img src="../third-plugin/image/top.svg" title="top" style="width: 5rem;height: 5rem;position: fixed;bottom: 2rem;right: 0.5rem;z-index: 9999;" />
+    </a>
 </div>
 <!-- content end -->
 
@@ -224,7 +274,64 @@
     $(function() {
         var testEditormdView;
 
-        $.get("test.md", function(markdown) {
+        var search = location.search;
+        search = search.substr(1);
+        console.log(search);
+
+        $.get("/webapp/index/get/"+search, function(rs) {
+            console.log(rs);
+            var markdown = '';
+            if (rs.code == 0) {
+                var data = rs.data;
+                markdown = data.content;
+                $('#h1_title').text(data.title);
+                $('#span_browseNum').text(data.browseNum);
+                $('#span_browseNum').parent('a').attr('title', data.browseNum);
+                $('#span_commentNum').text(data.commentNum);
+                $('#span_commentNum').parent('a').attr('title', data.commentNum);
+                $('#span_updateTime').text(data.updateTime);
+                $('#span_updateTime').parent('a').attr('title', data.updateTime);
+                $('#p_desc').text(data.descn);
+                if (data.category != null) {
+                    $('#span_category').text(data.category.name);
+                    $('#span_category').parent('a').attr('title', data.category.name);
+                }
+
+                var avs = data.avs;
+                if (avs != null && avs.length > 0) {
+                    $('#tbody_releaseVersionInfo').html('');
+                    var html = '';
+                    for (var i = 0; i < avs.length; i++) {
+                        var c = '';
+                        if (i == 0) {
+                            c = 'class="am-danger"';
+                        }
+                        var av = avs[i];
+                        html += '<tr '+c+' >' +
+                            '                                    <td>'+av.version+'</td>' +
+                            '                                    <td>'+av.content+'</td>' +
+                            '                                    <td>'+av.createTime+'</td>' +
+                            '                                </tr>';
+                    }
+                    $('#tbody_releaseVersionInfo').html(html);
+                } else {
+                    $('#tbody_releaseVersionInfo').html('');
+                    $('#tbody_releaseVersionInfo').html('<tr><td  colspan="3">无数据</td></tr>');
+                }
+
+                //<span class="am-icon-tags"> &nbsp;</span><a href="#">标签</a> , <a href="#">TAG</a> , <a href="#">啦啦</a>
+                var tags = data.tags;
+                if (tags != null && tags.length > 0) {
+                    $('#div_tags').html('');
+                    var html = '';
+                    for (var i = 0; i < tags.length; i++) {
+                        var tag = tags[i];
+                        var tid = tag.tid;
+                        html += '<a href="#" class="am-icon-tags">&nbsp;'+tag.name+'</a>&nbsp;&nbsp;';
+                    }
+                    $('#div_tags').html(html);
+                }
+            }
 
             testEditormdView = editormd.markdownToHTML("test-editormd-view", {
                 markdown        : markdown ,//+ "\r\n" + $("#append-test").text(),
@@ -249,6 +356,8 @@
             //console.log(testEditormdView.getMarkdown());
 
             //alert(testEditormdView.getMarkdown());
+
+            // $('code').addClass('am-text-nowrap');
         });
 
     });

@@ -152,7 +152,7 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
         articleVersionService.save(articleVersion);
 
         //todo 4. 物理删除 draft
-        this.delete(articleDraft.getId());
+        articleDraftDao.delete(articleDraft.getId());
     }
 
 
