@@ -57,22 +57,27 @@
          `id` = #{arg0}
     </update>
 
-    <sql id="columns">
-        `create_time` createTime, `update_time` updateTime, `ar_id` arId, `img_url` imgUrl,
-         `is_comment` isComment, `is_recommend` isRecommend, `is_top` isTop, `browse_num` browseNum, `comment_num` commentNum, `like_num` likeNum
-    </sql>
-
     <select id="countByDelFlag" resultType="Integer">
         select count(*) from `article_release` where  `del_flag`=#{arg0}
     </select>
 
-    <select id="findPage" resultType="com.sbsm.blog.entity.console.ArticleRelease">
+    <sql id="columns">
+        `create_time` createTime, `update_time` updateTime, `ar_id` arId, `ar_id` ar_t_id, `ar_id` v_ar_id, `img_url` imgUrl,
+         `is_comment` isComment, `is_recommend` isRecommend, `is_top` isTop, `browse_num` browseNum, `comment_num` commentNum, `like_num` likeNum
+    </sql>
+
+    <resultMap id="resultMap" type="com.sbsm.blog.entity.console.ArticleRelease">
+        <collection property="tags" column="ar_t_id" select="com.sbsm.blog.dao.console.TagDao.findTagByArId"></collection>
+        <collection property="avs" column="v_ar_id" select="com.sbsm.blog.dao.console.ArticleVersionDao.findByArId"></collection>
+    </resultMap>
+
+    <select id="findPage" resultMap="resultMap">
         select *, <include refid="columns" />, CONCAT(#{arg2.imgCallPrefixPath}, `img_url`) imgAbsUrl from `article_release` where  `del_flag`=0
         order by `update_time` desc
         limit #{arg0}, #{arg1}
     </select>
 
-    <select id="findOne" resultType="com.sbsm.blog.entity.console.ArticleRelease">
+    <select id="findOne" resultMap="resultMap">
         select *, <include refid="columns" />, CONCAT(#{imgCallPrefixPath}, `img_url`) imgAbsUrl from `article_release`
         <where>
             <if test="id != null">
@@ -85,7 +90,7 @@
         limit 0,1
     </select>
 
-    <select id="findByIds" resultType="com.sbsm.blog.entity.console.ArticleRelease">
+    <select id="findByIds" resultMap="resultMap">
         select *, <include refid="columns" /> from `article_release`
         where `id` in
         <foreach collection="array" open="(" separator="," close=")" item="item">

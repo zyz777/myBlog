@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sbsm.blog.entity.BaseEntity;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Article extends BaseEntity {
@@ -29,4 +31,7 @@ public class Article extends BaseEntity {
 
     protected String cid;
     protected Category category;
+
+    protected List<Tag> tags;
+    protected List<ArticleVersion> avs;
 }

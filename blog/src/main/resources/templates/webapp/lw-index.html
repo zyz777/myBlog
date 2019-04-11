@@ -407,11 +407,15 @@
         $("#hot_ul").append(html);
     });
 
+    /**
+     * 查找文件, 根据最新修改时间排序
+     * @param pageNo
+     */
     function findArticle(pageNo) {
         var pageSize = 5;
         $.ajax({
             type: 'get',
-            url: 'article.json',
+            url: '/webapp/index/findArticle',
             data: {
                 pageNo: pageNo,
                 pageSize: pageSize,
@@ -454,14 +458,21 @@
 
                 for (var i = 0; i < data.length; i++) {
                     var o = data[i];
-                    var imgUrl = o.imgUrl;
+                    var imgUrl = o.imgAbsUrl;
                     if (imgUrl == null || imgUrl == '') {
                         //默认图片
                         $('#articleAppendDiv #coverImg').attr('src', '../third-plugin/image/ying2.png');
                     } else {
                         $('#articleAppendDiv #coverImg').attr('src', imgUrl);
                     }
-                    var status = o.status;
+                    var status = null;
+                    if (o.avs != null) {
+                        if (o.avs.length == 1) {
+                            status = "new";
+                        } else {
+                            status = 'update';
+                        }
+                    }
                     if (status == null || status == '') {
                         $('#articleAppendDiv #statusSpan').hide();
                     } else {
@@ -474,11 +485,16 @@
                     $('#articleAppendDiv #descnP').text(o.descn);
 
                     var tags = o.tags;
-                    var tagHtml = '';
-                    for (var j = 0; j < tags.length; j++) {
-                        tagHtml += ' <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;'+tags[j]+'</a>';
+                    if (tags != null) {
+                        $('#articleAppendDiv #tagsP').html('');
+                        var tagHtml = '';
+                        for (var j = 0; j < tags.length; j++) {
+                            var tag = tags[j];
+                            tagHtml += ' <a><img src="../third-plugin/image/tag.svg" style="width: 1.8rem;">&nbsp;'+tag.name+'</a>';
+                        }
+                        $('#articleAppendDiv #tagsP').append(tagHtml);
                     }
-                    $('#articleAppendDiv #tagsP').append(tagHtml);
+
                     var resultHtml = $('#articleAppendDiv').html();
                     $('#articleListDiv').append(resultHtml);
                 }

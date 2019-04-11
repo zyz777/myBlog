@@ -42,5 +42,15 @@
         select count(*) from `tag` where `del_flag`=#{arg0}
     </select>
 
+    <select id="findTagByArId" resultType="com.sbsm.blog.entity.console.Tag">
+        SELECT
+            t.*, t.`create_time` createTime, t.`update_time` updateTime
+        FROM
+            `article_tag_mapping` atm
+            LEFT JOIN `tag` t ON t.`tid` = atm.`tid`
+        WHERE
+            atm.`ar_id` =#{arg0}
+    </select>
+
 
 </mapper>

@@ -17,10 +17,9 @@ public class ArticleDraft extends Article {
     private String adId;
     private Boolean isNew;
 
-    private List<Tag> tags;
     private String[] tids;
 
-    private List<ArticleVersion> avs;
+
 
     @Override
     public void preInsert() {
