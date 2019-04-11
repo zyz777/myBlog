@@ -21,7 +21,7 @@ public class ArticleVersionService extends BaseService<ArticleVersion> {
     public void save(ArticleVersion articleVersion) {
         String content = "新增文章版本更新内容";
         if (articleVersion.getId() == null) {
-            articleVersion.preUpdate();
+            articleVersion.preInsert();
             articleVersionDao.insert(articleVersion);
         } else {
             articleVersion.preUpdate();

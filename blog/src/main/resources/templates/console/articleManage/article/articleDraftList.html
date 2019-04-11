@@ -54,6 +54,7 @@
 <script type="text/html" id="categoryTpl">
     {{#
     var checkedFn = function(){
+    if (d.category == null) {return '';}
     return d.category.name;
     };
     }}
@@ -63,7 +64,7 @@
 <script type="text/html" id="tagTpl">
     {{#
         var checkedFn = function(){
-           if (d.tags == null || d.tags.length == 0) { return ; }
+           if (d.tags == null || d.tags.length == 0) { return ''; }
             var text = [];
                 for(var i = 0; i < d.tags.length; i++) {
                  var o = d.tags[i];
@@ -311,7 +312,7 @@
                 var contentWindow = firstChild.contentWindow;
                 firstChild.contentDocument.getElementById('save').click();
                 // parent.layer.close(index);
-                // loadPage();
+                loadPage();
             }
             ,btn2: function(index, layero){
                 //按钮【按钮二】的回调

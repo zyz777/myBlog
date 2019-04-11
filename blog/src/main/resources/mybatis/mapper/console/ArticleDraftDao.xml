@@ -58,7 +58,7 @@
 
 
     <sql id="columns">
-        `create_time` createTime, `update_time` updateTime, `is_new` isNew, `ar_id` arId, `ad_id` adId, `cid` c_id, `ar_id` ar_t_id, `ar_id` v_ar_id
+        `create_time` createTime, `update_time` updateTime, `is_new` isNew, `img_url` url, `img_url` imgUrl, `ar_id` arId, `ad_id` adId, `cid` c_id, `ar_id` ar_t_id, `ar_id` v_ar_id
     </sql>
 
     <select id="countByDelFlag" resultType="Integer">
@@ -67,6 +67,7 @@
 
     <resultMap id="resultMap" type="com.sbsm.blog.entity.console.ArticleDraft">
         <association property="category" column="c_id" select="com.sbsm.blog.dao.console.CategoryDao.findByCid"></association>
+        <association property="file" column="url" select="com.sbsm.blog.dao.console.FileDao.findOneByUrl"></association>
         <collection property="tags" column="ar_t_id" select="findTagByArId"></collection>
         <collection property="avs" column="v_ar_id" select="com.sbsm.blog.dao.console.ArticleVersionDao.findByArId"></collection>
     </resultMap>
@@ -83,13 +84,13 @@
     </select>
 
     <select id="findPage" resultMap="resultMap">
-        select *, <include refid="columns" /> from `article_draft` where  `del_flag`=0
+        select *, <include refid="columns" />, CONCAT(#{arg2.imgCallPrefixPath}, `img_url`) imgAbsUrl from `article_draft` where  `del_flag`=0
         order by `update_time` desc
         limit #{arg0}, #{arg1}
     </select>
 
     <select id="findOne" resultMap="resultMap">
-        select *, <include refid="columns" /> from `article_draft`
+        select *, <include refid="columns" />, CONCAT(#{imgCallPrefixPath}, `img_url`) imgAbsUrl from `article_draft`
         <where>
             `del_flag`=#{delFlag}
             <if test="id != null">

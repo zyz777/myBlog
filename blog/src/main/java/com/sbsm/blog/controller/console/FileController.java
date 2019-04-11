@@ -20,8 +20,11 @@ public class FileController extends BaseController {
 
     @RequestMapping("/upload")
     public ResultBean upload(@RequestParam("file") MultipartFile multipartFile) {
-        FileMd5Util.getMD5(multipartFile);
         File file = fileService.upload(multipartFile);
+//        File file = null;
+        if (file == null) {
+            return new ResultBean().setCode(ResultBean.FAIL).setMsg("保存文件失败");
+        }
         return new ResultBean(file);
     }
 

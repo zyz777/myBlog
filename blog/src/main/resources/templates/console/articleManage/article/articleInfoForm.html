@@ -65,7 +65,7 @@
             <div class="layui-input-inline">
                 <div class="layui-form-item layui-hide">
                     <div class="layui-input-block">
-                        <input type="text" name="imgUrl" disabled autocomplete="off"  class="layui-input">
+                        <input type="text" id="imgUrl" name="imgUrl" disabled autocomplete="off"  class="layui-input">
                     </div>
                 </div>
 
@@ -74,17 +74,17 @@
                     <div class="layui-upload-list">
                         <table class="layui-table" id="fileFieldTable">
                             <tr>
-                                <th>文件名：</th>
+                                <th id="fileName">文件名：</th>
                             </tr>
                             <tr>
-                                <th>大小：</th>
+                                <th id="fileDisplaySize">大小：</th>
                             </tr>
                             <tr>
                                 <th>像素：</th>
                             </tr>
                             <!--<tbody id="demoList"></tbody>-->
                         </table>
-                        <img class="layui-upload-img" id="demo1"  name="imgUrl" width="200">
+                        <img class="layui-upload-img" id="demo1" name="demo1" width="200">
                         <p id="demoText"></p>
                     </div>
                     <!--<button type="button" class="layui-btn" id="testListAction">开始上传</button>-->
@@ -143,8 +143,14 @@
             ,done: function(res){
                 //如果上传失败
                 if(res.code > 0){
-                    return layer.msg('上传失败');
+                    layer.msg('上传失败');
+                    return this.error();
                 }
+                console.log("上传成功", res);
+
+                var data = res.data;
+                $('#imgUrl').val(data.url);
+
                 //上传成功
                 var demoText = $('#demoText');
                 demoText.html('<span style="color: #FF5722;">上传成功</span>');
@@ -220,6 +226,7 @@
                 }
             }
             field['tids']=tagStr;
+            delete field['file'];
 
             $.ajax({
                 type: 'POST',
@@ -354,7 +361,14 @@
                 ,"updateTime": data.updateTime
                 ,"descn": data.descn
                 ,"imgUrl": data.imgUrl
+                ,"demo1": data.imgAbsUrl
             });
+            if (data.file != null) {
+                $('#demo1').attr('src', data.imgAbsUrl);
+                $('#fileName').text('文件名：'+data.file.originalName);
+                $('#fileDisplaySize').text('大小：'+data.file.displaySize);
+            }
+
         });
 
     }

@@ -17,4 +17,14 @@ public class File extends BaseEntity {
     private String crc32;
     private String url;
 
+    @Override
+    public void preInsert() {
+        super.preInsert();
+        this.fid = "f-"+getCreateTime().getTime();
+    }
+
+    public File() {
+    }
+
+
 }

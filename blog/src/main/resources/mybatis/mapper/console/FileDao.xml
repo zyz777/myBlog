@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sbsm.blog.dao.console.FileDao">
+
+
+    <insert id="insert" parameterType="com.sbsm.blog.entity.console.File">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `file` (  `create_time`, `update_time`, `remark`, `del_flag`, `fid`, `byte_size`, `display_size`, `original_name`, `now_name`, `md5`, `crc32`, `url` )
+        VALUES
+        ( #{createTime}, #{updateTime}, #{remark}, #{delFlag}, #{fid}, #{byteSize}, #{displaySize}, #{originalName}, #{nowName}, #{md5}, #{crc32}, #{url} )
+    </insert>
+
+    <sql id="columns">
+         `create_time` createTime, `update_time` updateTime, `byte_size` byteSize, `display_size` displaySize, `original_name` originalName, `now_name` nowName
+    </sql>
+
+    <select id="findOne"  resultType="com.sbsm.blog.entity.console.File">
+        select *, <include refid="columns" /> from `file`
+        <where>
+            `del_flag`=#{delFlag}
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="arId != null and arId != ''">
+                and `ar_id`= #{arId}
+            </if>
+            <if test="url != null and url != ''">
+                and `url`= #{url}
+            </if>
+        </where>
+        limit 0,1
+    </select>
+
+    <select id="findOneByUrl" resultType="com.sbsm.blog.entity.console.File">
+        select *, <include refid="columns" /> from `file`
+        where `url`= #{arg0}
+        limit 0,1
+    </select>
+
+</mapper>

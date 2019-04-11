@@ -12,19 +12,10 @@ import java.util.List;
 @Data
 //@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ArticleDraft extends BaseEntity {
+public class ArticleDraft extends Article {
 
-    private String title;
-    private String descn;
-    private String content;
-    private String imgUrl;
-
-    private String arId;
     private String adId;
     private Boolean isNew;
-
-    private String cid;
-    private Category category;
 
     private List<Tag> tags;
     private String[] tids;

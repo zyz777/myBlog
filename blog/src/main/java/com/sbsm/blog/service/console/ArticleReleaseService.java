@@ -21,7 +21,21 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
     private ArticleReleaseDao articleReleaseDao;
     @Autowired
     private ArticleVersionService articleVersionService;
+    @Autowired
+    private DictService dictService;
 
+    /**
+     * 获得文件的访问网址前缀
+     * @return
+     */
+    private String getFileCallPrefixPath(ArticleRelease articleRelease) {
+        //访问路径前缀
+        Dict dict = dictService.findOneByTypeAndLabel("file_call_path", "file_call_path");
+        String value = dict.getValue();
+
+        articleRelease.setImgCallPrefixPath(value);
+        return value;
+    }
     /**
      * 分页查询
      * @param page
@@ -30,6 +44,7 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
      * @return
      */
     public ResultPage<ArticleRelease> findPage(int page, int limit, ArticleRelease articleRelease) {
+        getFileCallPrefixPath(articleRelease);
         List<ArticleRelease> list = articleReleaseDao.findPage(page * limit, limit, articleRelease);
         List<Log> logs = null;
         ArticleVersion av = null;
@@ -63,6 +78,7 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
     }
 
     public ArticleRelease findOne(ArticleRelease articleRelease) {
+        getFileCallPrefixPath(articleRelease);
         Optional<ArticleRelease> one = articleReleaseDao.findOne(articleRelease);
         return one.orElse(null);
     }

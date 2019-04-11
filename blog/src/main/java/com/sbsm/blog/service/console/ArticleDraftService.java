@@ -1,10 +1,7 @@
 package com.sbsm.blog.service.console;
 
 import com.sbsm.blog.dao.console.ArticleDraftDao;
-import com.sbsm.blog.entity.console.ArticleDraft;
-import com.sbsm.blog.entity.console.ArticleRelease;
-import com.sbsm.blog.entity.console.ArticleVersion;
-import com.sbsm.blog.entity.console.Log;
+import com.sbsm.blog.entity.console.*;
 import com.sbsm.blog.service.BaseService;
 import com.sbsm.blog.utils.ConstantUtil;
 import com.sbsm.blog.vo.ResultPage;
@@ -27,6 +24,21 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
     private ArticleReleaseService articleReleaseService;
     @Autowired
     private ArticleVersionService articleVersionService;
+    @Autowired
+    private DictService dictService;
+
+    /**
+     * 获得文件的访问网址前缀
+     * @return
+     */
+    private String getFileCallPrefixPath(ArticleDraft articleDraft) {
+        //访问路径前缀
+        Dict dict = dictService.findOneByTypeAndLabel("file_call_path", "file_call_path");
+        String value = dict.getValue();
+
+        articleDraft.setImgCallPrefixPath(value);
+        return value;
+    }
 
     public ArticleDraft findOne(Integer id) {
         if (id == null) {
@@ -36,13 +48,14 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
     }
 
     private ArticleDraft findOne(ArticleDraft articleDraft) {
+        getFileCallPrefixPath(articleDraft);
         Optional<ArticleDraft> one = articleDraftDao.findOne(articleDraft);
         return one.orElse(null);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveContent(ArticleDraft articleDraft) {
-        String content = "新增文章 Markdown 内容";
+        String content = "创建草稿, 并新增文章 Markdown 内容";
         ArticleDraft one = findOne(articleDraft.getId());
         if (one == null) {
             articleDraft.preInsert();
@@ -78,6 +91,7 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
      * @return
      */
     public ResultPage<ArticleDraft> findPage(int page, int limit, ArticleDraft articleDraft) {
+        getFileCallPrefixPath(articleDraft);
         List<ArticleDraft> list = articleDraftDao.findPage(page * limit, limit, articleDraft);
         for (ArticleDraft data : list) {
             List<Log> logs = logService.findAll(new Log(data.getArId(), ConstantUtil.ARTICLE));

@@ -6,12 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ArticleRelease extends BaseEntity {
-
-    private String title;
-    private String descn;
-    private String content;
-    private String imgUrl;
+public class ArticleRelease extends Article {
 
     private Boolean isComment;
     private Boolean isRecommend;
@@ -20,9 +15,7 @@ public class ArticleRelease extends BaseEntity {
     private Integer commentNum;
     private Integer likeNum;
 
-    private String arId;
     private String version;
-    private String cid;
 
     private ArticleVersion av;
 

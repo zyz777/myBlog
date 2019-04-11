@@ -58,8 +58,8 @@
     </update>
 
     <sql id="columns">
-        `create_time` createTime, `update_time` updateTime, `ar_id` arId,
-        `img_url` imgUrl, `is_comment` isComment, `is_recommend` isRecommend, `is_top` isTop, `browse_num` browseNum, `comment_num` commentNum, `like_num` likeNum
+        `create_time` createTime, `update_time` updateTime, `ar_id` arId, `img_url` imgUrl,
+         `is_comment` isComment, `is_recommend` isRecommend, `is_top` isTop, `browse_num` browseNum, `comment_num` commentNum, `like_num` likeNum
     </sql>
 
     <select id="countByDelFlag" resultType="Integer">
@@ -67,13 +67,13 @@
     </select>
 
     <select id="findPage" resultType="com.sbsm.blog.entity.console.ArticleRelease">
-        select *, <include refid="columns" /> from `article_release` where  `del_flag`=0
+        select *, <include refid="columns" />, CONCAT(#{arg2.imgCallPrefixPath}, `img_url`) imgAbsUrl from `article_release` where  `del_flag`=0
         order by `update_time` desc
         limit #{arg0}, #{arg1}
     </select>
 
     <select id="findOne" resultType="com.sbsm.blog.entity.console.ArticleRelease">
-        select *, <include refid="columns" /> from `article_release`
+        select *, <include refid="columns" />, CONCAT(#{imgCallPrefixPath}, `img_url`) imgAbsUrl from `article_release`
         <where>
             <if test="id != null">
                 and `id` = #{id}
