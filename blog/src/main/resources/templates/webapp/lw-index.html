@@ -382,11 +382,17 @@
 
 <script>
     // $("#top_nav").load('index/top-nav.html');
-    $.get('tagCloud.json', function (data) {
+    /**
+     * 标签云
+     * */
+    // $.get('tagCloud.json', function (data) {
+    $.get('/webapp/index/tagCloud', function (rs) {
+        console.log(rs);
+        var data = rs.data;
         var html = '';
         for (var i = 0; i < data.length; i++) {
             var o = data[i];
-            html += ' <a href="'+o.url+'" class="blog-tag">'+o.label+'</a>';
+            html += ' <a href="'+o.url+'" class="blog-tag">'+o.name+'</a>';
         }
         $("#TAG_cloud").append(html);
     });

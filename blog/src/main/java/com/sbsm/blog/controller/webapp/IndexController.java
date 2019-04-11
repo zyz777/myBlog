@@ -2,11 +2,16 @@ package com.sbsm.blog.controller.webapp;
 
 import com.sbsm.blog.controller.BaseController;
 import com.sbsm.blog.entity.console.ArticleRelease;
+import com.sbsm.blog.entity.console.Tag;
 import com.sbsm.blog.service.webapp.IndexService;
+import com.sbsm.blog.vo.ResultBean;
 import com.sbsm.blog.vo.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/webapp/index/")
@@ -21,6 +26,12 @@ public class IndexController extends BaseController {
         pageNo--;
         ResultPage<ArticleRelease> rp = indexService.findArticle(pageNo, pageSize);
         return rp;
+    }
+
+    @RequestMapping(value = "/tagCloud", method = RequestMethod.GET)
+    public ResultBean tagCloud() {
+        List<Tag> list = indexService.tagCloud();
+        return new ResultBean(list);
     }
 
 }
