@@ -9,7 +9,7 @@ import java.util.Collection;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class ResultPage<T> extends ResultBean<T> {
+public class ResultPage<T> extends ResultBean {
 
     private int totalCount;
 
@@ -17,7 +17,7 @@ public class ResultPage<T> extends ResultBean<T> {
     }
 
     public ResultPage(Collection<T> data) {
-        this.data = (T)data;
+        super.data = data;
         this.totalCount = data.size();
     }
 
