@@ -159,7 +159,7 @@
 <div class="am-g am-g-fixed blog-fixed">
     <div class="am-u-md-8 am-u-sm-12">
         <div id="articleListDiv">
-        <article class="am-g blog-entry-article">
+       <!-- <article class="am-g blog-entry-article">
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
                 <img src="assets/i/f10.jpg" alt="" class="am-u-sm-12">
             </div>
@@ -184,7 +184,8 @@
                 </p>
                 <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2.5rem;">&nbsp;&nbsp;continue reading</a></p>
             </div>
-        </article>
+        </article>-->
+<!--
 
         <article class="am-g blog-entry-article">
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
@@ -209,8 +210,9 @@
                 <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
             </div>
         </article>
+-->
 
-        <article class="am-g blog-entry-article">
+      <!--  <article class="am-g blog-entry-article">
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
                 <img src="assets/i/f12.jpg" alt="" class="am-u-sm-12">
             </div>
@@ -233,7 +235,7 @@
                 </p>
                 <p><a href="" class="am-btn am-btn-primary am-round"><img src="../third-plugin/image/read1.svg" style="width: 2rem">&nbsp;&nbsp;continue reading</a></p>
             </div>
-        </article>
+        </article>-->
         </div>
 
 
@@ -389,6 +391,10 @@
     $.get('/webapp/index/tagCloud', function (rs) {
         var data = rs.data;
         var html = '';
+        if (data == null) {
+            $("#TAG_cloud").html(html);
+            return;
+        }
         for (var i = 0; i < data.length; i++) {
             var o = data[i];
             html += ' <a href="'+o.url+'" class="blog-tag">'+o.name+'</a>';
@@ -403,6 +409,10 @@
         var data = rs.data;
         console.log('recommend', data);
         var html = '';
+        if (data == null) {
+            $("#recommend_ul").html(html);
+            return;
+        }
         for (var i = 0; i < data.length; i++) {
             var o = data[i];
             html += ' <li><a href="lw-article-fullwidth.html?'+o.arId+'"><img style="width: 2rem" src="../third-plugin/image/recommend.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
@@ -418,6 +428,10 @@
         var data = rs.data;
         console.log('hot', data);
         var html = '';
+        if (data == null) {
+            $("#hot_ul").html(html);
+            return;
+        }
         for (var i = 0; i < data.length; i++) {
             var o = data[i];
             html += ' <li><a href="lw-article-fullwidth.html?'+o.arId+'"><img style="width: 2rem" src="../third-plugin/image/hot.svg" />&nbsp;&nbsp;'+o.title+'</a></li>';
@@ -474,6 +488,10 @@
                 console.log(data);
                 $('#articleListDiv').html('');
                 var resultHtml = '';
+                if (data == null) {
+                    $('#articleListDiv').html(resultHtml);
+                    return;
+                }
                 for (var i = 0; i < data.length; i++) {
                     var o = data[i];
                     var imgUrl = o.imgAbsUrl;

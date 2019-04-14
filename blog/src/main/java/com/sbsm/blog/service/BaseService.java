@@ -13,6 +13,7 @@ public class BaseService<T> {
     @Autowired
     protected LogService logService;
 
-
+    protected final String FILE_CALL_PATH = "file_call_path";
+    protected final String UPLOAD_PATH = "upload_path";
 
 }

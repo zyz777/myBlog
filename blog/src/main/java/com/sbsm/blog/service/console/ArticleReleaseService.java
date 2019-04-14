@@ -30,7 +30,7 @@ public class ArticleReleaseService extends BaseService<ArticleRelease> {
      */
     private String getFileCallPrefixPath(ArticleRelease articleRelease) {
         //访问路径前缀
-        Dict dict = dictService.findOneByTypeAndLabel("file_call_path", "file_call_path");
+        Dict dict = dictService.findOneByTypeAndLabel(FILE_CALL_PATH, FILE_CALL_PATH);
         String value = dict.getValue();
 
         articleRelease.setImgCallPrefixPath(value);

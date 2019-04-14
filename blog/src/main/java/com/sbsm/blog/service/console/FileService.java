@@ -39,7 +39,7 @@ public class FileService extends BaseService<File> {
         String md5 = FileMd5Util.getMD5(multipartFile);
 
         //上传路径
-        Dict dict = dictService.findOneByTypeAndLabel("upload_path", "upload_path");
+        Dict dict = dictService.findOneByTypeAndLabel(UPLOAD_PATH, UPLOAD_PATH);
         String path = dict.getValue();
 
         java.io.File file = new java.io.File(path + nowName);
@@ -77,7 +77,7 @@ public class FileService extends BaseService<File> {
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveFileInfo(File f) {
         //访问路径前缀
-        Dict dict = dictService.findOneByTypeAndLabel("file_call_path", "file_call_path");
+        Dict dict = dictService.findOneByTypeAndLabel(FILE_CALL_PATH, FILE_CALL_PATH);
         String path = dict.getValue()  + f.getNowName();
         log.info("文件访问地址： " + path);
 
