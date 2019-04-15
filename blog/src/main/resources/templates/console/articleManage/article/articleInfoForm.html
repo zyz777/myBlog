@@ -294,13 +294,15 @@
                             $('#tagSelect').html('');
                             var data = rs.data;
                             var optionHtml = ' <option value="">直接选择或搜索选择</option>';
-                            for (var i = 0; i < data.length; i++) {
-                                var o = data[i];
-                                var value = o.tid;
-                                var name = o.name;
-                                optionHtml += '<option value="'+value+'">'+name+'</option>';
+                            if (data != null && data.length > 0) {
+                                for (var i = 0; i < data.length; i++) {
+                                    var o = data[i];
+                                    var value = o.tid;
+                                    var name = o.name;
+                                    optionHtml += '<option value="'+value+'">'+name+'</option>';
+                                }
                             }
-                            $('#tagSelect').append(optionHtml);
+                            $('#tagSelect').html(optionHtml);
                             form.render('select');
                         },
                         error: function (arg1, arg2, arg3) {
@@ -318,13 +320,15 @@
                             $('#categorySelect').html('');
                             var data = rs.data;
                             var optionHtml = ' <option value="">直接选择或搜索选择</option>';
-                            for (var i = 0; i < data.length; i++) {
-                                var o = data[i];
-                                var value = o.cid;
-                                var name = o.name;
-                                optionHtml += '<option value="'+value+'">'+name+'</option>';
+                            if (data != null && data.length > 0) {
+                                for (var i = 0; i < data.length; i++) {
+                                    var o = data[i];
+                                    var value = o.cid;
+                                    var name = o.name;
+                                    optionHtml += '<option value="' + value + '">' + name + '</option>';
+                                }
                             }
-                            $('#categorySelect').append(optionHtml);
+                            $('#categorySelect').html(optionHtml);
                             form.render('select');
                         },
                         error: function (arg1, arg2, arg3) {

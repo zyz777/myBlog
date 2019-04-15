@@ -1,8 +1,6 @@
 package com.sbsm.blog.utils;
 
 public class ConstantUtil {
-
-
     private ConstantUtil() {
     }
 
@@ -23,5 +21,7 @@ public class ConstantUtil {
     public static final String INSERT = "insert";
     public static final String UPDATE = "update";
 
+    public final static String FILE_MAP = "/upload/**";
+    public final static String FILE_PATH = "D:\\Java Project\\self study\\idea\\myBlog\\fileUpload_pro\\upload\\";
 
 }

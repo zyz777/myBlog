@@ -16,6 +16,8 @@ public class File extends BaseEntity {
     private String md5;
     private String crc32;
     private String url;
+    private String callPrefixUrl;
+    private String absUrl;
 
     @Override
     public void preInsert() {

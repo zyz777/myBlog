@@ -1,10 +1,14 @@
 package com.sbsm.blog.service.console;
 
 import com.sbsm.blog.dao.console.FileDao;
+import com.sbsm.blog.entity.console.Category;
 import com.sbsm.blog.entity.console.Dict;
 import com.sbsm.blog.entity.console.File;
+import com.sbsm.blog.entity.console.Log;
 import com.sbsm.blog.service.BaseService;
+import com.sbsm.blog.utils.ConstantUtil;
 import com.sbsm.blog.utils.FileMd5Util;
+import com.sbsm.blog.vo.ResultPage;
 import org.apache.commons.io.FileSystemUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -13,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 public class FileService extends BaseService<File> {
@@ -41,8 +47,8 @@ public class FileService extends BaseService<File> {
         //上传路径
         Dict dict = dictService.findOneByTypeAndLabel(UPLOAD_PATH, UPLOAD_PATH);
         String path = dict.getValue();
-
-        java.io.File file = new java.io.File(path + nowName);
+        String concat = FilenameUtils.concat(path, nowName);
+        java.io.File file = new java.io.File(concat);
         if (!file.getParentFile().exists()) {
             //父目录不存在,则创建
             file.getParentFile().mkdirs();
@@ -85,5 +91,31 @@ public class FileService extends BaseService<File> {
             f.preInsert();
             fileDao.insert(f);
         }
+    }
+
+    /**
+     * 获得文件的访问网址前缀
+     * @return
+     */
+    private String getFileCallPrefixPath(File file) {
+        //访问路径前缀
+        Dict dict = dictService.findOneByTypeAndLabel(FILE_CALL_PATH, FILE_CALL_PATH);
+        String value = dict.getValue();
+
+        file.setCallPrefixUrl(value);
+        return value;
+    }
+
+    public ResultPage<File> findPage(int page, int limit, File file) {
+        getFileCallPrefixPath(file);
+        List<File> list = fileDao.findPage(page * limit, limit, file);
+        int count = countByDelFlag(false);
+        ResultPage<File> rp = new ResultPage<>(list);
+        rp.setTotalCount(count);
+        return rp;
+    }
+
+    private int countByDelFlag(boolean isDel) {
+        return fileDao.countByDelFlag(isDel);
     }
 }

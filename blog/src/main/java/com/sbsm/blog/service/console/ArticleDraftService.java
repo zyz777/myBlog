@@ -47,7 +47,7 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
        return findOne(new ArticleDraft(id));
     }
 
-    private ArticleDraft findOne(ArticleDraft articleDraft) {
+    public ArticleDraft findOne(ArticleDraft articleDraft) {
         getFileCallPrefixPath(articleDraft);
         Optional<ArticleDraft> one = articleDraftDao.findOne(articleDraft);
         return one.orElse(null);

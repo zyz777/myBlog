@@ -1,6 +1,7 @@
 package com.sbsm.blog.controller.webapp;
 
 import com.sbsm.blog.controller.BaseController;
+import com.sbsm.blog.entity.console.ArticleDraft;
 import com.sbsm.blog.entity.console.ArticleRelease;
 import com.sbsm.blog.entity.console.Tag;
 import com.sbsm.blog.service.webapp.IndexService;
@@ -38,6 +39,15 @@ public class IndexController extends BaseController {
     @RequestMapping(value = "/get/{arId}", method = RequestMethod.GET)
     public ResultBean<ArticleRelease> findArticleByArId(@PathVariable("arId") String arId) {
         ArticleRelease article = indexService.findArticleByArId(arId);
+        if (article == null) {
+            return new ResultBean<>().setCode(ResultBean.FAIL).setMsg("文章不存在");
+        }
+        return new ResultBean<>(article);
+    }
+
+    @RequestMapping(value = "/getDraft/{arId}", method = RequestMethod.GET)
+    public ResultBean<ArticleDraft> findDraftArticleByArId(@PathVariable("arId") String arId) {
+        ArticleDraft article = indexService.findDraftArticleByArId(arId);
         if (article == null) {
             return new ResultBean<>().setCode(ResultBean.FAIL).setMsg("文章不存在");
         }

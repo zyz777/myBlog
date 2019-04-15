@@ -39,4 +39,15 @@
         limit 0,1
     </select>
 
+
+    <select id="findPage" resultType="com.sbsm.blog.entity.console.File">
+        select *, <include refid="columns"/>, CONCAT(#{arg2.callPrefixUrl}, `url`) absUrl  from `file` where `del_flag`=0
+        order by `create_time` desc
+        limit #{arg0}, #{arg1}
+    </select>
+
+    <select id="countByDelFlag" resultType="Integer">
+        select count(*) from `file` where `del_flag`=#{arg0}
+    </select>
+
 </mapper>
