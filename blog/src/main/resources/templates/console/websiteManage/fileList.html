@@ -55,12 +55,30 @@
         <i class="layui-icon">&#xe640;</i> 批量删除
     </a>
 </script>
+<script type="text/html" id="urlTpl">
+    <img src="{{d.absUrl}}" height="200" />
+    {{#
+    var checkedFn = function(){
+    if (d.absUrl == null || d.absUrl == '') {
+    return;
+    }
+
+    if (d.absUrl.endsWith('jpg') || d.absUrl.endsWith('png') )
+    {
+    }}
+    <img src="{{d.absUrl}}" height="200" />
+    {{#
+    }
+    };
+    }}
+</script>
 <script>
     var layer = null;
     var $ = null;
     var form = null;
     var upload = null;
     var table;
+    var a = '';
     layui.use(['table','laypage', 'layer', 'form', 'upload'], function(){
         table = layui.table;
         layer = layui.layer;
@@ -119,7 +137,8 @@
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-                ,{field: 'originalName', title: '文件名'}
+                // ,{field: 'url', title: '图片', width: 200, unresize:true, templet: '#urlTpl'}
+                ,{field: 'originalName', title: '文件名', width:80}
                 ,{field: 'displaySize', title: '大小', width:80}
                 ,{field: 'absUrl', title: 'url', width:275}
                 ,{field: 'createTime', title: '上传时间', sort: true, width:175}
