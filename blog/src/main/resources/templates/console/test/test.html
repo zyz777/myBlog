@@ -10,14 +10,13 @@
 </p>
 <p>
     source: <textarea id="source" cols="30" rows="5"></textarea>
+    <button type="button" onclick="test()">生成</button>
 </p>
 <p>
     result:<br/>
     标题： <textarea id="title" readonly="readonly" cols="30" rows="5"></textarea><br/>
     内容：<textarea id="content" readonly="readonly" cols="50" rows="15"></textarea>
-</p>
-<p>
-    <button type="button" onclick="test()">生成</button>
+    上一次的内容：<textarea id="pre_content" readonly="readonly" cols="50" rows="15"></textarea>
 </p>
 
 <script src="../../third-plugin/editor.md/examples/js/jquery.min.js"></script>
@@ -25,7 +24,9 @@
     var num = 1;
     function test() {
         $('#title').val('');
+        var a =  $('#content').val();
         $('#content').val('');
+        $('#pre_content').val(a);
 
         var content = $('#source').val();
         var lastIndexOf = content.lastIndexOf("(");
@@ -39,7 +40,7 @@
         $('#title').val(t2);
 
         var html = "> <span id=\""+num+"-j\">["+titleSub+"](#"+num+"-b)</span>\n" +
-            ">> **<span style=\"color: red;\">"+contentSub+"</span>**";
+            ">> **<span style=\"color: red;\">"+contentSub+"</span>**\n";
         $('#content').val(html);
 
         num++;
