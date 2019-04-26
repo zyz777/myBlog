@@ -11,16 +11,12 @@ public class BlogApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		/*
 
-
-
-	 */
-		int num = 18;
+		int num = 19;
 
 		String content =
-				"天使岂不都是服役的灵、奉差遣为那将要承受救恩的人效力吗？\n" +
-						" (希伯来书 1:14 和合本)" +
+				"身体没有灵魂是死的，信心没有行为也是死的。\n" +
+						" (雅各书 2:26 和合本)" +
 						"";
 
 		int lastIndexOf = content.lastIndexOf("(");

@@ -55,22 +55,8 @@
         <i class="layui-icon">&#xe640;</i> 批量删除
     </a>
 </script>
-<script type="text/html" id="urlTpl">
-    <img src="{{d.absUrl}}" height="200" />
-    {{#
-    var checkedFn = function(){
-    if (d.absUrl == null || d.absUrl == '') {
-    return;
-    }
-
-    if (d.absUrl.endsWith('jpg') || d.absUrl.endsWith('png') )
-    {
-    }}
-    <img src="{{d.absUrl}}" height="200" />
-    {{#
-    }
-    };
-    }}
+<script type="text/html" id="absUrlTpl">
+    <a href="#" onclick="showImg(this)" id="{{d.absUrl}}"><span style="color: blue;">{{d.absUrl}}</span></a>
 </script>
 <script>
     var layer = null;
@@ -78,7 +64,6 @@
     var form = null;
     var upload = null;
     var table;
-    var a = '';
     layui.use(['table','laypage', 'layer', 'form', 'upload'], function(){
         table = layui.table;
         layer = layui.layer;
@@ -138,9 +123,9 @@
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
                 // ,{field: 'url', title: '图片', width: 200, unresize:true, templet: '#urlTpl'}
-                ,{field: 'originalName', title: '文件名', width:80}
+                ,{field: 'originalName', title: '文件名', width:275}
                 ,{field: 'displaySize', title: '大小', width:80}
-                ,{field: 'absUrl', title: 'url', width:275}
+                ,{field: 'absUrl', title: 'url', width:375, templet: '#absUrlTpl'}
                 ,{field: 'createTime', title: '上传时间', sort: true, width:175}
                 ,{title: '操作', width: 100, sort: false, toolbar: '#barDemo', event:'aa', fixed: 'right'}
             ]],
@@ -237,6 +222,41 @@
             }
         });
 
+    }
+
+    function showImg(obj) {
+        var url = obj.id;
+        parent.layer.open({
+            type: 2,
+            title: '图片预览',
+            btn: ['关闭'],
+            shadeClose: true,
+            area: ['400px', '70%'],
+            skin: 'layui-layer-molv',
+            content: url, //iframe的url
+            yes: function(index, layero){
+                parent.layer.close(index);
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                parent.layer.msg('关闭');
+                // return false;  //开启该代码可禁止点击该按钮关闭
+            }
+            ,cancel: function(){
+                //右上角关闭回调
+                parent.layer.msg('右上角关闭按钮');
+                // return false; // 开启该代码可禁止点击该按钮关闭
+            },
+            success: function(layero, index){
+                var layeroElement = layero[0];
+                var childNode = layeroElement.childNodes[1];
+                var firstChild = childNode.firstChild;
+                var contentDocument = firstChild.contentDocument;
+                var contentType = contentDocument.contentType;
+                var image = contentDocument.images[0];
+                $(image).css('max-height', contentDocument.body.clientHeight);
+            }
+        });
     }
 
 </script>

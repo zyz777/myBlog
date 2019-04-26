@@ -72,6 +72,7 @@ public class ArticleDraftService extends BaseService<ArticleDraft> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveInfo(ArticleDraft articleDraft) {
+        articleDraft.preUpdate();
         articleDraftDao.update(articleDraft);
         articleDraftDao.deleteArticleTagMapping(articleDraft.getArId());
         String[] tids = articleDraft.getTids();

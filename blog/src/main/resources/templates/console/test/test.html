@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>
+    下一个num: <input type="text" disabled="disabled" value="1" id="num">
+</p>
+<p>
+    source: <textarea id="source" cols="30" rows="5"></textarea>
+</p>
+<p>
+    result:<br/>
+    标题： <textarea id="title" readonly="readonly" cols="30" rows="5"></textarea><br/>
+    内容：<textarea id="content" readonly="readonly" cols="50" rows="15"></textarea>
+</p>
+<p>
+    <button type="button" onclick="test()">生成</button>
+</p>
+
+<script src="../../third-plugin/editor.md/examples/js/jquery.min.js"></script>
+<script>
+    var num = 1;
+    function test() {
+        $('#title').val('');
+        $('#content').val('');
+
+        var content = $('#source').val();
+        var lastIndexOf = content.lastIndexOf("(");
+        var contentSub = content.substring(0, lastIndexOf);
+        var titleSub = content.substring(lastIndexOf);
+        titleSub = titleSub.replace('(',' ');
+        titleSub = titleSub.replace(')',' ');
+        titleSub = titleSub.trim();
+
+        var t2 = "> <span id=\""+num+"-b\" style=\"color: red;\">**`"+titleSub+"`**[(附录)](#"+num+"-j)</span>：";
+        $('#title').val(t2);
+
+        var html = "> <span id=\""+num+"-j\">["+titleSub+"](#"+num+"-b)</span>\n" +
+            ">> **<span style=\"color: red;\">"+contentSub+"</span>**";
+        $('#content').val(html);
+
+        num++;
+        $("#num").val(num);
+    }
+</script>
+
+</body>
+</html>

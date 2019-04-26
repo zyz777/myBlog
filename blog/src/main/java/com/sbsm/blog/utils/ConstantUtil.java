@@ -22,7 +22,7 @@ public class ConstantUtil {
     public static final String UPDATE = "update";
 
     public final static String FILE_MAP = "/upload/**";
-//    public final static String FILE_PATH = "D:\\Java Project\\self study\\idea\\myBlog\\fileUpload_pro\\upload\\";
-    public final static String FILE_PATH = "E:\\Java Project\\idea\\self study\\myBlog\\fileUpload_pro\\upload\\";
+    public final static String FILE_PATH = "D:\\Java Project\\self study\\idea\\myBlog\\fileUpload_pro\\upload\\";
+//    public final static String FILE_PATH = "E:\\Java Project\\idea\\self study\\myBlog\\fileUpload_pro\\upload\\";
 
 }

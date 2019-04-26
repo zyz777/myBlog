@@ -45,8 +45,9 @@ public class FileService extends BaseService<File> {
         String md5 = FileMd5Util.getMD5(multipartFile);
 
         //上传路径
-        Dict dict = dictService.findOneByTypeAndLabel(UPLOAD_PATH, UPLOAD_PATH);
-        String path = dict.getValue();
+//        Dict dict = dictService.findOneByTypeAndLabel(UPLOAD_PATH, UPLOAD_PATH);
+//        String path = dict.getValue();
+        String path = ConstantUtil.FILE_PATH;
         String concat = FilenameUtils.concat(path, nowName);
         java.io.File file = new java.io.File(concat);
         if (!file.getParentFile().exists()) {
