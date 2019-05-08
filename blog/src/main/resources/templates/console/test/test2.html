@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body>
+
+
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">章节:&nbsp; <b><span style="color:red;" id="title"></span></b></div>
+                <div class="layui-card-body">
+                    <textarea name="descn" id="descn" lay-verify="required|descn" class="layui-textarea"></textarea>
+                    <br/>
+                    <button class="layui-btn" onclick="compare()"  id="saveArticleInfo">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">对比结果</div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label"><b>当前填空</b></label>
+                        <div class="layui-input-block" id="content1">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label"><u><b style="color:blue;">正确答案</b></u></label>
+                        <div class="layui-input-block" id="content2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="../../layui/layui.js"></script>
+<script>
+
+    var layer;
+    var $;
+    var table;
+    var data = [];
+    var index = 0;
+    var currentIndex = 0;
+    layui.use(['table', 'layer', 'form'], function(){
+        table = layui.table;
+        layer = layui.layer;
+        $ = layui.jquery;
+        findAll();
+        console.log(data);
+        next();
+    });
+
+    function next() {
+        if (data == null || data.length == 0 || data.length == index) {
+            return;
+        }
+        var o = data[index];
+        $('#title').text(o.title);
+        currentIndex = index;
+    }
+
+    function compare() {
+        $('#content1').html($('#descn').val());
+        var o = data[currentIndex];
+        $('#content2').html(o.content);
+        //差异效果
+        CompareTxt(document.getElementById('content2'),document.getElementById('content1'));
+
+        if (data[index] == null) {
+            return;
+        }
+        index++;
+        next();
+    }
+
+    function findAll() {
+        $.ajax({
+            type: 'post',
+            url: '/console/test/test2/findAll',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (rs, textStatus, jqXHR) {
+                data = rs.data;
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // this.closeLoading();
+                console.log("textStatus: "+textStatus, "errorThrown: "+errorThrown);
+                layer.alert(textStatus);
+            },
+            statusCode: {
+                404: function () {
+                    layer.alert("404 访问路径不正确");
+                },
+                415: function () {
+                    layer.alert("415 内容类型不匹配");
+                },
+                400: function () {
+                    layer.alert("400 bad请求");
+                },
+                500: function () {
+                    layer.alert("500 服务器异常");
+                }
+            },
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 【文本比较插件】
+     * 传递两个参数dom1、dom2，以dom1为基准进行比较。
+     * 0）dom1和dom2不能都为空；
+     * 1）如果dom1不存在，则dom2为新增效果
+     * 2）如果dom2不存在，则dom1为删除效果
+     * 3）如果dom1和dom2存在，则进行文本差异比较
+     *
+     */
+    (function(window,document){
+        function MyCompare(dom1,dom2){
+            if(!dom1&&!dom2){
+                console.log('参数错误：dom1、dom2不能为空。');
+                return;
+            }
+            else if(!dom1){
+                //dom1为空：新增
+                dom2.style.color = '#90EE90';
+            }else if(!dom2){
+                //dom2为空：删除
+                dom1.style.color = '#FF6347';
+                dom1.style.textDecoration = 'line-through';
+            }else{
+                //进行差异比较
+                var result = _eq({value1:dom1.innerText||dom1.innerHTML,value2:dom2.innerText||dom2.innerHTML});
+                dom1.innerHTML = result.value1;
+                dom2.innerHTML = result.value2;
+            }
+        }
+        function _eq(op) {
+            if(!op){
+                return op;
+            }
+            if(!op.value1_style){
+                op.value1_style="background-color:#FEC8C8;";
+            }
+            if(!op.value2_style){
+                op.value2_style="background-color:#FEC8C8;";
+            }
+            if(!op.eq_min){
+                op.eq_min=3;
+            }
+            if(!op.eq_index){
+                op.eq_index=5;
+            }
+            if (!op.value1 || !op.value2) {
+                return op;
+            }
+            var ps = {
+                v1_i: 0,
+                v1_new_value: "",
+                v2_i: 0,
+                v2_new_value: ""
+            };
+            while (ps.v1_i < op.value1.length && ps.v2_i < op.value2.length) {
+                if (op.value1[ps.v1_i] == op.value2[ps.v2_i]) {
+                    ps.v1_new_value += op.value1[ps.v1_i].replace(/</g,"<").replace(">",">");
+                    ps.v2_new_value += op.value2[ps.v2_i].replace(/</g,"<").replace(">",">");
+                    ps.v1_i += 1;
+                    ps.v2_i += 1;
+                    if (ps.v1_i >= op.value1.length) {
+                        ps.v2_new_value += "<span style='" + op.value2_style + "'>" + op.value2.substr(ps.v2_i).replace(/</g,"<").replace(">",">") + "</span>";
+                        break;
+                    }
+                    if (ps.v2_i >= op.value2.length) {
+                        ps.v1_new_value += "<span style='" + op.value1_style + "'>" + op.value1.substr(ps.v1_i).replace(/</g,"<").replace(">",">") + "</span>";
+                        break;
+                    }
+                } else {
+                    ps.v1_index = ps.v1_i + 1;
+                    ps.v1_eq_length = 0;
+                    ps.v1_eq_max = 0;
+                    ps.v1_start = ps.v1_i + 1;
+                    while (ps.v1_index < op.value1.length) {
+                        if (op.value1[ps.v1_index] == op.value2[ps.v2_i + ps.v1_eq_length]) {
+                            ps.v1_eq_length += 1;
+                        } else if (ps.v1_eq_length > 0) {
+                            if (ps.v1_eq_max < ps.v1_eq_length) {
+                                ps.v1_eq_max = ps.v1_eq_length;
+                                ps.v1_start = ps.v1_index - ps.v1_eq_length;
+                            }
+                            ps.v1_eq_length = 0;
+                            break;//只寻找最近的
+                        }
+                        ps.v1_index += 1;
+                    }
+                    if (ps.v1_eq_max < ps.v1_eq_length) {
+                        ps.v1_eq_max = ps.v1_eq_length;
+                        ps.v1_start = ps.v1_index - ps.v1_eq_length;
+                    }
+
+                    ps.v2_index = ps.v2_i + 1;
+                    ps.v2_eq_length = 0;
+                    ps.v2_eq_max = 0;
+                    ps.v2_start = ps.v2_i + 1;
+                    while (ps.v2_index < op.value2.length) {
+                        if (op.value2[ps.v2_index] == op.value1[ps.v1_i + ps.v2_eq_length]) {
+                            ps.v2_eq_length += 1;
+                        } else if (ps.v2_eq_length > 0) {
+                            if (ps.v2_eq_max < ps.v2_eq_length) {
+                                ps.v2_eq_max = ps.v2_eq_length;
+                                ps.v2_start = ps.v2_index - ps.v2_eq_length;
+                            }
+                            ps.v1_eq_length = 0;
+                            break;//只寻找最近的
+                        }
+                        ps.v2_index += 1;
+                    }
+                    if (ps.v2_eq_max < ps.v2_eq_length) {
+                        ps.v2_eq_max = ps.v2_eq_length;
+                        ps.v2_start = ps.v2_index - ps.v2_eq_length;
+                    }
+                    if (ps.v1_eq_max < op.eq_min && ps.v1_start - ps.v1_i > op.eq_index) {
+                        ps.v1_eq_max = 0;
+                    }
+                    if (ps.v2_eq_max < op.eq_min && ps.v2_start - ps.v2_i > op.eq_index) {
+                        ps.v2_eq_max = 0;
+                    }
+                    if ((ps.v1_eq_max == 0 && ps.v2_eq_max == 0)) {
+                        ps.v1_new_value += "<span style='" + op.value1_style + "'>" + op.value1[ps.v1_i].replace(/</g,"<").replace(">",">") + "</span>";
+                        ps.v2_new_value += "<span style='" + op.value2_style + "'>" + op.value2[ps.v2_i].replace(/</g,"<").replace(">",">") + "</span>";
+                        ps.v1_i += 1;
+                        ps.v2_i += 1;
+
+                        if (ps.v1_i >= op.value1.length) {
+                            ps.v2_new_value += "<span style='" + op.value2_style + "'>" + op.value2.substr(ps.v2_i).replace(/</g,"<").replace(">",">") + "</span>";
+                            break;
+                        }
+                        if (ps.v2_i >= op.value2.length) {
+                            ps.v1_new_value += "<span style='" + op.value1_style + "'>" + op.value1.substr(ps.v1_i).replace(/</g,"<").replace(">",">") + "</span>";
+                            break;
+                        }
+                    } else if (ps.v1_eq_max > ps.v2_eq_max) {
+                        ps.v1_new_value += "<span style='" + op.value1_style + "'>" + op.value1.substr(ps.v1_i, ps.v1_start - ps.v1_i).replace(/</g,"<").replace(">",">") + "</span>";
+                        ps.v1_i = ps.v1_start;
+                    } else {
+                        ps.v2_new_value += "<span style='" + op.value2_style + "'>" + op.value2.substr(ps.v2_i, ps.v2_start - ps.v2_i).replace(/</g,"<").replace(">",">") + "</span>";
+                        ps.v2_i = ps.v2_start;
+                    }
+                }
+            }
+            op.value1 = ps.v1_new_value;
+            op.value2 = ps.v2_new_value;
+            return op;
+        }
+        window.CompareTxt = MyCompare;
+    })(window,document);
+
+
+
+</script>
+
+
+</body>
+</html>
