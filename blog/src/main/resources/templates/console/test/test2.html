@@ -20,6 +20,8 @@
                     <textarea name="descn" id="descn" lay-verify="required|descn" class="layui-textarea"></textarea>
                     <br/>
                     <button class="layui-btn" onclick="compare()"  id="saveArticleInfo">提交</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="layui-btn" onclick="next()"  id="next">下一个</button>
                 </div>
             </div>
         </div>
@@ -72,6 +74,11 @@
         var o = data[index];
         $('#title').text(o.title);
         currentIndex = index;
+        index++;
+        $('#descn').val('');
+        if (data.length == index) {
+            $('#next').text('没有了');
+        }
     }
 
     function compare() {
@@ -84,8 +91,6 @@
         if (data[index] == null) {
             return;
         }
-        index++;
-        next();
     }
 
     function findAll() {
