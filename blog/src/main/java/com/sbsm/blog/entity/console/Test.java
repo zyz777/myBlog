@@ -8,6 +8,6 @@ public class Test extends BaseEntity {
 
     private String content;
     private String title;
-
+    private Integer type;
 
 }
