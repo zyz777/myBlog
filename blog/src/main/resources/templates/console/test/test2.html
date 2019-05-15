@@ -44,12 +44,25 @@
                 </div>
             </div>
         </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">卡片面板</div>
+                <div class="layui-card-body">
+                    <table id="test2ListTable" lay-filter="test2ListTable" >
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 
 
 <script src="../../layui/layui.js"></script>
+<script type="text/html" id="titleTpl">
+    <a href="#" onclick="opened(this)">{{d.title}}</a>
+</script>
+
 <script>
 
     var layer;
@@ -63,6 +76,7 @@
         layer = layui.layer;
         $ = layui.jquery;
         findAll();
+        loadPage();
         console.log(data);
         next();
     });
@@ -78,6 +92,8 @@
         $('#descn').val('');
         if (data.length == index) {
             $('#next').text('没有了');
+        } else {
+            $('#next').text('下一个');
         }
     }
 
@@ -102,7 +118,6 @@
             dataType: 'json',
             success: function (rs, textStatus, jqXHR) {
                 data = rs.data;
-
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 // this.closeLoading();
@@ -127,9 +142,48 @@
     }
 
 
+    function loadPage() {
+        //第一个实例
+        table.render({
+            elem: '#test2ListTable'
+            // ,height: 'full-20'
+            ,height: '400'
+            // ,url: 'articleList.json' //数据接口
+            ,url: '/console/test/test2/findAll' //数据接口
+            // ,method:'POST'   //laui 修改请求方式
+            // ,request: {
+            //     pageName: 'currentPageNo' //页码的参数名称，默认：page
+            //     ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            // }
+            , response: {
+                statusName: 'code' //数据状态的字段名称，默认：code
+                ,countName: 'totalCount' //数据总数的字段名称，默认：count
+                ,dataName: 'data' //默数据列表的字段名称，默认：data
+            }
+            ,title: 'test2'
+            ,page: false //开启分页
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', hide: true}
+                ,{field: 'title', width: 300, title: '标题',  sort: true,  templet: '#titleTpl'}
+                ,{field: 'content', width: 300, title: '内容', hide: true}
+            ]],
+            toolbar: true,
+            totalRow: false,
+        });
+    }
 
 
-
+    function opened(obj) {
+        console.log(obj.text);
+        for (var i = 0; i < data.length; i++) {
+            var o = data[i];
+            if (o.title == obj.text) {
+                this.index = i;
+                break;
+            }
+        }
+        next();
+    }
 
 
 
