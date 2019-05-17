@@ -21,7 +21,11 @@
                     <br/>
                     <button class="layui-btn" onclick="compare()"  id="saveArticleInfo">提交</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <button class="layui-btn" onclick="next()"  id="next">下一个</button>
+                    <button class="layui-btn" onclick="next()"  id="next">顺序下一个</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="layui-btn" onclick="randomNext()"  id="randomNext">随机下一个(不重复)</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="layui-btn" onclick="randomNextRepeat()"  id="randomNextRepeat">随机下一个(可重复)</button>
                 </div>
             </div>
         </div>
@@ -104,6 +108,15 @@
         } else {
             $('#next').text('下一个');
         }
+    }
+    
+    var usedIndex = [];//已使用的下标
+    function randomNext() {
+        
+    }
+    
+    function randomNextRepeat() {
+
     }
 
     function compare() {
